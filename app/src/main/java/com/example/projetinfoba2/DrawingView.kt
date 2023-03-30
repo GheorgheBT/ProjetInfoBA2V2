@@ -16,6 +16,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
 
     val bird = Bird(ctx ,1000f,100f)
+    val joueur = Joueur(ctx,100f,1000f)
     val bulletList = mutableListOf<Balle>()
 
 
@@ -30,6 +31,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         }
         if (canvas != null) {
             bird.draw(canvas)
+            joueur.draw(canvas)
             for (bullet in bulletList) {
                 bullet.draw(canvas)
                 bullet.updatePosition()
