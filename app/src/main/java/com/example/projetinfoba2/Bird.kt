@@ -23,6 +23,8 @@ class Bird(private val context: Context, val x: Float, val y: Float) {
 
 
 
+
+
     fun updatePosition(x: Float, y: Float) {
         birdposition.offsetTo(x - birdsize / 2f, y - birdsize / 2f)
     }
