@@ -34,11 +34,5 @@ class Oiseau(private val context: Context, val x: Float, val y: Float) {
     fun isClicked(x: Float, y: Float): Boolean { // detect si on a cliqué sur l'oiseau et return true ou false
         return x >= oiseauposition.left && x <= oiseauposition.right && y >= oiseauposition.top && y <= oiseauposition.bottom
     }
-
-    //fun updatePosition(x: Float, y: Float) {
-    //    oiseauposition.offsetTo(x - oiseauTaille / 2f, y - oiseauTaille / 2f)
-    //}
-
-
 }
 

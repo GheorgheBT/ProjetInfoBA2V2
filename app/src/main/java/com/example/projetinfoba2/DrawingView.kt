@@ -15,8 +15,10 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     var backgroundOffset = 0f
 
 
+    val bouton0 = Bouton(ctx , 100f,1000f,0)
+    val bouton1 = Bouton(ctx , 500f,1000f,1)
     val bird = Oiseau(ctx ,100f,100f)
-    val joueur = Joueur(ctx,100f,1000f)
+    val joueur = Joueur(ctx,1000f,1000f)
     val projectileList1 = mutableListOf<Projectile>()
     val projectileList2 = mutableListOf<Projectile>()
 
@@ -30,6 +32,8 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
             backgroundOffset = 0f
         }
         if (canvas != null) {
+            bouton0.draw(canvas)
+            bouton1.draw(canvas)
             bird.draw(canvas)
             joueur.draw(canvas)
             for (projetile  in projectileList1) {
