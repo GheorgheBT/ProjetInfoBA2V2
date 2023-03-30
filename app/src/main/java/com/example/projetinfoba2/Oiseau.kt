@@ -3,7 +3,7 @@ package com.example.projetinfoba2
 import android.content.Context
 import android.graphics.*
 
-class Bird(private val context: Context, val x: Float, val y: Float) {
+class Oiseau(private val context: Context, val x: Float, val y: Float) {
 
 
     private var numeroImage = 0 // numero de l'image de l'oiseau que s'affiche

@@ -15,9 +15,10 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     var backgroundOffset = 0f
 
 
-    val bird = Bird(ctx ,100f,100f)
+    val bird = Oiseau(ctx ,100f,100f)
     val joueur = Joueur(ctx,100f,1000f)
-    val projectileList = mutableListOf<Projectile>()
+    val projectileList1 = mutableListOf<Projectile>()
+    val projectileList2 = mutableListOf<Projectile>()
 
     override fun onDraw(canvas: Canvas?) {
         //super.onDraw(canvas)
@@ -31,9 +32,13 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         if (canvas != null) {
             bird.draw(canvas)
             joueur.draw(canvas)
-            for (projetile  in projectileList) {
+            for (projetile  in projectileList1) {
                 projetile.draw(canvas)
                 projetile.updatePositionOeuf()
+            }
+            for (projectile in projectileList2) {
+                projectile.draw(canvas)
+                projectile.updatePositionBalle()
             }
             bird.updatePosition()
         }
@@ -47,8 +52,13 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
             MotionEvent.ACTION_DOWN -> {
                 //bird.updatePosition(x, y)
                 if (bird.isClicked(x, y)) { // L'utilisateur a cliqué sur l'oiseau
-                    projectileList.add(Projectile(ctx, x, y,1)) // ajouter une nouvelle balle a la liste des ablles deja existantes
+                    projectileList1.add(Projectile(ctx, x, y,1)) // ajouter une nouvelle balle a la liste des ablles deja existantes
                     invalidate() // Actualiser la vue
+                    return true
+                }
+                if (joueur.isTouched(x,y)){
+                    projectileList2.add(Projectile(ctx,x,y,0))
+                    invalidate()
                     return true
                 }
                 //else{

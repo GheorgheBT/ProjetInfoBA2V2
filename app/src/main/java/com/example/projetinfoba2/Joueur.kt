@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.*
 
 
-class Joueur(private val context: Context, val x: Float, val y: Float) {
+class Joueur(private val context: Context, private val x: Float, private val y: Float) {
 
     private var numeroImage = 0 // numero de l'image du joueur
     private val listJoueurImage = intArrayOf(R.drawable.pers_1, R.drawable.pers_2,R.drawable.pers_3,R.drawable.pers_4,R.drawable.pers_4,R.drawable.pers_5) // liste des images
