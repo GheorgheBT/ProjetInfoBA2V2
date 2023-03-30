@@ -16,7 +16,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
 
     val bird = Bird(ctx ,1000f,100f)
-    val bulletList = mutableListOf<Bullet>()
+    val bulletList = mutableListOf<Balle>()
 
 
     override fun onDraw(canvas: Canvas?) {
@@ -45,7 +45,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
             MotionEvent.ACTION_DOWN -> {
                 //bird.updatePosition(x, y)
                 if (bird.isClicked(x, y)) { // L'utilisateur a cliqué sur l'oiseau
-                    bulletList.add(Bullet(ctx, x, y)) // ajouter une nouvelle balle a la liste des ablles deja existantes
+                    bulletList.add(Balle(ctx, x, y)) // ajouter une nouvelle balle a la liste des ablles deja existantes
                     invalidate() // Actualiser la vue
                     return true
                 }

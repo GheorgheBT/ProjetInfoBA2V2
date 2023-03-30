@@ -24,13 +24,6 @@ class Bird(private val context: Context, val x: Float, val y: Float) {
         birdposition.offsetTo(x - birdsize / 2f, y - birdsize / 2f)
     }
 
-
-
-
-
-
-
-
     fun draw(canvas: Canvas) {
         val paint = Paint()
         canvas.drawBitmap(birdImage,null, birdposition, null)
