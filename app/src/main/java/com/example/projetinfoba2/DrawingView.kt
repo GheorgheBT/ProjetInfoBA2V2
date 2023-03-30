@@ -15,10 +15,9 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     var backgroundOffset = 0f
 
 
-    val bird = Bird(ctx ,1000f,100f)
+    val bird = Bird(ctx ,100f,100f)
     val joueur = Joueur(ctx,100f,1000f)
-    val bulletList = mutableListOf<Balle>()
-
+    val projectileList = mutableListOf<Projectile>()
 
     override fun onDraw(canvas: Canvas?) {
         //super.onDraw(canvas)
@@ -32,10 +31,11 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         if (canvas != null) {
             bird.draw(canvas)
             joueur.draw(canvas)
-            for (bullet in bulletList) {
-                bullet.draw(canvas)
-                bullet.updatePosition()
+            for (projetile  in projectileList) {
+                projetile.draw(canvas)
+                projetile.updatePositionOeuf()
             }
+            bird.updatePosition()
         }
         // Planifier la prochaine mise à jour
         postInvalidateOnAnimation()
@@ -47,14 +47,14 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
             MotionEvent.ACTION_DOWN -> {
                 //bird.updatePosition(x, y)
                 if (bird.isClicked(x, y)) { // L'utilisateur a cliqué sur l'oiseau
-                    bulletList.add(Balle(ctx, x, y)) // ajouter une nouvelle balle a la liste des ablles deja existantes
+                    projectileList.add(Projectile(ctx, x, y,1)) // ajouter une nouvelle balle a la liste des ablles deja existantes
                     invalidate() // Actualiser la vue
                     return true
                 }
-                else{
-                    bird.updatePosition(x, y) // mettre a jour la poosition de l'oiseau
-                    invalidate() // Actualiser la vue
-                }
+                //else{
+                //    bird.updatePosition(x, y) // mettre a jour la poosition de l'oiseau
+                //    invalidate() // Actualiser la vue
+                //}
             }
         }
         return super.onTouchEvent(event)
