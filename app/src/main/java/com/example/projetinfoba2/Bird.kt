@@ -21,10 +21,6 @@ class Bird(private val context: Context, val x: Float, val y: Float) {
         return x >= birdposition.left && x <= birdposition.right && y >= birdposition.top && y <= birdposition.bottom
     }
 
-
-
-
-
     fun updatePosition(x: Float, y: Float) {
         birdposition.offsetTo(x - birdsize / 2f, y - birdsize / 2f)
     }
