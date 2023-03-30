@@ -10,7 +10,6 @@ class Bird(private val context: Context, val x: Float, val y: Float) {
     private var birdsize = 250f //taille de l'affichage de l'oiseau
     var birdposition = RectF(x, y, x + birdsize, y + birdsize) // position de l'oiseau encode dans un rectangle
 
-
     init { // initialisation de la premiere image de l'oiseau
         val options = BitmapFactory.Options().apply { inScaled = true }
         birdImage = BitmapFactory.decodeResource(context.resources, frames[frameIndex], options)
