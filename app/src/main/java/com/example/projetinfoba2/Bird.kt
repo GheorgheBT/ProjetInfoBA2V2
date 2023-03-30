@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.*
 
 class Bird(private val context: Context, val x: Float, val y: Float) {
-    private val a : Boolean = true
+
     private var frameIndex = 0 // numero de l'image de l'oiseau que s'affiche
     private val frames = intArrayOf(R.drawable.frame_0, R.drawable.frame_1,R.drawable.frame_2,R.drawable.frame_3,R.drawable.frame_4,R.drawable.frame_5,R.drawable.frame_6,R.drawable.frame_7) // liste des images
     private var birdImage: Bitmap
