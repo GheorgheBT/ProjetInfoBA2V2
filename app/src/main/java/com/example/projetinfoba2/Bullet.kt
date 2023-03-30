@@ -9,7 +9,7 @@ import android.graphics.RectF
 class Bullet(private val context: Context, private val x: Float, private val y: Float) {
 
     private val bulletImage: Bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.ball) // recupere l'image de la balle
-    private val scaledBulletImage: Bitmap = Bitmap.createScaledBitmap(bulletImage, 50, 25, true) // adapte les dimension de la balle
+    private val scaledBulletImage: Bitmap = Bitmap.createScaledBitmap(bulletImage, 90, 45, true) // adapte les dimension de la balle
     private val bulletposition = RectF(x, y, x + scaledBulletImage.width, y + scaledBulletImage.height) // encode la position de la balle dans un rectangle
     private val ballSpeed = 20f // la vitesse eb x à laquelle la balle va se deplacer
 
