@@ -35,6 +35,9 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     val bouton0 = Bouton(ctx, 100f, 1000f, 0)
     val bouton1 = Bouton(ctx, 500f, 1000f, 1)
     val bouton2 = Bouton(ctx, 300f, 800f, 2)
+
+    val joystick = Joystick(ctx,300f,750f, 80f,190f)
+
     init {
         boutonList.add(bouton0)
         boutonList.add(bouton1)
@@ -65,7 +68,10 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         if (backgroundOffset < -7000f) { //
             backgroundOffset = 0f
         }
+
         if (canvas != null) {
+
+            joystick.draw(canvas)
 
             joueur.draw(canvas)
             joueur.gravite()

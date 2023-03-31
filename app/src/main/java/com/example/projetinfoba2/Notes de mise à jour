@@ -1,0 +1,5 @@
+Mise à jour du 01/04/2023 :
+ -  J'ai forcé l'application a etre en mode paysage. Je suppose que dans sa version finale elle sera en mode paysage du coup je l'ai forcé pour
+    voir un peu la position des différents objets (car ils changent de place quand on alterne portrait/paysage)
+ -  J'ai créé l'objet joystick mais j'ai pas encore implémenté ses fonctions (faire bouger le perso, mettre a jour le joystick, etc),
+    je rajouterai aussi plus de commentaires
