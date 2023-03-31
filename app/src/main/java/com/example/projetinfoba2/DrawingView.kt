@@ -58,24 +58,22 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         if (canvas != null) {
             bouton0.draw(canvas)
             bouton1.draw(canvas)
-
             joueur.draw(canvas)
-
-            for (projetile  in projectileList1) {
-                projetile.draw(canvas)
-                projetile.updatePositionOeuf()
-            }
-            for (projectile in projectileList2) {
-                projectile.draw(canvas)
-                projectile.updatePositionBalle()
-            }
 
             // Génère des obstacles toutes les 5 secondes
 
             if (System.currentTimeMillis() - lastObstacleTime > 5000) {
                 lastObstacleTime = System.currentTimeMillis()
-                generateObstacle(8000f, 700f)
+                generateObstacle(3000f, 1200f)
             }
+
+            // Génère des oiseaux toutes les 10 secondes
+
+            if (System.currentTimeMillis() - lastOiseauTime > 10000) {
+                lastOiseauTime = System.currentTimeMillis()
+                generateOiseau(100f, 100f)
+            }
+
             // Dessine tous les obstacles existants
                 for (obstacle in obstacleList) {
                     obstacle.draw(canvas)
@@ -87,12 +85,6 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
                     }
                 }
 
-            // Génère des oiseaux toutes les 8 secondes
-
-            if (System.currentTimeMillis() - lastOiseauTime > 8000) {
-                lastOiseauTime = System.currentTimeMillis()
-                generateOiseau(100f, 100f)
-            }
             // Dessine tous les oiseaux existants
             for (oiseau in oiseauList) {
                 oiseau.draw(canvas)
@@ -104,10 +96,19 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
                 }
             }
 
-            oiseauToRemove.removeAll(oiseauToRemove)
+            for (projetile  in projectileList1) {
+                projetile.draw(canvas)
+                projetile.updatePositionOeuf()
+            }
+            for (projectile in projectileList2) {
+                projectile.draw(canvas)
+                projectile.updatePositionBalle()
+            }
+
+            oiseauList.removeAll(oiseauToRemove)
             oiseauToRemove.clear()
 
-            obstacleToRemove.removeAll(obstacleToRemove)
+            obstacleList.removeAll(obstacleToRemove)
             obstacleToRemove.clear()
         }
         // Planifier la prochaine mise à jour
