@@ -17,10 +17,34 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
     val bouton0 = Bouton(ctx , 100f,1000f,0)
     val bouton1 = Bouton(ctx , 500f,1000f,1)
-    val bird = Oiseau(ctx ,100f,100f)
+
     val joueur = Joueur(ctx,1000f,1000f)
+
     val projectileList1 = mutableListOf<Projectile>()
     val projectileList2 = mutableListOf<Projectile>()
+
+    var oiseauList = mutableListOf<Oiseau>()
+    var oiseauToRemove = mutableListOf<Oiseau>()
+    var lastOiseauTime = 0L
+
+    var obstacleList =  mutableListOf<Obstacle>()
+    var obstacleToRemove = mutableListOf<Obstacle>()
+    var lastObstacleTime = 0L
+
+
+
+
+
+    fun generateObstacle(x: Float, y: Float) {
+        val obstacle = Obstacle(context, x, y)
+        obstacleList.add(obstacle)
+    }
+
+    fun generateOiseau(x: Float, y: Float) {
+        val oiseau = Oiseau(context, x, y)
+        oiseauList.add(oiseau)
+    }
+
 
     override fun onDraw(canvas: Canvas?) {
         //super.onDraw(canvas)
@@ -34,8 +58,9 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         if (canvas != null) {
             bouton0.draw(canvas)
             bouton1.draw(canvas)
-            bird.draw(canvas)
+
             joueur.draw(canvas)
+
             for (projetile  in projectileList1) {
                 projetile.draw(canvas)
                 projetile.updatePositionOeuf()
@@ -44,7 +69,46 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
                 projectile.draw(canvas)
                 projectile.updatePositionBalle()
             }
-            bird.updatePosition()
+
+            // Génère des obstacles toutes les 5 secondes
+
+            if (System.currentTimeMillis() - lastObstacleTime > 5000) {
+                lastObstacleTime = System.currentTimeMillis()
+                generateObstacle(8000f, 700f)
+            }
+            // Dessine tous les obstacles existants
+                for (obstacle in obstacleList) {
+                    obstacle.draw(canvas)
+                    obstacle.updatePosition()
+
+                    // Vérifie si un obstacle est sorti de l'écran et le supprime de la liste
+                    if (obstacle.obstaclePosition.right < 0) {
+                        obstacleToRemove.add(obstacle)
+                    }
+                }
+
+            // Génère des oiseaux toutes les 8 secondes
+
+            if (System.currentTimeMillis() - lastOiseauTime > 8000) {
+                lastOiseauTime = System.currentTimeMillis()
+                generateOiseau(100f, 100f)
+            }
+            // Dessine tous les oiseaux existants
+            for (oiseau in oiseauList) {
+                oiseau.draw(canvas)
+                oiseau.updatePosition()
+
+                // Vérifie si un obstacle est sorti de l'écran et le supprime de la liste
+                if (oiseau.oiseauposition.left > 5000) {
+                    oiseauToRemove.add(oiseau)
+                }
+            }
+
+            oiseauToRemove.removeAll(oiseauToRemove)
+            oiseauToRemove.clear()
+
+            obstacleToRemove.removeAll(obstacleToRemove)
+            obstacleToRemove.clear()
         }
         // Planifier la prochaine mise à jour
         postInvalidateOnAnimation()
@@ -55,11 +119,12 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 //bird.updatePosition(x, y)
-                if (bird.isClicked(x, y)) { // L'utilisateur a cliqué sur l'oiseau
-                    projectileList1.add(Projectile(ctx, x, y,1)) // ajouter une nouvelle balle a la liste des ablles deja existantes
-                    invalidate() // Actualiser la vue
-                    return true
-                }
+                //if (bird.isClicked(x, y)) { // L'utilisateur a cliqué sur l'oiseau
+                //    projectileList1.add(Projectile(ctx, x, y,1)) // ajouter une nouvelle balle a la liste des ablles deja existantes
+                //    invalidate() // Actualiser la vue
+                //    return true
+                //}
+
                 if (joueur.isTouched(x,y)){
                     projectileList2.add(Projectile(ctx,x,y,0))
                     invalidate()
@@ -73,4 +138,6 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         }
         return super.onTouchEvent(event)
     }
+
+
 }
