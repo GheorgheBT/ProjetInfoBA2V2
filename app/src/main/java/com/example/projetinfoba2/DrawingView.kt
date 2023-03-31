@@ -15,8 +15,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     var backgroundOffset = 0f
 
 
-    val bouton0 = Bouton(ctx , 100f,1000f,0)
-    val bouton1 = Bouton(ctx , 500f,1000f,1)
+
 
     val joueur = Joueur(ctx,1000f,1000f)
 
@@ -30,6 +29,17 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     var obstacleList =  mutableListOf<Obstacle>()
     var obstacleToRemove = mutableListOf<Obstacle>()
     var lastObstacleTime = 0L
+
+    val boutonList = mutableListOf<Bouton>()
+
+    val bouton0 = Bouton(ctx, 100f, 1000f, 0)
+    val bouton1 = Bouton(ctx, 500f, 1000f, 1)
+    val bouton2 = Bouton(ctx, 250f, 1500f, 2)
+    init {
+        boutonList.add(bouton0)
+        boutonList.add(bouton1)
+        boutonList.add(bouton2)
+    }
 
 
 
@@ -56,10 +66,15 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
             backgroundOffset = 0f
         }
         if (canvas != null) {
+
+            joueur.draw(canvas)
+            joueur.gravite()
             bouton0.draw(canvas)
             bouton1.draw(canvas)
-            joueur.draw(canvas)
-
+            bouton2.draw(canvas)
+            //for (bouton in boutonList){
+            //    bouton.draw(canvas)
+            //}
             // Génère des obstacles toutes les 5 secondes
 
             if (System.currentTimeMillis() - lastObstacleTime > 5000) {
@@ -90,6 +105,12 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
                 oiseau.draw(canvas)
                 oiseau.updatePosition()
 
+                //fais tomber un oeuf si l'oiseau est au dessus du joueur
+                if (oiseau.oiseauposition.left == joueur.joueurPosition.left){
+                    val x = oiseau.oiseauposition.left
+                    val y = oiseau.oiseauposition.bottom
+                    projectileList1.add(Projectile(ctx, x, y,1)) // ajouter une nouvelle balle a la liste des ablles deja existantes
+                }
                 // Vérifie si un obstacle est sorti de l'écran et le supprime de la liste
                 if (oiseau.oiseauposition.left > 5000) {
                     oiseauToRemove.add(oiseau)
@@ -105,6 +126,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
                 projectile.updatePositionBalle()
             }
 
+
             oiseauList.removeAll(oiseauToRemove)
             oiseauToRemove.clear()
 
@@ -119,6 +141,12 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         val y = event.y
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
+                for (i in 1 until boutonList.size)
+                    if (boutonList[i].isClicked(x,y)){
+                       if (i==1){joueur.marcheArrier()}
+                       if(i==2){joueur.marcheAvant()}
+                       if (i==3){joueur.saute()}
+                    }
                 //bird.updatePosition(x, y)
                 //if (bird.isClicked(x, y)) { // L'utilisateur a cliqué sur l'oiseau
                 //    projectileList1.add(Projectile(ctx, x, y,1)) // ajouter une nouvelle balle a la liste des ablles deja existantes

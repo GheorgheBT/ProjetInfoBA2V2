@@ -8,7 +8,7 @@ import android.graphics.RectF
 
 class Bouton(private val context: Context, private val x: Float, private val y: Float,val numeroBouton: Int) {
 
-    private val listeBoutonImage = intArrayOf(R.drawable.bouton1,R.drawable.bouton2) // liste des images des balles
+    private val listeBoutonImage = intArrayOf(R.drawable.bouton1,R.drawable.bouton2,R.drawable.bouton3) // liste des images des balles
     private val boutonTaille = 200f
     private val boutonImage : Bitmap = BitmapFactory.decodeResource(context.resources, listeBoutonImage[numeroBouton])
     private val BoutonPosition = RectF(x, y, x + boutonTaille, y + boutonTaille) // encode la position de la balle dans un rectangle

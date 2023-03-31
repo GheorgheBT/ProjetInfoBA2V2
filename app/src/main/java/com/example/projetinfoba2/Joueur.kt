@@ -11,7 +11,8 @@ class Joueur(private val context: Context, private val x: Float, private val y: 
     private var joueurImage: Bitmap
     private val joueurTaille = 200f //taille de l'affichage du joueur
     var joueurPosition = RectF(x, y, x + joueurTaille, y + joueurTaille) // position du joueur encodé dans un rectangle
-    private val joueurVitesse = 10f
+    private val joueurVitesse = 100f
+    private val joueurGravite = 30f
     private var joueurVie = 5
 
     init { // initialisation de la premiere image du joueur
@@ -34,5 +35,27 @@ class Joueur(private val context: Context, private val x: Float, private val y: 
 
     fun isTouched(x: Float, y: Float): Boolean { // detect si on a cliqué sur
         return x >= joueurPosition.left && x <= joueurPosition.right && y >= joueurPosition.top && y <= joueurPosition.bottom
+    }
+
+    fun marcheAvant(){
+        joueurPosition.left += joueurVitesse
+        joueurPosition.right+= joueurVitesse
+    }
+
+    fun marcheArrier(){
+        joueurPosition.left -= joueurVitesse
+        joueurPosition.right -= joueurVitesse
+    }
+
+    fun saute() {
+        joueurPosition.top += joueurVitesse
+        joueurPosition.bottom += joueurVitesse
+    }
+
+    fun gravite(){
+        if (joueurPosition.bottom <= 1000f){
+            joueurPosition.top+=joueurGravite
+            joueurPosition.bottom+=joueurGravite
+        }
     }
 }
