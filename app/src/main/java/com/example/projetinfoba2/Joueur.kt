@@ -12,7 +12,7 @@ class Joueur(private val context: Context, private val x: Float, private val y: 
     private val joueurTaille = 200f //taille de l'affichage du joueur
     var joueurPosition = RectF(x, y, x + joueurTaille, y + joueurTaille) // position du joueur encodé dans un rectangle
     private val joueurVitesse = 100f
-    private val joueurGravite = 30f
+    private val joueurGravite = 5f
     private var joueurVie = 5
 
     init { // initialisation de la premiere image du joueur
@@ -48,12 +48,12 @@ class Joueur(private val context: Context, private val x: Float, private val y: 
     }
 
     fun saute() {
-        joueurPosition.top += joueurVitesse
-        joueurPosition.bottom += joueurVitesse
+        joueurPosition.top -= 300
+        joueurPosition.bottom -= 300
     }
 
     fun gravite(){
-        if (joueurPosition.bottom <= 1000f){
+        if (joueurPosition.bottom <= 1150f){
             joueurPosition.top+=joueurGravite
             joueurPosition.bottom+=joueurGravite
         }

@@ -34,7 +34,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
     val bouton0 = Bouton(ctx, 100f, 1000f, 0)
     val bouton1 = Bouton(ctx, 500f, 1000f, 1)
-    val bouton2 = Bouton(ctx, 250f, 1500f, 2)
+    val bouton2 = Bouton(ctx, 300f, 800f, 2)
     init {
         boutonList.add(bouton0)
         boutonList.add(bouton1)
@@ -69,12 +69,9 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
             joueur.draw(canvas)
             joueur.gravite()
-            bouton0.draw(canvas)
-            bouton1.draw(canvas)
-            bouton2.draw(canvas)
-            //for (bouton in boutonList){
-            //    bouton.draw(canvas)
-            //}
+            for (bouton in boutonList){
+                bouton.draw(canvas)
+            }
             // Génère des obstacles toutes les 5 secondes
 
             if (System.currentTimeMillis() - lastObstacleTime > 5000) {
@@ -141,11 +138,11 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         val y = event.y
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                for (i in 1 until boutonList.size)
+                for (i in 0 until boutonList.size)
                     if (boutonList[i].isClicked(x,y)){
-                       if (i==1){joueur.marcheArrier()}
-                       if(i==2){joueur.marcheAvant()}
-                       if (i==3){joueur.saute()}
+                       if (i==0){joueur.marcheArrier()}
+                       if(i==1){joueur.marcheAvant()}
+                       if (i==2){joueur.saute()}
                     }
                 //bird.updatePosition(x, y)
                 //if (bird.isClicked(x, y)) { // L'utilisateur a cliqué sur l'oiseau
