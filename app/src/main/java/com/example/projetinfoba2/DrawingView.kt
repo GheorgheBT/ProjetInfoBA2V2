@@ -5,6 +5,7 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.SurfaceView
+import android.util.Log
 
 class DrawingView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0): SurfaceView(context, attributes,defStyleAttr) {
     val ctx = getContext() //donne le contexte de l'activité ou du fragment où on veut dessiner l'oiseau
@@ -43,10 +44,6 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         boutonList.add(bouton1)
         boutonList.add(bouton2)
     }
-
-
-
-
 
     fun generateObstacle(x: Float, y: Float) {
         val obstacle = Obstacle(context, x, y)
@@ -148,7 +145,8 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
                     if (boutonList[i].isClicked(x,y)){
                        if (i==0){joueur.marcheArrier()}
                        if(i==1){joueur.marcheAvant()}
-                       if (i==2){joueur.saute()}
+                       if (i==2){
+                           joueur.saute()}
                     }
                 //bird.updatePosition(x, y)
                 //if (bird.isClicked(x, y)) { // L'utilisateur a cliqué sur l'oiseau
@@ -160,15 +158,34 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
                 if (joueur.isTouched(x,y)){
                     projectileList2.add(Projectile(ctx,x,y,0))
                     invalidate()
-                    return true
                 }
                 //else{
                 //    bird.updatePosition(x, y) // mettre a jour la poosition de l'oiseau
                 //    invalidate() // Actualiser la vue
                 //}
+
+                if(joystick.isPressed(x,y)){
+                    joystick.setIsPressed(true)
+                }
+            }
+
+            MotionEvent.ACTION_UP -> {
+                joystick.setIsPressed(false)
+                joystick.resetActuator()
+                joystick.updateJoystickPosition()
+                invalidate()
+            }
+
+            MotionEvent.ACTION_MOVE -> {
+                if (joystick.getIsPressed()){
+                    joystick.setActuator(x,y)
+                    joystick.updateJoystickPosition()
+                    invalidate()
+                }
             }
         }
-        return super.onTouchEvent(event)
+        return true
+        //return super.onTouchEvent(event) // Les events ection_move et action_up ne sont pas appelés si on utilise ce retour (j'ai pas trop compir pourquoi mais bon)
     }
 
 

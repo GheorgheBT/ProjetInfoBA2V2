@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.util.Log
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -28,10 +29,15 @@ class Joystick (private val context: Context, private val centreX : Float, priva
 
     //Donnée si on appuie sur le joystick
     private var isJoystickPressed : Boolean = false
+
+    //Données pour mettre a jour la position du joystick
+    private var deltaPosX : Float = 0f
+    private var deltaPosY : Float = 0f
+
+    //Methodes
     fun draw(canvas: Canvas) {
         cercleIntPaint.color = Color.LTGRAY
         cercleExtPaint.color = Color.GRAY
-
 
         if (joystickExtOnscreen) {//dessine le grand cercle du joystick
             canvas.drawCircle(
@@ -47,10 +53,10 @@ class Joystick (private val context: Context, private val centreX : Float, priva
                 cercleIntRayon,
                 cercleIntPaint)
         }
-
     }
 
     fun isPressed (posAppuiX: Float, posAppuiY : Float) : Boolean{
+
         val distanceAppuiX = posAppuiX - cercleExtPosX
         val distanceAppuiY = posAppuiY - cercleExtPosY
         val distanceAppui = sqrt( distanceAppuiX.pow(2) + distanceAppuiY.pow(2))
@@ -65,9 +71,32 @@ class Joystick (private val context: Context, private val centreX : Float, priva
         return isJoystickPressed
     }
 
+    fun setActuator(posAppuiX : Float, posAppuiY: Float){
+        val distanceAppuiX = posAppuiX - cercleExtPosX
+        val distanceAppuiY = posAppuiY - cercleExtPosY
+        val distanceAppui = sqrt( distanceAppuiX.pow(2) + distanceAppuiY.pow(2))
+
+        if(distanceAppui < cercleExtRayon){
+            deltaPosX = distanceAppuiX
+            deltaPosY = distanceAppuiY
+        }
+        else{
+            deltaPosX = distanceAppuiX / distanceAppui * cercleExtRayon
+            deltaPosY = distanceAppuiY / distanceAppui * cercleExtRayon
+        }
+    }
+
+    fun resetActuator(){
+        deltaPosX = 0f
+        deltaPosY = 0f
+    }
+    fun updateJoystickPosition(){
+        cercleIntPosX = cercleExtPosX + deltaPosX
+        cercleIntPosY = cercleExtPosY + deltaPosY
+    }
+
     fun destroy(){ // Detruit le joystick (a voir si c'est utile)
         joystickIntOnscreen = false
         joystickExtOnscreen = false
     }
-    // Pas encore fini mais fatigué pour finir ce soir
 }
