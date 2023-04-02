@@ -71,7 +71,6 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         if (canvas != null) {
 
             joystick.draw(canvas)
-
             joueur.draw(canvas)
             //joueur.gravite()
             for (bouton in boutonList){
