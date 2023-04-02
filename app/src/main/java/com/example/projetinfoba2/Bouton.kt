@@ -14,6 +14,8 @@ class Bouton(private val context: Context, private val x: Float, private val y: 
     private val BoutonPosition = RectF(x, y, x + boutonTaille, y + boutonTaille) // encode la position de la balle dans un rectangle
     private var boutonOnScreen = true
 
+
+
     fun draw(canvas: Canvas) {
         if (boutonOnScreen) {//dessine la balle dans le rectangle defini plus haut
             canvas.drawBitmap(
