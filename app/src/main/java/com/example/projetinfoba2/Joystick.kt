@@ -1,21 +1,17 @@
 package com.example.projetinfoba2
 
-import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.util.Log
 import kotlin.math.pow
 import kotlin.math.sqrt
 
-class Joystick (private val context: Context, private val centreX : Float, private val centreY : Float, private val rayonInt : Float, private val rayonExt : Float){
+class Joystick (private val centreX : Float, private val centreY : Float, private val cercleIntRayon : Float, val cercleExtRayon : Float){
 
-    //Dimensions/positions des boutons
-    private val cercleIntRayon : Float = rayonInt
+    //positions des boutons
     private var cercleIntPosX : Float = centreX
     private var cercleIntPosY : Float = centreY
 
-    private val cercleExtRayon : Float = rayonExt
     private var cercleExtPosX : Float = centreX
     private var cercleExtPosY : Float = centreY
 
@@ -56,7 +52,6 @@ class Joystick (private val context: Context, private val centreX : Float, priva
     }
 
     fun isPressed (posAppuiX: Float, posAppuiY : Float) : Boolean{
-
         val distanceAppuiX = posAppuiX - cercleExtPosX
         val distanceAppuiY = posAppuiY - cercleExtPosY
         val distanceAppui = sqrt( distanceAppuiX.pow(2) + distanceAppuiY.pow(2))
@@ -86,6 +81,9 @@ class Joystick (private val context: Context, private val centreX : Float, priva
         }
     }
 
+    fun getDeltaPosJoystick(): FloatArray {
+        return floatArrayOf(deltaPosX, deltaPosY)
+    }
     fun resetActuator(){
         deltaPosX = 0f
         deltaPosY = 0f

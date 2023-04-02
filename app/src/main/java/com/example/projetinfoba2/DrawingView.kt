@@ -37,7 +37,9 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     val bouton1 = Bouton(ctx, 500f, 1000f, 1)
     val bouton2 = Bouton(ctx, 300f, 800f, 2)
 
-    val joystick = Joystick(ctx,300f,750f, 80f,190f)
+    val boutonTir = Bouton(ctx, 1500f, 800f, 0)
+
+    val joystick = Joystick(300f,750f, 80f,190f)
 
     init {
         boutonList.add(bouton0)
@@ -71,7 +73,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
             joystick.draw(canvas)
 
             joueur.draw(canvas)
-            joueur.gravite()
+            //joueur.gravite()
             for (bouton in boutonList){
                 bouton.draw(canvas)
             }
@@ -132,6 +134,8 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
             obstacleList.removeAll(obstacleToRemove)
             obstacleToRemove.clear()
+
+            joueur.updatePosition(joystick)
         }
         // Planifier la prochaine mise à jour
         postInvalidateOnAnimation()
@@ -143,10 +147,10 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
             MotionEvent.ACTION_DOWN -> {
                 for (i in 0 until boutonList.size)
                     if (boutonList[i].isClicked(x,y)){
-                       if (i==0){joueur.marcheArrier()}
-                       if(i==1){joueur.marcheAvant()}
-                       if (i==2){
-                           joueur.saute()}
+                       //if (i==0){joueur.marcheArrier()}
+                       //if(i==1){joueur.marcheAvant()}
+                       //if (i==2){
+                       //    joueur.saute()}
                     }
                 //bird.updatePosition(x, y)
                 //if (bird.isClicked(x, y)) { // L'utilisateur a cliqué sur l'oiseau

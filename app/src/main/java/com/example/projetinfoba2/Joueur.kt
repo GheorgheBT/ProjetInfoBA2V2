@@ -2,6 +2,8 @@ package com.example.projetinfoba2
 
 import android.content.Context
 import android.graphics.*
+import android.os.SystemClock
+import android.util.Log
 
 
 class Joueur(private val context: Context, private val x: Float, private val y: Float) {
@@ -11,9 +13,15 @@ class Joueur(private val context: Context, private val x: Float, private val y: 
     private var joueurImage: Bitmap
     private val joueurTaille = 200f //taille de l'affichage du joueur
     var joueurPosition = RectF(x, y, x + joueurTaille, y + joueurTaille) // position du joueur encodé dans un rectangle
-    private val joueurVitesse = 100f
     private val joueurGravite = 5f
+
+    //Vie du joueur
     private var joueurVie = 5
+
+    //Vitesses du joueur
+    private val vitesseMax = 20f
+    private var vitesseX : Float = 0f
+    private var vitesseY : Float = 0f
 
     init { // initialisation de la premiere image du joueur
         val options = BitmapFactory.Options().apply { inScaled = true }
@@ -28,8 +36,14 @@ class Joueur(private val context: Context, private val x: Float, private val y: 
         joueurImage = BitmapFactory.decodeResource(context.resources, listJoueurImage[numeroImage], options) // load the next image
     }
 
-    fun updatePosition(x: Float, y: Float) {
-        joueurPosition.offsetTo(x - joueurTaille / 2f, y - joueurTaille / 2f)
+    fun updatePosition(joystick: Joystick) {
+        vitesseX = joystick.getDeltaPosJoystick()[0] / joystick.cercleExtRayon * vitesseMax// On prend le delta (x et y) du joystick, qu'on normalise (entre 0 et 1)
+        vitesseY = joystick.getDeltaPosJoystick()[1] / joystick.cercleExtRayon * vitesseMax
+
+        joueurPosition.right += vitesseX
+        joueurPosition.left += vitesseX
+        joueurPosition.top += vitesseY
+        joueurPosition.bottom += vitesseY
     }
 
 
@@ -37,20 +51,6 @@ class Joueur(private val context: Context, private val x: Float, private val y: 
         return x >= joueurPosition.left && x <= joueurPosition.right && y >= joueurPosition.top && y <= joueurPosition.bottom
     }
 
-    fun marcheAvant(){
-        joueurPosition.left += joueurVitesse
-        joueurPosition.right+= joueurVitesse
-    }
-
-    fun marcheArrier(){
-        joueurPosition.left -= joueurVitesse
-        joueurPosition.right -= joueurVitesse
-    }
-
-    fun saute() {
-        joueurPosition.top -= 300
-        joueurPosition.bottom -= 300
-    }
 
     fun gravite(){
         if (joueurPosition.bottom <= 1150f){
