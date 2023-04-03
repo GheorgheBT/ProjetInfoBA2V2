@@ -127,8 +127,6 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
                 projetile.updatePositionBalle()
             }
 
-
-
             oiseauList.removeAll(oiseauToRemove)
             oiseauToRemove.clear()
 
