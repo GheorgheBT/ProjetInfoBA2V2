@@ -45,9 +45,10 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     var obstacleToRemove = mutableListOf<Obstacle>()
     var lastObstacleTime = 0L
 
-    val boutonTir = Bouton(ctx, 1500f, 800f, 0)
+    val boutonTir = Bouton(ctx, (screenWidth - 190f), screenHeight / 2f, 0)
 
-    val joystick = Joystick(300f,750f, 80f,190f)
+    val joystick =
+        Joystick(screenHeight / 4f, screenHeight / 1.35f, screenHeight / 14f, screenHeight / 7f)
 
 
 
@@ -69,7 +70,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         }
 
         if (canvas != null) {
-
+            boutonTir.draw(canvas)
             joystick.draw(canvas)
             joueur.draw(canvas)
 
