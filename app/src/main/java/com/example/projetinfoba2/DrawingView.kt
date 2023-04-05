@@ -1,5 +1,6 @@
 package com.example.projetinfoba2
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -7,6 +8,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.util.AttributeSet
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceView
 import android.view.WindowManager
@@ -51,13 +53,14 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         Joystick(screenHeight / 4f, screenHeight / 1.35f, screenHeight / 14f, screenHeight / 7f)
 
 
-
+    @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas?) {
 
         // super.onDraw(canvas)
 
-        canvas?.drawColor(Color.BLACK)// Couleur de fond de la Drawingview
 
+
+        canvas?.drawColor(Color.BLACK)// Couleur de fond de la Drawingview
         canvas?.drawBitmap(
             scaledBackgroundImage,
             backgroundOffset,
@@ -152,6 +155,11 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
                 if(joystick.isPressed(x,y)){
                     joystick.setIsPressed(true)
+                }
+
+                if(boutonTir.isClicked(x,y)){
+                    projectileList.add(Projectile(ctx, joueur.joueurPosition.left, joueur.joueurPosition.bottom, 0))
+                    invalidate()
                 }
             }
 

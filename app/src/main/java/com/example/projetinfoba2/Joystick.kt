@@ -32,8 +32,8 @@ class Joystick (private val centreX : Float, private val centreY : Float, privat
 
     //Methodes
     fun draw(canvas: Canvas) {
-        cercleIntPaint.color = Color.LTGRAY
-        cercleExtPaint.color = Color.GRAY
+        cercleIntPaint.color = Color.TRANSPARENT
+        cercleExtPaint.color = Color.TRANSPARENT
 
         if (joystickExtOnscreen) {//dessine le grand cercle du joystick
             canvas.drawCircle(
