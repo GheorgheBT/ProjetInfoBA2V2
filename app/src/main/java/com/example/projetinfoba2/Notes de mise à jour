@@ -3,3 +3,9 @@ Mise à jour du 01/04/2023 :
     voir un peu la position des différents objets (car ils changent de place quand on alterne portrait/paysage)
  -  J'ai créé l'objet joystick mais j'ai pas encore implémenté ses fonctions (faire bouger le perso, mettre a jour le joystick, etc),
     je rajouterai aussi plus de commentaires
+
+
+Mise à jour du 06/04/2023 :
+ - j'ai ajouté une nouvelle activité de demarage qui nous permetra de parametrer l'affichage avant de commencer le jeux
+  C'est WelcomeActivity avec son fichier xml "activity_welcome"
+ - j'ai aussi mis les interactions balles joueur et obstacles mais c'est pas encore tres formel

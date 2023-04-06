@@ -23,7 +23,7 @@ class Obstacle (private val context: Context, private val x: Float, private val 
     ) // liste des images des balles
     private val obstacleTaille = 100f
     private val obstacleImage: Bitmap
-    private val obstacleVitesse = -5f // la vitesse eb x à laquelle la balle va se deplacer
+    private val obstacleVitesse = -5f // la vitesse en x à laquelle la balle va se deplacer
     private val obstacleDegats = 100
     private var obstacleOnScreen = true
     init {
@@ -31,7 +31,9 @@ class Obstacle (private val context: Context, private val x: Float, private val 
         val random = Random().nextInt(listeObstacleImage.size)
         obstacleImage = BitmapFactory.decodeResource(context.resources, listeObstacleImage[random])
     }
-    val obstaclePosition = RectF(x, y, x + obstacleImage.width, y - obstacleImage.height) // encode la position de la balle dans un rectangle
+
+    val obstaclePosition =
+        RectF(x, y, x + 80, y - 200) // encode la position de la balle dans un rectangle
 
     fun draw(canvas: Canvas) {
         if (obstacleOnScreen) {//dessine la balle dans le rectangle defini plus haut
@@ -51,6 +53,11 @@ class Obstacle (private val context: Context, private val x: Float, private val 
 
     fun obstacleDestroyed() {
         obstacleOnScreen = false
+    }
+
+    fun isTouched(x: Float, y: Float): Boolean { // detect si on
+        return x >= obstaclePosition.left && x <= obstaclePosition.right && y >= obstaclePosition.bottom && y <= obstaclePosition.top
+        //
     }
 
 }
