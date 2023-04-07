@@ -37,7 +37,15 @@ class Joueur(
     }
 
 
-    fun updatePosition() {
+    fun updatePosition(screenMinX : Float, screenMinY : Float, screenMaxX : Float, screenMaxY : Float) {
+        when{
+            vitesseX > 0 -> if(joueurPosition.right > screenMaxX){vitesseX = 0f}
+            vitesseX < 0 -> if(joueurPosition.left < screenMinX){vitesseX = 0f}
+        }
+        when{
+            vitesseY < 0 -> if(joueurPosition.top < screenMinY){vitesseY = 0f}
+            vitesseY > 0 -> if(joueurPosition.bottom > screenMaxY){vitesseY = 0f}
+        }
         joueurPosition.right += vitesseX
         joueurPosition.left += vitesseX
         joueurPosition.top += vitesseY

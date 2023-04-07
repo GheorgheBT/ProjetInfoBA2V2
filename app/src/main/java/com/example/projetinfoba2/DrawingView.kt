@@ -31,8 +31,6 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     }
 
     val screenRect = RectF(0f, 0f ,screenWidth, screenHeight )
-    val joystick = Joystick(screenHeight / 4f, screenHeight / 1.35f, screenHeight / 14f, screenHeight / 7f)
-    val boutonTir = Bouton(context, (screenWidth - 220f), screenHeight / 1.5f, screenHeight / 8f)
     val joueur = Joueur(context, 0f, screenHeight / 2f, screenHeight / 8f)
 
     private val projectileList = mutableListOf<Projectile>()
@@ -55,7 +53,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     }
 
     private fun update() {
-        joueur.updatePosition()
+        joueur.updatePosition(0f,0f,screenWidth,screenHeight)
         for (obstacle in obstacleList){
             obstacle.isOnScreen(screenRect,joueur.joueurPosition)
             if (obstacle.updatePosition()){
@@ -102,8 +100,6 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     override fun onDraw(canvas: Canvas?) {
         if (canvas != null) {
             canvas.drawBitmap(scaledBackgroundImage, backgroundOffset, 0f, null)
-            joystick.draw(canvas)
-            boutonTir.draw(canvas)
             joueur.draw(canvas, paint, 1000f, 1000f)
             // Dessine tous les obstacles existants
             for (obstacle in obstacleList) {
@@ -143,6 +139,5 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
                 50f
             )
         )
-        Log.d("TAG", "UYUUUUU")
     }
 }
