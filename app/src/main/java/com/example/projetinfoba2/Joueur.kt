@@ -2,6 +2,7 @@ package com.example.projetinfoba2
 
 import android.content.Context
 import android.graphics.*
+import android.util.Log
 
 
 class Joueur(
@@ -20,7 +21,6 @@ class Joueur(
         y + joueurTaille
     ) // position du joueur encodé dans un rectangle
 
-
     //Vie du joueur
     var joueurVie = 5
 
@@ -32,7 +32,6 @@ class Joueur(
     private var vitesseX: Float = 0f
     private var vitesseY: Float = 0f
 
-
     fun draw(canvas: Canvas, paint: Paint, width: Float, height: Float) {
         canvas.drawBitmap(joueurImage, null, joueurPosition, null)
         paint.color = Color.BLACK
@@ -41,13 +40,21 @@ class Joueur(
         canvas.drawText("Point: $joueurPoint", width, height - 100f, paint)
     }
 
-    fun updatePosition() {
+    fun updatePosition(screenMinX : Float, screenMinY : Float, screenMaxX : Float, screenMaxY : Float) {
+        when {
+            vitesseX > 0f -> if(joueurPosition.right > screenMaxX){vitesseX = 0f}
+            vitesseX < 0f -> if(joueurPosition.left < screenMinX){vitesseX = 0f}
+        }
+        when{
+            vitesseY > 0f -> if(joueurPosition.bottom > screenMaxY){vitesseY = 0f}
+            vitesseY < 0f -> if(joueurPosition.top < screenMinY){vitesseY = 0f }
+        }
         joueurPosition.right += vitesseX
         joueurPosition.left += vitesseX
         joueurPosition.top += vitesseY
         joueurPosition.bottom += vitesseY
     }
-    fun setSpeed(normeX : Float, normeY : Float){
+    fun setSpeed(normeX : Float, normeY : Float ){
         vitesseX = normeX * vitesseMax
         vitesseY = normeY * vitesseMax
     }

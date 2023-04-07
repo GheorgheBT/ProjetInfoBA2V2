@@ -35,7 +35,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         screenHeight = displayMetrics.heightPixels.toFloat()
     }
 
-    val joueur = Joueur(context, 0f, screenHeight / 2f, screenHeight / 8f)
+    val joueur = Joueur(context, screenWidth/2f, screenHeight / 2f, screenHeight / 8f)
 
     private val projectileList = mutableListOf<Projectile>()
     private val projectileToRemove = mutableListOf<Projectile>()
@@ -65,7 +65,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
             // Génère des obstacles toutes les 5 secondes
             if (System.currentTimeMillis() - lastObstacleTime > 2000) {
-                var y1 = random.nextInt(screenHeight.toInt())
+                val y1 = random.nextInt(screenHeight.toInt())
                 lastObstacleTime = System.currentTimeMillis()
                 val obstacle = Obstacle(context, screenWidth, y1.toFloat())
                 obstacleList.add(obstacle)
@@ -116,7 +116,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
                 }
             }
 
-            joueur.updatePosition()
+            joueur.updatePosition(0f,0f, screenWidth, screenHeight)
 
             ///////////////////////////////////////////////cette partie sera rajoutée dans un thread plus tar
             for (obstacle in obstacleList) {
@@ -129,7 +129,6 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
                     obstacleToRemove.add(obstacle)
                 }
                 for (projectile in projectileList) {
-
 
                     if (obstacle.isTouched(
                             projectile.projectilePosition.centerX(),
@@ -170,6 +169,5 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
                 50f
             )
         )
-        Log.d("TAG", "UYUUUUU")
     }
 }

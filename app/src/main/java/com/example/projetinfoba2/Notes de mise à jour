@@ -17,8 +17,12 @@ Mise à jour du 07/04/2023 :
     d'apres ce que j'ai compris en chercheant sur internet, c'est mieux si on différencie les différents composants(vues, objets, etc)
     et vu que notre Drawingview n'a pas besin de listener car on utilise des boutons et joysticks, j'ai mis le listener sur ceux-ci
     (et d'ailleurs par cette methode ca evite des etteurs que j'avaia ou j'abais besoin d'appeler le meme objet dans d'autres classes)
-    si on rajoute des boutons supplémentaires, on rajoute le code dans main, la ou se trouve l'annotation
+    si on rajoute des boutons supplémentaires, on rajoute le code dans main, la ou se trouve l'annotation. Le joystick em view, permet aussi de le placer directement
+    en mode view et de le contraindre plus facilement, et la taille des cercles s'adapte a la taille de la view
     -J'ai aussi changé l'affichage du joystick et bouton comme ca ils sont un peu plus joli
     - Petite note supp: je pense que c'est mieux qu'on fasse le plus possible de fonctions séparées qui interractent dans le code principal,
     car pour l'instant les codes principaux son souvents en un block sonc quand le github a été mis à jour, ca a provoqué bcp d'erreurs dans mon code
     du coup en faisant des fonctions indépendantes on a juste a modifier la fonction (et peut etre legerement le code principal) et ca va créer moins d'erreurs
+    -Le joueur est contraint maintenant a se deplacer dans la zone de l'ecran
+    -je sais pas si il devrait y avoir des obstacles/projectiles ennemis affichés?, mais en tout cas ils sont pas visibles
+    -Les classes joystick.kt et bouton.kt ne sont techniquement plus nécessaires mais je les ai pas supprimées au cas ou
