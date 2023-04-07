@@ -21,6 +21,8 @@ class MainActivity: Activity(), View.OnClickListener{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN)
+
         drawingView = findViewById(R.id.vMain)
         drawingView.setWillNotDraw(false)
         drawingView.invalidate()

@@ -6,6 +6,7 @@ import android.graphics.Paint
 import kotlin.math.pow
 import kotlin.math.sqrt
 
+//Objet non utilisé
 class Joystick (private val centreX : Float, private val centreY : Float, private val cercleIntRayon : Float, val cercleExtRayon : Float){
 
     //positions des boutons
