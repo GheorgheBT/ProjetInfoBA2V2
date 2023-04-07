@@ -3,10 +3,7 @@ package com.example.projetinfoba2
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
-import android.os.Debug
 import android.util.AttributeSet
-import android.util.Log
-import android.view.MotionEvent
 import android.view.SurfaceView
 import kotlin.math.min
 import kotlin.math.pow
@@ -21,8 +18,8 @@ class JoystickView @JvmOverloads constructor(context: Context, attributes: Attri
     private var cercleExtPosX : Float = (width/2).toFloat()
     private var cercleExtPosY : Float = (height/2).toFloat()
 
-    private var cercleIntRayon : Float = 0f //On prend la valeur minimale entre la largeur et la longueur du "view" comme ca si la view est un rectangle, le cercle ne depasse pas du rectangle
-    private var cercleExtRayon : Float =0f    //Cercle 3x plus petit que celui exterieur
+    private var cercleIntRayon : Float = 0f
+    var cercleExtRayon : Float = 0f    //Cercle 2x plus petit que celui exterieur
 
     //Données sur l'aspect du bouton
     private val cercleIntPaint : Paint = Paint()
@@ -36,41 +33,12 @@ class JoystickView @JvmOverloads constructor(context: Context, attributes: Attri
     private var isJoystickPressed : Boolean = false
 
     //Données pour mettre a jour la position du joystick
-    private var deltaPosX : Float = 0f
-    private var deltaPosY : Float = 0f
-    //joystick listener
-
-
-    fun onJoystickTouch(motionEvent: MotionEvent?) {
-        when (motionEvent?.action) {
-            MotionEvent.ACTION_DOWN -> {
-                if (isPressed(motionEvent.x, motionEvent.y)) {
-                    setIsPressed(true)
-                }
-            }
-            MotionEvent.ACTION_UP -> {
-                setIsPressed(false)
-                resetActuator()
-                updateJoystickPosition()
-                invalidate()
-            }
-
-            MotionEvent.ACTION_MOVE -> {
-                if (getIsPressed()){
-                    setActuator(motionEvent.x, motionEvent.y)
-                    updateJoystickPosition()
-                    //Log.d("TAG","AAAAEAFDW")
-                    invalidate()
-                }
-            }
-        }
-
-    }
+    var deltaPosX : Float = 0f
+    var deltaPosY : Float = 0f
 
     init {
         cercleIntPaint.color = context.getColor(R.color.JoystickIntColor)
         cercleExtPaint.color = context.getColor(R.color.JoystickExtColor)
-        Log.d("TAG", width.toString())
     }
 
     fun isPressed (posAppuiX: Float, posAppuiY : Float) : Boolean{
@@ -102,10 +70,6 @@ class JoystickView @JvmOverloads constructor(context: Context, attributes: Attri
             deltaPosY = distanceAppuiY / distanceAppui * cercleExtRayon
         }
     }
-
-    fun getDeltaPosJoystick(): FloatArray {
-        return floatArrayOf(deltaPosX, deltaPosY)
-    }
     fun resetActuator(){
         deltaPosX = 0f
         deltaPosY = 0f
@@ -113,7 +77,6 @@ class JoystickView @JvmOverloads constructor(context: Context, attributes: Attri
     fun updateJoystickPosition(){
         cercleIntPosX = cercleExtPosX + deltaPosX
         cercleIntPosY = cercleExtPosY + deltaPosY
-        //Log.d("TAG",cercleIntPosX.toString())
     }
 
     @SuppressLint("DrawAllocation")
@@ -122,12 +85,12 @@ class JoystickView @JvmOverloads constructor(context: Context, attributes: Attri
         cercleIntPosY = (height/2).toFloat() + deltaPosY
         cercleExtPosX = (width/2).toFloat()
         cercleExtPosY = (height/2).toFloat()
-        cercleIntRayon = min(width/2,height/3).toFloat() / 2f
+        cercleIntRayon = min(width/2,height/3).toFloat() / 2f //On prend la valeur minimale entre la largeur et la longueur du "view" comme ca si la view est un rectangle, le cercle ne depasse pas du rectangle
         cercleExtRayon = min(width/2,height/3).toFloat()
 
         canvas?.drawColor(Color.TRANSPARENT)
+
         if (joystickExtOnscreen) {//dessine le grand cercle du joystick
-            //Log.d("TAG", cercleExtRayon.toString())
             canvas?.drawCircle(
                 cercleExtPosX,
                 cercleExtPosY,

@@ -5,54 +5,69 @@ import android.app.Activity
 import android.graphics.PixelFormat
 import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
-import android.view.SurfaceHolder
-import android.view.View
+import android.view.*
 import android.view.View.OnTouchListener
+import android.widget.Button
+import android.widget.ImageButton
 
 
 class MainActivity: Activity(), View.OnClickListener{
 
-    override fun onClick(v: View?) {
-        when(v?.id){
-            R.id.joystickView->{
-
-            }
-        }
-    }
-
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        return super.onTouchEvent(event)
-        joystickView.onJoystickTouch(event)
-        Log.d("TAG","AAA")
-    }
-
     lateinit var drawingView: DrawingView
     lateinit var joystickView: JoystickView
+    lateinit var boutonTir : ImageButton
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
         drawingView = findViewById(R.id.vMain)
         drawingView.setWillNotDraw(false)
         drawingView.invalidate()
+
+        //Gestion du bouton
+        boutonTir = findViewById(R.id.boutonTir)
+        boutonTir.setOnClickListener(this)
+
         //Affichage du joystick
         joystickView = findViewById<JoystickView>(R.id.joystickView)
         joystickView.setWillNotDraw(false)
         joystickView.setZOrderOnTop(true)
-        val sfhTrackHolder: SurfaceHolder = joystickView.getHolder()
+        val sfhTrackHolder: SurfaceHolder = joystickView.holder
         sfhTrackHolder.setFormat(PixelFormat.TRANSPARENT)
-        joystickView.setOnTouchListener(OnTouchListener { v, event ->
-            joystickView.onJoystickTouch(event)
+
+        joystickView.setOnTouchListener(OnTouchListener {v, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    if (joystickView.isPressed(event.x, event.y)) {
+                        joystickView.setIsPressed(true)
+                    }
+                }
+                MotionEvent.ACTION_UP -> {
+                    joystickView.setIsPressed(false)
+                    joystickView.resetActuator()
+                    joystickView.updateJoystickPosition()
+                    joystickView.invalidate()
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    if (joystickView.getIsPressed()){
+                        joystickView.setActuator(event.x, event.y)
+                        joystickView.updateJoystickPosition()
+                        joystickView.invalidate()
+                    }
+                }
+            }
+            drawingView.joueur.setSpeed(joystickView.deltaPosX/joystickView.cercleExtRayon, joystickView.deltaPosY/ joystickView.cercleExtRayon)
             true
         })
+    }
 
-
-
-
-        joystickView.invalidate()
-
+    override fun onClick(p0: View?) {
+        when(p0) {
+            is ImageButton ->{
+                drawingView.addBullet()
+            }
+        }
+        // Si on decide d'ajouter d'autres boutons, leur comportement est ici
     }
 }
