@@ -167,45 +167,5 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         // Planifier la prochaine mise à jour
         postInvalidateOnAnimation()
     }
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        val x = event.x
-        val y = event.y
-        when (event.action) {
-            MotionEvent.ACTION_DOWN -> {
-                if (boutonTir.isClicked(x, y)) {
-                    projectileList.add(
-                        Projectile(
-                            context,
-                            joueur.joueurPosition.centerX(),
-                            joueur.joueurPosition.centerY(),
-                            0,
-                            50f
-                        )
-                    )
-                }
-
-                if (joystick.isPressed(x, y)) {
-                    joystick.setIsPressed(true)
-                }
-            }
-
-            MotionEvent.ACTION_UP -> {
-                joystick.setIsPressed(false)
-                joystick.resetActuator()
-                joystick.updateJoystickPosition()
-                invalidate()
-            }
-
-            MotionEvent.ACTION_MOVE -> {
-                if (joystick.getIsPressed()){
-                    joystick.setActuator(x,y)
-                    joystick.updateJoystickPosition()
-                    invalidate()
-                }
-            }
-        }
-        return true
-        //return super.onTouchEvent(event) // Les events ection_move et action_up ne sont pas appelés si on utilise ce retour (j'ai pas trop compir pourquoi mais bon)
-    }
 
 }
