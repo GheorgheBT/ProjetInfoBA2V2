@@ -9,3 +9,16 @@ Mise à jour du 06/04/2023 :
  - j'ai ajouté une nouvelle activité de demarage qui nous permetra de parametrer l'affichage avant de commencer le jeux
   C'est WelcomeActivity avec son fichier xml "activity_welcome"
  - j'ai aussi mis les interactions balles joueur et obstacles mais c'est pas encore tres formel
+
+Mise à jour du 07/04/2023 :
+    - j'ai transformé le joystick en une vue et on le controle dans le main
+    j'ai enlevé le touch listener du drawingview et je l'utilise que pour le
+    joystick(dans main) et bouton tir (qui n'est plus un objet qu'on a créé mais un bouton normal qu'on a override),
+    d'apres ce que j'ai compris en chercheant sur internet, c'est mieux si on différencie les différents composants(vues, objets, etc)
+    et vu que notre Drawingview n'a pas besin de listener car on utilise des boutons et joysticks, j'ai mis le listener sur ceux-ci
+    (et d'ailleurs par cette methode ca evite des etteurs que j'avaia ou j'abais besoin d'appeler le meme objet dans d'autres classes)
+    si on rajoute des boutons supplémentaires, on rajoute le code dans main, la ou se trouve l'annotation
+    -J'ai aussi changé l'affichage du joystick et bouton comme ca ils sont un peu plus joli
+    - Petite note supp: je pense que c'est mieux qu'on fasse le plus possible de fonctions séparées qui interractent dans le code principal,
+    car pour l'instant les codes principaux son souvents en un block sonc quand le github a été mis à jour, ca a provoqué bcp d'erreurs dans mon code
+    du coup en faisant des fonctions indépendantes on a juste a modifier la fonction (et peut etre legerement le code principal) et ca va créer moins d'erreurs

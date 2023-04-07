@@ -7,6 +7,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceView
 import android.view.WindowManager
@@ -34,12 +35,6 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         screenHeight = displayMetrics.heightPixels.toFloat()
     }
 
-
-    val joystick =
-        Joystick(screenHeight / 4f, screenHeight / 1.35f, screenHeight / 14f, screenHeight / 7f)
-
-    val boutonTir = Bouton(context, (screenWidth - 220f), screenHeight / 1.5f, screenHeight / 8f)
-
     val joueur = Joueur(context, 0f, screenHeight / 2f, screenHeight / 8f)
 
     private val projectileList = mutableListOf<Projectile>()
@@ -66,8 +61,6 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         }
 
         if (canvas != null) {
-            joystick.draw(canvas)
-            boutonTir.draw(canvas)
             joueur.draw(canvas, paint, 1000f, 1000f)
 
             // Génère des obstacles toutes les 5 secondes
@@ -123,7 +116,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
                 }
             }
 
-            joueur.updatePosition(joystick)
+            joueur.updatePosition()
 
             ///////////////////////////////////////////////cette partie sera rajoutée dans un thread plus tar
             for (obstacle in obstacleList) {
@@ -167,5 +160,16 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         // Planifier la prochaine mise à jour
         postInvalidateOnAnimation()
     }
-
+    fun addBullet(){
+        projectileList.add(
+            Projectile(
+                context,
+                joueur.joueurPosition.centerX(),
+                joueur.joueurPosition.centerY(),
+                0,
+                50f
+            )
+        )
+        Log.d("TAG", "UYUUUUU")
+    }
 }

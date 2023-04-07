@@ -41,15 +41,14 @@ class Joueur(
         canvas.drawText("Point: $joueurPoint", width, height - 100f, paint)
     }
 
-    fun updatePosition(joystick: Joystick) {
-        vitesseX =
-            joystick.getDeltaPosJoystick()[0] / joystick.cercleExtRayon * vitesseMax// On prend le delta (x et y) du joystick, qu'on normalise (entre 0 et 1)
-        vitesseY = joystick.getDeltaPosJoystick()[1] / joystick.cercleExtRayon * vitesseMax
-
+    fun updatePosition() {
         joueurPosition.right += vitesseX
         joueurPosition.left += vitesseX
         joueurPosition.top += vitesseY
         joueurPosition.bottom += vitesseY
     }
-
+    fun setSpeed(normeX : Float, normeY : Float){
+        vitesseX = normeX * vitesseMax
+        vitesseY = normeY * vitesseMax
+    }
 }
