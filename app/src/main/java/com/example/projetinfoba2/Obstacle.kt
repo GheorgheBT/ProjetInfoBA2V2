@@ -25,7 +25,7 @@ class Obstacle (private val context: Context, private val x: Float, private val 
     private val obstacleImage: Bitmap
     private val obstacleVitesse = -5f // la vitesse en x à laquelle la balle va se deplacer
     private val obstacleDegats = 100
-    private var obstacleOnScreen = true
+    var obstacleOnScreen = true
     init {
         // initialise l'image de l'obstacle avec une valeur aléatoire
         val random = Random().nextInt(listeObstacleImage.size)
@@ -37,7 +37,7 @@ class Obstacle (private val context: Context, private val x: Float, private val 
 
     fun draw(canvas: Canvas) {
         if (obstacleOnScreen) {//dessine la balle dans le rectangle defini plus haut
-            canvas.drawBitmap(
+           canvas.drawBitmap(
                 obstacleImage,
                 null,
                 obstaclePosition,
@@ -46,18 +46,28 @@ class Obstacle (private val context: Context, private val x: Float, private val 
         }
     }
 
-    fun updatePosition() { // actualise la position
-        obstaclePosition.left += obstacleVitesse
-        obstaclePosition.right += obstacleVitesse
+    fun updatePosition() : Boolean { // actualise la position
+        if (obstacleOnScreen){
+            obstaclePosition.left += obstacleVitesse
+            obstaclePosition.right += obstacleVitesse
+            return true
+        }
+        else {
+            return false
+        }
     }
 
-    fun obstacleDestroyed() {
-        obstacleOnScreen = false
-    }
-
-    fun isTouched(x: Float, y: Float): Boolean { // detect si on
+    private fun isTouched(rect : RectF): Boolean { // detect si le un l'obstacle est en contacte avec un autre
+        var x = rect.centerX()
+        var y = rect.centerY()
         return x >= obstaclePosition.left && x <= obstaclePosition.right && y >= obstaclePosition.bottom && y <= obstaclePosition.top
-        //
     }
+
+    fun isOnScreen(screenRect : RectF, objetRect : RectF){ // determine si l'obstacle doit toujour etre affiche
+        if ((obstaclePosition.right< screenRect.left ) || isTouched(objetRect) ){   //!screenRect.contains(obstaclePosition)
+            obstacleOnScreen = false
+        }
+    }
+
 
 }
