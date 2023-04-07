@@ -22,3 +22,5 @@ Mise à jour du 07/04/2023 :
     - Petite note supp: je pense que c'est mieux qu'on fasse le plus possible de fonctions séparées qui interractent dans le code principal,
     car pour l'instant les codes principaux son souvents en un block sonc quand le github a été mis à jour, ca a provoqué bcp d'erreurs dans mon code
     du coup en faisant des fonctions indépendantes on a juste a modifier la fonction (et peut etre legerement le code principal) et ca va créer moins d'erreurs
+
+   - oui pour les fonctions avec trop de lignes de code j'ai change ca pcq c'est pas pretique et c'est dure de sy retrouver j'ai aussi normalement resolu le probleme des des versions

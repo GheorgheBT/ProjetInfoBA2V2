@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.util.DisplayMetrics
-import android.view.MotionEvent
+import android.util.Log
 import android.view.SurfaceView
 import android.view.WindowManager
 import java.util.*
@@ -55,7 +55,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     }
 
     private fun update() {
-        joueur.updatePosition(joystick,screenRect)
+        joueur.updatePosition()
         for (obstacle in obstacleList){
             obstacle.isOnScreen(screenRect,joueur.joueurPosition)
             if (obstacle.updatePosition()){
@@ -121,48 +121,28 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         run()
         postInvalidateOnAnimation()
     }
-
-     private fun run(){
-         if (System.currentTimeMillis() - lastObstacleTime > 2000) {// Génère des obstacles toutes les 5 secondes
-             generateObstacle()
-         }
-         if (System.currentTimeMillis() - lastEnnemiTime > 100000) {// Génère des oiseaux toutes les 10 secondes
-             generateEnnemi()
-         }
-         backgroundMove(backgroundspeed)
-         update()
-     }
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        val x = event.x
-        val y = event.y
-        when (event.action) {
-
-            MotionEvent.ACTION_DOWN -> {
-                if (boutonTir.isClicked(x, y)) {
-                    var projectile = Projectile(context,joueur.joueurPosition.centerX(),joueur.joueurPosition.centerY(), 0, 50f)
-                    projectileList.add(projectile)
-                }
-                if (joystick.isPressed(x, y)) {
-                    joystick.setIsPressed(true)
-                }
-            }
-
-            MotionEvent.ACTION_UP -> {
-                joystick.setIsPressed(false)
-                joystick.resetActuator()
-                joystick.updateJoystickPosition()
-                invalidate()
-            }
-
-            MotionEvent.ACTION_MOVE -> {
-                if (joystick.getIsPressed()){
-                    joystick.setActuator(x,y)
-                    joystick.updateJoystickPosition()
-                    invalidate()
-                }
-            }
+    private fun run(){
+        if (System.currentTimeMillis() - lastObstacleTime > 2000) {// Génère des obstacles toutes les 5 secondes
+            generateObstacle()
         }
-        return true
-        //return super.onTouchEvent(event) // Les events ection_move et action_up ne sont pas appelés si on utilise ce retour (j'ai pas trop compir pourquoi mais bon)
+        if (System.currentTimeMillis() - lastEnnemiTime > 100000) {// Génère des oiseaux toutes les 10 secondes
+            generateEnnemi()
+        }
+        backgroundMove(backgroundspeed)
+        update()
+    }
+
+
+    fun addBullet(){
+        projectileList.add(
+            Projectile(
+                context,
+                joueur.joueurPosition.centerX(),
+                joueur.joueurPosition.centerY(),
+                0,
+                50f
+            )
+        )
+        Log.d("TAG", "UYUUUUU")
     }
 }

@@ -37,18 +37,14 @@ class Joueur(
     }
 
 
-
-    fun updatePosition(joystick: Joystick , screenRect:RectF) {
-            vitesseX =
-                joystick.getDeltaPosJoystick()[0] / joystick.cercleExtRayon * vitesseMax// On prend le delta (x et y) du joystick, qu'on normalise (entre 0 et 1)
-            vitesseY = joystick.getDeltaPosJoystick()[1] / joystick.cercleExtRayon * vitesseMax
-
-            joueurPosition.right += vitesseX
-            joueurPosition.left += vitesseX
-            joueurPosition.top += vitesseY
-            joueurPosition.bottom += vitesseY
-
-
+    fun updatePosition() {
+        joueurPosition.right += vitesseX
+        joueurPosition.left += vitesseX
+        joueurPosition.top += vitesseY
+        joueurPosition.bottom += vitesseY
     }
-
+    fun setSpeed(normeX : Float, normeY : Float){
+        vitesseX = normeX * vitesseMax
+        vitesseY = normeY * vitesseMax
+    }
 }
