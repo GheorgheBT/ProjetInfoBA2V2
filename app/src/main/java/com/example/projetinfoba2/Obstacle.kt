@@ -33,7 +33,7 @@ class Obstacle (private val context: Context, private val x: Float, private val 
     }
 
     val obstaclePosition =
-        RectF(x, y, x + 80, y - 200) // encode la position de la balle dans un rectangle
+        RectF(x, y, x + 200f, y + 200f) // encode la position de la balle dans un rectangle
 
     fun draw(canvas: Canvas) {
         if (obstacleOnScreen) {//dessine la balle dans le rectangle defini plus haut

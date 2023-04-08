@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.SurfaceView
 import android.view.WindowManager
 import java.util.*
@@ -55,14 +54,15 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     private fun update() {
         joueur.updatePosition(0f,0f,screenWidth,screenHeight)
         for (obstacle in obstacleList){
-            obstacle.isOnScreen(screenRect,joueur.joueurPosition)
-            if (obstacle.updatePosition()){
+            obstacle.isOnScreen(screenRect,joueur.joueurPosition) // le joueur demande à l'obstacle si ils sont en contacte si oui "obstacleOnScreen" passe en false
+            if (obstacle.updatePosition()){ // si il n'y pas contacte  l'obstacle se met a jour
                 for (projectile in projectileList){
-                    projectile.isOnScreen(screenRect,obstacle)
-                    if(!projectile.updatePositionBalle()){
+                    projectile.isOnScreen(screenRect,obstacle) // le projectile demande a l'obstacle si ils sont en contacte ou pas si c'est la cas "projectileOnscreen" passe ne false
+                    if(!projectile.updatePositionBalle()){ // le cas ou il y'a contacte => la position du projectile refuse de se mettre a jour => soit il a toucher un obstacle soit il est hors du screen
                         projectileToRemove.add(projectile)
-                        if(!obstacle.obstacleOnScreen) {
+                        if(!obstacle.obstacleOnScreen) { //le cas ou le projectile a touche l'obstacle
                            obstacleToRemove.add(obstacle)
+                            println("ok1")
                        }
                     }
                 }
@@ -106,9 +106,9 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
                 obstacle.draw(canvas)
             }
             // Dessine tous les oiseaux existants
-            for (ennemi in ennemiList) {
-                ennemi.draw(canvas)
-            }
+           //for (ennemi in ennemiList) {
+           //     ennemi.draw(canvas)
+            //}
             // dessine tous les projectiles existants
             for (projetile in projectileList) {
                 projetile.draw(canvas)
