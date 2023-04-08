@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.RectF
+import android.util.Log
 import java.util.*
 
 class Obstacle (private val context: Context, private val x: Float, private val y: Float) {

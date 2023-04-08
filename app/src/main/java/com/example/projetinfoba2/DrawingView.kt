@@ -29,7 +29,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         screenHeight = displayMetrics.heightPixels.toFloat()
     }
 
-    val screenRect = RectF(0f, 0f ,screenWidth, screenHeight )
+    private val screenRect = RectF(0f, 0f ,screenWidth, screenHeight)
     val joueur = Joueur(context, 0f, screenHeight / 2f, screenHeight / 8f)
 
     private val projectileList = mutableListOf<Projectile>()
@@ -41,7 +41,6 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
     var obstacleList = mutableListOf<Obstacle>()
     var obstacleToRemove = mutableListOf<Obstacle>()
-
     var lastObstacleTime = 0L
 
     private fun backgroundMove(speed: Float){
@@ -52,7 +51,9 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     }
 
     private fun update() {
+        joueur.getCollisionSide(obstacleList)
         joueur.updatePosition(0f,0f,screenWidth,screenHeight)
+
         for (obstacle in obstacleList){
             obstacle.isOnScreen(screenRect,joueur.joueurPosition) // le joueur demande à l'obstacle si ils sont en contacte si oui "obstacleOnScreen" passe en false
             if (obstacle.updatePosition()){ // si il n'y pas contacte  l'obstacle se met a jour
@@ -88,7 +89,6 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         lastObstacleTime = System.currentTimeMillis()
         val obstacle = Obstacle(context, screenWidth, y1.toFloat())
         obstacleList.add(obstacle)
-
     }
 
     private fun generateEnnemi(){
@@ -115,6 +115,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
             }
         }
         run()
+        update()
         postInvalidateOnAnimation()
     }
     private fun run(){
@@ -125,7 +126,6 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
             generateEnnemi()
         }
         backgroundMove(backgroundspeed)
-        update()
     }
 
 

@@ -16,7 +16,7 @@ Mise à jour du 07/04/2023 :
     joystick(dans main) et bouton tir (qui n'est plus un objet qu'on a créé mais un bouton normal qu'on a override),
     d'apres ce que j'ai compris en chercheant sur internet, c'est mieux si on différencie les différents composants(vues, objets, etc)
     et vu que notre Drawingview n'a pas besin de listener car on utilise des boutons et joysticks, j'ai mis le listener sur ceux-ci
-    (et d'ailleurs par cette methode ca evite des etteurs que j'avaia ou j'abais besoin d'appeler le meme objet dans d'autres classes)
+    (et d'ailleurs par cette methode ca evite des erreurs que j'avais ou j'avais besoin d'appeler le meme objet dans d'autres classes)
     si on rajoute des boutons supplémentaires, on rajoute le code dans main, la ou se trouve l'annotation
     -J'ai aussi changé l'affichage du joystick et bouton comme ca ils sont un peu plus joli
     - Petite note supp: je pense que c'est mieux qu'on fasse le plus possible de fonctions séparées qui interractent dans le code principal,
@@ -24,3 +24,17 @@ Mise à jour du 07/04/2023 :
     du coup en faisant des fonctions indépendantes on a juste a modifier la fonction (et peut etre legerement le code principal) et ca va créer moins d'erreurs
 
    - oui pour les fonctions avec trop de lignes de code j'ai change ca pcq c'est pas pretique et c'est dure de sy retrouver j'ai aussi normalement resolu le probleme des des versions
+
+Mise à jour du 08/04/2023 :
+    - concernant le signe dans le rectf de l'obstacle, android studio considere les x positifs vers la droite et les y positifs vers le bas (0,0) coin supérieur gauche.
+    Donc en mettant un moins, la valeur "bottom" se trouve au dessus de la valeur "top", du coup ca dessine pas.
+    - La detection de collision entre joueur et obstacle se fait dans la classe joueur (d'un point de vue pratique je pense que c'est mieux, et aussi plus facile a comprendre)
+    - Vu que le code m'a pris pas mal de temps, je n'ai pas fait la detection de collision entre balle et obstacle cassable mais ma démarche est :
+        1. On fait une classe fille "Objet cassable", qui hérite de objet (ou si on veut pas faire de classe on ajoute le parametre "isDestructible" à la classe objet, donc a voir ce qu'on préfère)
+        2. On ajoute une détection de collision aux balles, de la meme facon que le joueur(le coté de la collision n'est plus nécessaire ici), et si la collision a lieu, et l'objet est destructible (vérification de type ou de Boolean si on ne fait pas d'héritage), on appelle la fonction destroy de l'obstacle destructible(ce qui l'enleve de la liste)
+        3. On appelle ensuite la fonction destroy de la balle (qui l'enleve de la liste)
+    - Le projectile ennemi devrait par contre etre une autre type de classe (peut etre souclasse de projectile, dans lauquelle on override la fonction detecter collision pour ne detecter que le joueur et en cas de collision, le joueur perd une vie)
+    - Dans le drawingview de la ligne 57 a 72 il y a la gestion des balles et obstacle, j'ai peur de casser des trucs en modifiant les "if" mais ce qu'il faut c'est juste de enlever la detection de collision du mur, et mettre juste l'affichage comme c'est fait pour les ennemis plus bas.
+    - Dans la classe obstacle, il faut enlever la fonction istouched, car le code de collision a été déplacé dans joueur et dans la fonction isOnScreen il faut aussi enlever la 2e condition
+    mais les 2 dernier points c'est mieux que tu les fasse car je ne veux pas faire d'erreurs
+    Qu'est ce que tu en penses?
