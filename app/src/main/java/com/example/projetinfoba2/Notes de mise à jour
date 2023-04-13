@@ -38,3 +38,7 @@ Mise à jour du 08/04/2023 :
     - Dans la classe obstacle, il faut enlever la fonction istouched, car le code de collision a été déplacé dans joueur et dans la fonction isOnScreen il faut aussi enlever la 2e condition
     mais les 2 dernier points c'est mieux que tu les fasse car je ne veux pas faire d'erreurs
     Qu'est ce que tu en penses?
+
+Mise à jour du 13/04/2023 :
+    - j'ai modifié la classe projectile selon les propositions ci-dessus ( j'ai ajouté une methode getCollison dans la classe projcetile et une methode  Destroy dans le drawingView (qui se charge d'actualiser les listes) ) les obstacles on maintenant un attribut destructible
+    - j'ai rajouté un sembant d'effet de rebond au du joueur au contacte des obstacle comme ca

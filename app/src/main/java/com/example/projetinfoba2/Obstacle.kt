@@ -5,11 +5,11 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.RectF
-import android.util.Log
 import java.util.*
 
-class Obstacle (private val context: Context, private val x: Float, private val y: Float) {
+class Obstacle ( context: Context,  x: Float, y: Float) {
 
+    //Images des obstacles
     private val listeObstacleImage = intArrayOf(
         R.drawable.par_1,
         R.drawable.par_2,
@@ -21,54 +21,56 @@ class Obstacle (private val context: Context, private val x: Float, private val 
         R.drawable.par_8,
         R.drawable.par_9,
         R.drawable.par_10
-    ) // liste des images des balles
-    private val obstacleTaille = 100f
-    private val obstacleImage: Bitmap
-    private val obstacleVitesse = -5f // la vitesse en x à laquelle la balle va se deplacer
-    private val obstacleDegats = 100
-    var obstacleOnScreen = true
-    init {
-        // initialise l'image de l'obstacle avec une valeur aléatoire
-        val random = Random().nextInt(listeObstacleImage.size)
-        obstacleImage = BitmapFactory.decodeResource(context.resources, listeObstacleImage[random])
-    }
+    )
+    //Obstacles destructibles
+    private val listeObstacleDestuctible = intArrayOf(
+        R.drawable.par_2,
+        R.drawable.par_4,
+        R.drawable.par_6,
+        R.drawable.par_8,
+        R.drawable.par_10
+    )
 
-    val obstaclePosition =
-        RectF(x, y, x + 200f, y + 200f) // encode la position de la balle dans un rectangle
+    //Aspect de l'obstacle
+    private val Image: Bitmap
+
+    // vitesse de l'obstacle
+    var Vitesse = -5f
+
+    // Degats causés par le contacte avec un obstacle
+    private val Degats = 100
+
+    //Proprieté de destructibilité
+    var isDestructible = false
+
+    //Proprieté d'affichage
+    var isOnScreen = true
+    init {// initialise l'image de l'obstacle de manière  aléatoire
+        val random = Random().nextInt(listeObstacleImage.size)
+        Image = BitmapFactory.decodeResource(context.resources, listeObstacleImage[random])
+        if ( listeObstacleDestuctible.contains(listeObstacleImage[random])){// caracterisation de la destructibilité
+            isDestructible = true
+        }
+    }
+    // position de l'obstacle (dans un RectF)
+    val Position = RectF(x, y, x  + Image.width, y + Image.height) // encode la position
 
     fun draw(canvas: Canvas) {
-        if (obstacleOnScreen) {//dessine la balle dans le rectangle defini plus haut
-           canvas.drawBitmap(
-                obstacleImage,
-                null,
-                obstaclePosition,
-                null
-            )
+        //dessine l'obstacle dans le rectangle defini plus haut
+        if (isOnScreen) {
+           canvas.drawBitmap(Image, null, Position, null)
         }
     }
 
-    fun updatePosition() : Boolean { // actualise la position
-        if (obstacleOnScreen){
-            obstaclePosition.left += obstacleVitesse
-            obstaclePosition.right += obstacleVitesse
-            return true
+    fun updatePosition(screenRect : RectF){
+        // actualise la position
+        if (Position.right< screenRect.left) {
+            isOnScreen = false
         }
-        else {
-            return false
-        }
-    }
-
-    private fun isTouched(rect : RectF): Boolean { // detect si le un l'obstacle est en contacte avec un autre
-        var x = rect.centerX()
-        var y = rect.centerY()
-        return x >= obstaclePosition.left && x <= obstaclePosition.right && y >= obstaclePosition.bottom && y <= obstaclePosition.top
-    }
-
-    fun isOnScreen(screenRect : RectF, objetRect : RectF){ // determine si l'obstacle doit toujour etre affiche
-        if ((obstaclePosition.right< screenRect.left ) || isTouched(objetRect) ){   //!screenRect.contains(obstaclePosition)
-            obstacleOnScreen = false
+        if (isOnScreen) {
+            Position.left += Vitesse
+            Position.right += Vitesse
         }
     }
-
 
 }
