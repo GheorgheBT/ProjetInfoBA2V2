@@ -2,6 +2,8 @@ package com.example.projetinfoba2
 
 import android.content.Context
 import android.graphics.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlin.math.abs
 
 
@@ -20,7 +22,7 @@ class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float)
     private val Point = 0
 
     //Vitesses du joueur
-    private val vitesseMax = 20f
+    private val vitesseMax = 15f
     private var vitesseX: Float = 0f
     private var vitesseY: Float = 0f
 
@@ -73,14 +75,17 @@ class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float)
         var collidedObject = RectF()
         collisionSide = "NoCollision"
 
-
-        for(obstacle in obstacleList){ //Parcours de tous les obstacles de la liste d'obstacles
-            vitesseRebond = obstacle.Vitesse
-            val rectF = obstacle.Position // Assignation des "RectF" des obstacles
-            //Detection si il y a collision
-            if (Position.right > rectF.left && Position.left < rectF.right && Position.top < rectF.bottom && Position.bottom > rectF.top) {
-                isColliding = true
-                collidedObject = rectF
+        runBlocking {   //On bloque la continuation du thread pendant le lancement des coroutines detectant les collisions
+            for (obstacle in obstacleList) { //Parcours de tous les obstacles de la liste d'obstacles
+                launch { // Pour chaque boucle, lancement d'une coroutine pour que la detection de collision se fasse plus vite
+                    vitesseRebond = obstacle.Vitesse
+                    val rectF = obstacle.Position // Assignation des "RectF" des obstacles
+                    //Detection si il y a collision
+                    if (Position.right > rectF.left && Position.left < rectF.right && Position.top < rectF.bottom && Position.bottom > rectF.top) {
+                        isColliding = true
+                        collidedObject = rectF
+                    }
+                }
             }
         }
         //Si il y a collision, détermination du coté de la collision (entre joueur et obstacle)

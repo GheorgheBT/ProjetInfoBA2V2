@@ -42,3 +42,14 @@ Mise à jour du 08/04/2023 :
 Mise à jour du 13/04/2023 :
     - j'ai modifié la classe projectile selon les propositions ci-dessus ( j'ai ajouté une methode getCollison dans la classe projcetile et une methode  Destroy dans le drawingView (qui se charge d'actualiser les listes) ) les obstacles on maintenant un attribut destructible
     - j'ai rajouté un sembant d'effet de rebond au du joueur au contacte des obstacle comme ca
+
+Mise à jour du 14/04/2023 :
+    - Ajout de 2 coroutines simples lors de la detection de tous les objets pour les collisions (dans la classe joueur et projectile)
+    - Modification du fonctionnement du bouton tir : on peut tenir appuyer et le bouton tire a un certain intervalle
+    de plus, si on spamme les balles ne spawnent pas trop fréquemment
+    - ajout du nombre de fps pour avoir une idée des performances
+    - dans le drawingview j'ai l'impression que la division en fonction update et run n'est pas nécessaire, on pourrait peut ettre les fusionner ?
+    - Je penseais a transformer la detection de collision en une initerface, et la classe joueur et projectile l'utiliserai ? tu en penses quoi? (je peux m'en occuper si on le fait)
+    - Je penseais a donner plus de structure/ logique aux obstacles qui aparaissent( tout en gardant l'aspect aléatoire). (je peux aussi le faire)
+    - j'ai modifié les vitesses des balles(15->20) et joueur(20-15) comme ca le joueur ne dépasse pas les balles et ne bouge pas trop vite
+    -

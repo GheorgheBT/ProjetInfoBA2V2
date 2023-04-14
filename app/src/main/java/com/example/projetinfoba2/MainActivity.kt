@@ -9,34 +9,50 @@ import android.view.*
 import android.view.View.OnTouchListener
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.TextView
 
 
-class MainActivity: Activity(), View.OnClickListener{
+class MainActivity: Activity(){
 
     lateinit var drawingView: DrawingView
     lateinit var joystickView: JoystickView
     lateinit var boutonTir : ImageButton
+    lateinit var fpsLabel : TextView // Pour voir nos fsp (seulement durant le developpement)
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Permet de mettre le jeu en plein ecran
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
+        // Gestion du texte des fps
+        fpsLabel = findViewById(R.id.fpsText)
+
+        // Gesion de la vue du jeu
         drawingView = findViewById(R.id.vMain)
         drawingView.setWillNotDraw(false)
+        drawingView.fpsLabel = fpsLabel
         drawingView.invalidate()
 
         //Gestion du bouton
         boutonTir = findViewById(R.id.boutonTir)
-        boutonTir.setOnClickListener(this)
 
-        //Affichage du joystick
-        joystickView = findViewById<JoystickView>(R.id.joystickView)
-        joystickView.setWillNotDraw(false)
-        joystickView.setZOrderOnTop(true)
-        val sfhTrackHolder: SurfaceHolder = joystickView.holder
-        sfhTrackHolder.setFormat(PixelFormat.TRANSPARENT)
+        boutonTir.setOnTouchListener { view, event ->
+            when (event.action){
+                MotionEvent.ACTION_DOWN -> {
+                    drawingView.isShooting = true
+                }
+                MotionEvent.ACTION_UP -> {
+                    drawingView.isShooting = false
+                }
+            }
+            true
+        }
+
+        //Gestion du joystick
+        joystickView = findViewById(R.id.joystickView)
 
         joystickView.setOnTouchListener(OnTouchListener {v, event ->
             when (event.action) {
@@ -64,12 +80,4 @@ class MainActivity: Activity(), View.OnClickListener{
         })
     }
 
-    override fun onClick(p0: View?) {
-        when(p0) {
-            is ImageButton ->{
-                drawingView.addBullet()
-            }
-        }
-        // Si on decide d'ajouter d'autres boutons, leur comportement est ici
-    }
 }

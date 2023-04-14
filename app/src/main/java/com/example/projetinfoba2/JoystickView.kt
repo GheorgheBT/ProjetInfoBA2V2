@@ -26,8 +26,7 @@ class JoystickView @JvmOverloads constructor(context: Context, attributes: Attri
     private val cercleExtPaint : Paint = Paint()
 
     //Données sur l'existance des boutons
-    private var joystickIntOnscreen : Boolean = true    //J'ai vu que les objets ont ce type de paramètre, pour les joystics je pense que ca restera toujours true donc c'est pas forcement utile mais pour l'instant je le laisse
-    private var joystickExtOnscreen : Boolean = true
+    private var joystickOnscreen : Boolean = true    //J'ai vu que les objets ont ce type de paramètre, pour les joystics je pense que ca restera toujours true donc c'est pas forcement utile mais pour l'instant je le laisse
 
     //Donnée si on appuie sur le joystick
     private var isJoystickPressed : Boolean = false
@@ -39,6 +38,10 @@ class JoystickView @JvmOverloads constructor(context: Context, attributes: Attri
     init {
         cercleIntPaint.color = context.getColor(R.color.JoystickIntColor)
         cercleExtPaint.color = context.getColor(R.color.JoystickExtColor)
+
+        holder.setFormat(PixelFormat.TRANSPARENT) // Pour mettre l'arrière du joystick transparent
+        setZOrderOnTop(true)
+        setWillNotDraw(false) // permet d'activer Ondraw
     }
 
     fun isPressed (posAppuiX: Float, posAppuiY : Float) : Boolean{
@@ -90,7 +93,7 @@ class JoystickView @JvmOverloads constructor(context: Context, attributes: Attri
 
         canvas?.drawColor(Color.TRANSPARENT)
 
-        if (joystickExtOnscreen) {//dessine le grand cercle du joystick
+        if (joystickOnscreen) {//dessine le grand cercle du joystick
             canvas?.drawCircle(
                 cercleExtPosX,
                 cercleExtPosY,
@@ -98,7 +101,7 @@ class JoystickView @JvmOverloads constructor(context: Context, attributes: Attri
                 cercleExtPaint
             )
         }
-        if (joystickIntOnscreen) {//dessine le petit cercle du joystick
+        if (joystickOnscreen) {//dessine le petit cercle du joystick
             canvas?.drawCircle(
                 cercleIntPosX,
                 cercleIntPosY,

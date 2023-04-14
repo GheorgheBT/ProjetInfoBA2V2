@@ -2,10 +2,12 @@ package com.example.projetinfoba2
 
 import android.content.Context
 import android.graphics.*
+import android.os.SystemClock
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.view.SurfaceView
 import android.view.WindowManager
+import android.widget.TextView
 import java.util.*
 
 class DrawingView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0): SurfaceView(context, attributes,defStyleAttr) {
@@ -43,6 +45,16 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     var obstacleToRemove = mutableListOf<Obstacle>()
     var lastObstacleTime = 0L
 
+    //Variables pour la gesion des fps
+    private var prevTime : Long = 0 // Sert a calculer l'intervalle entre chaque frame
+    lateinit var fpsLabel : TextView
+    var deltas = mutableListOf<Float>() // liste des n fps pour avoir une valeur stable
+
+    // Variables pour la gestion des tirs
+    var isShooting = false // determine si le joueur doit tirer
+    private var prevShootTime : Long = 0 // permet d'utiliser un intervalle de tir
+
+
     private fun backgroundMove(speed: Float){
         backgroundOffset -= speed//
         if (backgroundOffset < -(scaledBackgroundImage.width - screenWidth)) { //
@@ -72,6 +84,10 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         //        ennemiToRemove.add(ennemi)
         //    }
         //}
+        getFrameRate()
+        if (isShooting){
+            addBullet(400)
+        }
     }
 
     fun destroy(){
@@ -120,7 +136,6 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
             }
         }
         run()
-
         postInvalidateOnAnimation()
     }
     private fun run(){
@@ -135,16 +150,31 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         destroy()
     }
 
-
-    fun addBullet(){
-        projectileList.add(
-            Projectile(
-                context,
-                joueur.Position.centerX(),
-                joueur.Position.centerY(),
-                0,
-                screenHeight/35f
+    private fun addBullet(intervalle : Long){
+        val currentShootTime = SystemClock.elapsedRealtime()
+        if (currentShootTime - prevShootTime > intervalle) {
+            projectileList.add(
+                Projectile(
+                    context,
+                    joueur.Position.centerX(),
+                    joueur.Position.centerY(),
+                    0,
+                    screenHeight / 35f
+                )
             )
-        )
+            prevShootTime = currentShootTime
+        }
+    }
+
+    private fun getFrameRate(){
+        val currTime = SystemClock.elapsedRealtime()
+        val deltaTime =  (currTime - prevTime).toFloat()/1000
+        deltas.add(1f/deltaTime)
+        if (deltas.size > 8){
+            deltas.removeAt(0)
+        }
+        val average = deltas.average()
+        fpsLabel.text = average.toInt().toString()
+        prevTime = currTime
     }
 }

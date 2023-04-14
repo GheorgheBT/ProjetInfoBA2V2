@@ -5,6 +5,8 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.RectF
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 
 class Projectile( context: Context, x: Float,y: Float,  numeroProjectile: Int, projectileTaille: Float) {
@@ -15,7 +17,7 @@ class Projectile( context: Context, x: Float,y: Float,  numeroProjectile: Int, p
 
     private val Position = RectF(x, y, x + projectileTaille, y + projectileTaille) // encode la position de la balle dans un rectangle
 
-    private val Vitesse = 15f // la vitesse eb x à laquelle la balle va se deplacer
+    private val Vitesse = 20f // la vitesse eb x à laquelle la balle va se deplacer
 
     private val Degats = 100
 
@@ -45,11 +47,15 @@ class Projectile( context: Context, x: Float,y: Float,  numeroProjectile: Int, p
         val rightX= Position.right
         val centerY = Position.centerY()
 
-        for (obstacle in obstacleList){
-            if (rightX>= obstacle.Position.left && rightX <= obstacle.Position.right &&  centerY >= obstacle.Position.top  && centerY <= obstacle.Position.bottom ){
-                isOnScreen = false
-                if (obstacle.isDestructible){
-                    obstacleToRemove.add(obstacle)
+        runBlocking {   //On bloque la continuation du thread pendant le lancement des coroutines detectant les collisions
+            for (obstacle in obstacleList) {
+                launch {// Pour chaque boucle, lancement d'une coroutine pour que la detection de collision se fasse plus vite
+                    if (rightX >= obstacle.Position.left && rightX <= obstacle.Position.right && centerY >= obstacle.Position.top && centerY <= obstacle.Position.bottom) {
+                        isOnScreen = false
+                        if (obstacle.isDestructible) {
+                            obstacleToRemove.add(obstacle)
+                        }
+                    }
                 }
             }
         }
