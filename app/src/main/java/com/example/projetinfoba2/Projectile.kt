@@ -59,14 +59,6 @@ class Projectile( context: Context, x: Float,y: Float,  numeroProjectile: Int, p
                 }
             }
         }
-        //destroy(obstacleList , obstacleToRemove)
     }
-
-    //private fun destroy (obstacleList : MutableList<Obstacle>, obstacleToRemove: MutableList<Obstacle> ){
-        //supprime les obstacles qui ne sont plus atifs de la liste des obstacles actifs
-    //    obstacleList.removeAll(obstacleToRemove)
-    //    obstacleToRemove.clear()
-    //
-    //}
 
 }

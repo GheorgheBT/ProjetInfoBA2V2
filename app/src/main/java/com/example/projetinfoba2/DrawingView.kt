@@ -1,5 +1,6 @@
 package com.example.projetinfoba2
 
+import android.app.AlertDialog
 import android.content.Context
 import android.graphics.*
 import android.os.SystemClock
@@ -11,6 +12,10 @@ import android.widget.TextView
 import java.util.*
 
 class DrawingView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0): SurfaceView(context, attributes,defStyleAttr) {
+
+    var drawing = true
+
+
 
     private var screenWidth = 0f// Largeur de l'écran en pixels
     private var screenHeight = 0f // Hauteur de l'écran en pixels
@@ -78,12 +83,12 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         for (obstacle in obstacleList){
             obstacle.updatePosition(screenRect)
         }
-        //for (ennemi in ennemiList){
-        //    ennemi.isOnScreen(screenRect)
-        //    if (!ennemi.updatePosition()) {
-        //        ennemiToRemove.add(ennemi)
-        //    }
-        //}
+        for (ennemi in ennemiList){
+            ennemi.isOnScreen(screenRect)
+           if (!ennemi.updatePosition()) {
+               ennemiToRemove.add(ennemi)
+           }
+        }
         getFrameRate()
         if (isShooting){
             addBullet(400)
@@ -111,12 +116,12 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
     private fun generateEnnemi(){
         lastEnnemiTime = System.currentTimeMillis()
-        val ennemi = Ennemi(context, 0f, screenHeight / 2)
+        val ennemi = Ennemi(context, 0f, screenHeight / 20)
         ennemiList.add(ennemi)
     }
 
     override fun onDraw(canvas: Canvas?) {
-        if (canvas != null) {
+        if (canvas != null && drawing ) {
             canvas.drawBitmap(scaledBackgroundImage, backgroundOffset, 0f, null)
             joueur.draw(canvas, paint, 1000f, 1000f)
 
@@ -126,19 +131,19 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
             }
 
             // Dessine tous les oiseaux existants
-           //for (ennemi in ennemiList) {
-           //     ennemi.draw(canvas)
-            //}
-            // dessine tous les projectiles existants
+            for (ennemi in ennemiList) {
+                ennemi.draw(canvas)
+            }
 
+            // dessine tous les projectiles existants
             for (projetile in projectileList) {
                 projetile.draw(canvas)
             }
+            postInvalidateOnAnimation()
         }
         run()
-        postInvalidateOnAnimation()
     }
-    private fun run(){
+    fun run(){
         if (System.currentTimeMillis() - lastObstacleTime > 2000) {// Génère des obstacles toutes les 5 secondes
             generateObstacle()
         }
@@ -148,6 +153,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         backgroundMove(backgroundspeed)
         update()
         destroy()
+        detectEndGame()
     }
 
     private fun addBullet(intervalle : Long){
@@ -177,4 +183,39 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         fpsLabel.text = average.toInt().toString()
         prevTime = currTime
     }
+
+    private fun showScoreDialog(score: Int, onRestartGame: () -> Unit) {
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle("Score")
+        builder.setMessage("Votre score est de $score")
+
+        builder.setPositiveButton("Nouvelle partie") { dialog, which ->
+            onRestartGame()
+        }
+
+        builder.setNegativeButton("Quitter") { dialog, which ->
+            dialog.dismiss()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+    fun endGame(score: Int) {
+        showScoreDialog(score) {
+            println("ok")
+            // redémarrer le jeu ici
+        }
+    }
+
+    //  détecte la fin du jeu
+    fun detectEndGame() {
+        if (joueur.Vie == 0  ) {
+            drawing = false
+            endGame(joueur.Point) // afficher la boîte de dialogue
+        }
+    }
+
+
+
 }
