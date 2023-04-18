@@ -10,11 +10,13 @@ import android.view.SurfaceView
 import android.view.WindowManager
 import android.widget.TextView
 import java.util.*
+import java.util.concurrent.atomic.AtomicBoolean
 
 class DrawingView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0): SurfaceView(context, attributes,defStyleAttr) {
 
-    var drawing = true
 
+    private var drawing= AtomicBoolean(true)
+    private var restartPending = false
 
 
     private var screenWidth = 0f// Largeur de l'écran en pixels
@@ -121,7 +123,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     }
 
     override fun onDraw(canvas: Canvas?) {
-        if (canvas != null && drawing ) {
+        if (canvas != null) {
             canvas.drawBitmap(scaledBackgroundImage, backgroundOffset, 0f, null)
             joueur.draw(canvas, paint, 1000f, 1000f)
 
@@ -140,6 +142,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
                 projetile.draw(canvas)
             }
             postInvalidateOnAnimation()
+
         }
         run()
     }
@@ -154,20 +157,14 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         update()
         destroy()
         detectEndGame()
+
     }
 
     private fun addBullet(intervalle : Long){
         val currentShootTime = SystemClock.elapsedRealtime()
         if (currentShootTime - prevShootTime > intervalle) {
-            projectileList.add(
-                Projectile(
-                    context,
-                    joueur.Position.centerX(),
-                    joueur.Position.centerY(),
-                    0,
-                    screenHeight / 35f
-                )
-            )
+            var projectile = Projectile(context, joueur.Position.centerX(), joueur.Position.centerY(), 0, screenHeight / 35f)
+            projectileList.add( projectile)
             prevShootTime = currentShootTime
         }
     }
@@ -184,38 +181,39 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         prevTime = currTime
     }
 
+
+
     private fun showScoreDialog(score: Int, onRestartGame: () -> Unit) {
         val builder = AlertDialog.Builder(context)
         builder.setTitle("Score")
         builder.setMessage("Votre score est de $score")
-
-        builder.setPositiveButton("Nouvelle partie") { dialog, which ->
+        builder.setPositiveButton("Nouvelle partie") { _, _ ->
             onRestartGame()
         }
-
-        builder.setNegativeButton("Quitter") { dialog, which ->
+        builder.setNegativeButton("Quitter") { dialog, _ ->
             dialog.dismiss()
         }
-
         val dialog = builder.create()
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.setOnDismissListener {
+            drawing.compareAndSet(false, true)
+        }
         dialog.show()
     }
 
-    fun endGame(score: Int) {
-        showScoreDialog(score) {
-            println("ok")
-            // redémarrer le jeu ici
-        }
-    }
-
-    //  détecte la fin du jeu
     fun detectEndGame() {
-        if (joueur.Vie == 0  ) {
-            drawing = false
-            endGame(joueur.Point) // afficher la boîte de dialogue
+        if (joueur.Vie == 0 && drawing.compareAndSet(true, false)) {
+            showScoreDialog(joueur.Point) { restartGame() }
         }
     }
 
-
-
+    fun restartGame() {
+        obstacleList.clear()
+        ennemiList.clear()
+        projectileList.clear()
+        joueur.Position.top = screenHeight / 2
+        joueur.Position.left = 0f
+        joueur.Vie = 5
+        joueur.Point = 0
+    }
 }

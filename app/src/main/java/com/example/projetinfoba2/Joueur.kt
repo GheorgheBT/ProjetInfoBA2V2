@@ -16,11 +16,11 @@ class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float)
     var Position = RectF(x, y, x + joueurTaille, y + joueurTaille) // position du joueur encodé dans un rectangle
 
     //Vie du joueur
-    var Vie = 5
+    var Vie = 0
 
 
     //point du joueur
-    val Point = 0
+    var Point = 5
 
     //Vitesses du joueur
     private val vitesseMax = 15f
