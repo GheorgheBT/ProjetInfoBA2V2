@@ -2,12 +2,11 @@ package com.example.projetinfoba2
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.graphics.PixelFormat
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.View.OnTouchListener
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 
@@ -18,7 +17,7 @@ class MainActivity: Activity(){
     lateinit var joystickView: JoystickView
     lateinit var boutonTir : ImageButton
     lateinit var fpsLabel : TextView // Pour voir nos fsp (seulement durant le developpement)
-
+    var endGameAlertDialog: AlertDialog? = null
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,6 +77,29 @@ class MainActivity: Activity(){
             drawingView.joueur.setSpeed(joystickView.deltaPosX/joystickView.cercleExtRayon, joystickView.deltaPosY/ joystickView.cercleExtRayon)
             true
         })
+
+        // je rajoute ca ici juste pour les tests mais on va le programmer proprement
+        if (drawingView.joueur.Vie == 0){
+            showScoreDialog()
+            endGameAlertDialog?.show()
+        }
     }
 
+
+    fun showScoreDialog() {
+        drawingView = findViewById(R.id.vMain)
+
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Score")
+        builder.setMessage("Votre score est de")
+        builder.setPositiveButton("Nouvelle partie") { _: DialogInterface, _: Int ->
+            drawingView.restartGame()
+            drawingView.upadate = true
+        }
+        builder.setNegativeButton("Quitter ") { _: DialogInterface, _: Int ->
+            finish()
+        }
+        endGameAlertDialog = builder.create()
+        endGameAlertDialog?.setCanceledOnTouchOutside(false)
+    }
 }

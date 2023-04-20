@@ -1,6 +1,5 @@
 package com.example.projetinfoba2
 
-import android.app.AlertDialog
 import android.content.Context
 import android.graphics.*
 import android.os.SystemClock
@@ -10,13 +9,12 @@ import android.view.SurfaceView
 import android.view.WindowManager
 import android.widget.TextView
 import java.util.*
-import java.util.concurrent.atomic.AtomicBoolean
 
 class DrawingView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0): SurfaceView(context, attributes,defStyleAttr) {
 
 
-    private var drawing= AtomicBoolean(true)
-    private var restartPending = false
+    private var drawing= true
+     var upadate  = true
 
 
     private var screenWidth = 0f// Largeur de l'écran en pixels
@@ -154,9 +152,12 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
             generateEnnemi()
         }
         backgroundMove(backgroundspeed)
-        update()
-        destroy()
-        detectEndGame()
+        if (upadate){
+            update()
+            destroy()
+        }
+
+       detectEndGame()
 
     }
 
@@ -182,28 +183,9 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     }
 
 
-
-    private fun showScoreDialog(score: Int, onRestartGame: () -> Unit) {
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle("Score")
-        builder.setMessage("Votre score est de $score")
-        builder.setPositiveButton("Nouvelle partie") { _, _ ->
-            onRestartGame()
-        }
-        builder.setNegativeButton("Quitter") { dialog, _ ->
-            dialog.dismiss()
-        }
-        val dialog = builder.create()
-        dialog.setCanceledOnTouchOutside(false)
-        dialog.setOnDismissListener {
-            drawing.compareAndSet(false, true)
-        }
-        dialog.show()
-    }
-
     fun detectEndGame() {
-        if (joueur.Vie == 0 && drawing.compareAndSet(true, false)) {
-            showScoreDialog(joueur.Point) { restartGame() }
+        if (joueur.Vie == 0 ) {
+            upadate = false
         }
     }
 

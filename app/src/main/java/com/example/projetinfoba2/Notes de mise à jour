@@ -52,4 +52,8 @@ Mise à jour du 14/04/2023 :
     - Je penseais a transformer la detection de collision en une initerface, et la classe joueur et projectile l'utiliserai ? tu en penses quoi? (je peux m'en occuper si on le fait)
     - Je penseais a donner plus de structure/ logique aux obstacles qui aparaissent( tout en gardant l'aspect aléatoire). (je peux aussi le faire)
     - j'ai modifié les vitesses des balles(15->20) et joueur(20-15) comme ca le joueur ne dépasse pas les balles et ne bouge pas trop vite
-    -
+
+Mise a jour du 20/04/2022:
+    - j'ai ajouté la methode de la boite de dialogue de fin de jeu dans la MainActivity apres je sais pas si c'est la qu'on doit la mettre mais vu que c'est aussi un vue je me suis proposé de la metre la
+    et puis c'est plus facile a programmer comme ca
+    -il faudra aussi correctement implementer la maniere dont elle va se declancher pcq pour l'instant c'est du bricolage
