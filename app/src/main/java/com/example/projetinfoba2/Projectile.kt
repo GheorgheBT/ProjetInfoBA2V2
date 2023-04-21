@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 
-class Projectile( context: Context, x: Float,y: Float,  numeroProjectile: Int, projectileTaille: Float) {
+open class Projectile( context: Context, x: Float,y: Float,  numeroProjectile: Int, projectileTaille: Float) : ViewComponent{
 
     private val listeProjectileImage = intArrayOf(R.drawable.ball, R.drawable.oeuf) // liste des images des balles
 
@@ -17,7 +17,7 @@ class Projectile( context: Context, x: Float,y: Float,  numeroProjectile: Int, p
 
     private val Position = RectF(x, y, x + projectileTaille, y + projectileTaille) // encode la position de la balle dans un rectangle
 
-    private val Vitesse = 20f // la vitesse eb x à laquelle la balle va se deplacer
+    protected open val Vitesse = 20f // la vitesse eb x à laquelle la balle va se deplacer
 
     private val Degats = 100
 
@@ -28,8 +28,8 @@ class Projectile( context: Context, x: Float,y: Float,  numeroProjectile: Int, p
         canvas.drawBitmap(Image, null, Position, null)
     }
 
-    fun updatePositionBalle(screenRect : RectF){ // actualise la position de la balle selon sa vitesse
-        if (screenRect.right<Position.left  ){
+    override fun updatePosition(){ // actualise la position de la balle selon sa vitesse
+        if (gameData.screenWidth <Position.left){
             isOnScreen = false
         }
         if (isOnScreen) {
@@ -43,7 +43,7 @@ class Projectile( context: Context, x: Float,y: Float,  numeroProjectile: Int, p
         Position.bottom += Vitesse
     }
 
-    fun getCollision(obstacleList : MutableList<Obstacle> ,obstacleToRemove: MutableList<Obstacle> ){
+    fun getCollision(obstacleList : MutableList<Obstacle> ,obstacleToRemove: MutableList<Obstacle>, joueur: Joueur ){
         val rightX= Position.right
         val centerY = Position.centerY()
 
@@ -52,6 +52,7 @@ class Projectile( context: Context, x: Float,y: Float,  numeroProjectile: Int, p
                 launch {// Pour chaque boucle, lancement d'une coroutine pour que la detection de collision se fasse plus vite
                     if (rightX >= obstacle.Position.left && rightX <= obstacle.Position.right && centerY >= obstacle.Position.top && centerY <= obstacle.Position.bottom) {
                         isOnScreen = false
+                        joueur.scores.updateScore()
                         if (obstacle.isDestructible) {
                             obstacleToRemove.add(obstacle)
                         }

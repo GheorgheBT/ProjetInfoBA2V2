@@ -28,12 +28,8 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
 
     init {
-        val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        val display = windowManager.defaultDisplay
-        val displayMetrics = DisplayMetrics()
-        display.getMetrics(displayMetrics)
-        screenWidth = displayMetrics.widthPixels.toFloat()
-        screenHeight = displayMetrics.heightPixels.toFloat()
+        gameData.setScreenHeight(context)
+        gameData.setScreenWidth(context)
     }
 
     private val screenRect = RectF(0f, 0f ,screenWidth, screenHeight)
@@ -69,19 +65,19 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
     private fun update() {
         joueur.getCollisionSide(obstacleList)
-        joueur.updatePosition(screenRect)
+        joueur.updatePosition()
 
 
         for (projectile in projectileList){
-            projectile.getCollision(obstacleList,obstacleToRemove)
-            projectile.updatePositionBalle(screenRect)
+            projectile.getCollision(obstacleList,obstacleToRemove, joueur)
+            projectile.updatePosition()
             if (!projectile.isOnScreen){
                 projectileToRemove.add(projectile)
             }
         }
 
         for (obstacle in obstacleList){
-            obstacle.updatePosition(screenRect)
+            obstacle.updatePosition()
         }
         for (ennemi in ennemiList){
             ennemi.isOnScreen(screenRect)

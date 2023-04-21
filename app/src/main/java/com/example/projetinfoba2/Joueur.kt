@@ -2,16 +2,16 @@ package com.example.projetinfoba2
 
 import android.content.Context
 import android.graphics.*
+import android.widget.TextView
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.math.abs
 
 
-class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float)
+class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float) : ViewComponent
 {
     //Aspect du joueur
     private var Image = BitmapFactory.decodeResource(context.resources, R.drawable.pers_1, null)
-
     //position du joueur
     var Position = RectF(x, y, x + joueurTaille, y + joueurTaille) // position du joueur encodé dans un rectangle
 
@@ -33,24 +33,31 @@ class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float)
     // vitess de rebond
     private var vitesseRebond = 0f
 
+    //Vie du joueur
+    val scores = Scores()
+    lateinit var vieLabel : TextView
+
+    // Bouclier du jouerur
+    val bouclier = Bouclier()
+
     fun draw(canvas: Canvas, paint: Paint, width: Float, height: Float) {
         canvas.drawBitmap(Image, null, Position, null)
         paint.color = Color.BLACK
         paint.textSize = 50f
-        canvas.drawText("Vies : $Vie", width, height, paint)
-        canvas.drawText("Point: $Point", width, height - 100f, paint)
+        //canvas.drawText("Vies : ${scores.getVie()}", width, height, paint)
+        //canvas.drawText("Point: $Point", width, height - 100f, paint)
     }
 
 
-    fun updatePosition(screenRectF: RectF) {
+    override fun updatePosition() {
         // Limitation du mouvement du joueur si il se trouve à la bordure
         when{
-            vitesseX > 0 -> if(Position.right > screenRectF.right){vitesseX = 0f}
-            vitesseX < 0 -> if(Position.left < screenRectF.left){vitesseX = 0f}
+            vitesseX > 0 -> if(Position.right > gameData.screenWidth){vitesseX = 0f}
+            vitesseX < 0 -> if(Position.left < gameData.leftScreenSide){vitesseX = 0f}
         }
         when{
-            vitesseY < 0 -> if(Position.top < screenRectF.top){vitesseY = 0f}
-            vitesseY > 0 -> if(Position.bottom > screenRectF.bottom){vitesseY = 0f}
+            vitesseY < 0 -> if(Position.top < gameData.upScreenSide){vitesseY = 0f}
+            vitesseY > 0 -> if(Position.bottom > gameData.screenHeight){vitesseY = 0f}
         }
         // Limitation du mouvement du joueur si en contact avec les obstacles
         when (collisionSide) {
@@ -64,6 +71,7 @@ class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float)
         Position.left += vitesseX
         Position.top += vitesseY
         Position.bottom += vitesseY
+
     }
     fun setSpeed(normeX : Float, normeY : Float){
         //Assignation des vitesses en vonction de la vitesse maximale du joueur et des valeurs normées du joystick
@@ -113,6 +121,11 @@ class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float)
                 }
             }
         }
-
+    }
+    fun updateVie(screenRectF: RectF){
+        if(Position.right < screenRectF.left) {
+            scores.updateVie(-5)
+        }
+        scores.showInfo(vieLabel)
     }
 }

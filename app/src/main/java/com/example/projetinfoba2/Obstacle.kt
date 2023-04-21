@@ -7,7 +7,7 @@ import android.graphics.Canvas
 import android.graphics.RectF
 import java.util.*
 
-class Obstacle ( context: Context,  x: Float, y: Float) {
+class Obstacle ( context: Context,  x: Float, y: Float) : ViewComponent{
 
     //Images des obstacles
     private val listeObstacleImage = intArrayOf(
@@ -62,9 +62,9 @@ class Obstacle ( context: Context,  x: Float, y: Float) {
         }
     }
 
-    fun updatePosition(screenRect : RectF){
+    override fun updatePosition(){
         // actualise la position
-        if (Position.right< screenRect.left) {
+        if (Position.right< gameData.leftScreenSide) {
             isOnScreen = false
         }
         if (isOnScreen) {
