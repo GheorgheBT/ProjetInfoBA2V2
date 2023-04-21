@@ -5,7 +5,6 @@ import android.graphics.*
 
 class Ennemi(private val context: Context, val x: Float, val y: Float) {
 
-
     private var numeroImage = 0 // numero de l'image de l'oiseau que s'affiche
     private val listEnnemiImage = intArrayOf(R.drawable.frame_0, R.drawable.frame_1,R.drawable.frame_2,R.drawable.frame_3,R.drawable.frame_4,R.drawable.frame_5,R.drawable.frame_6,R.drawable.frame_7) // liste des images
     private var Image: Bitmap

@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 
 class WelcomeActivity : AppCompatActivity() {
 
-
     lateinit var btnPlay: ImageButton
 
     @SuppressLint("MissingInflatedId")

@@ -12,7 +12,6 @@ object gameData {
     var leftScreenSide = 0
     var upScreenSide = 0
 
-
     fun setScreenWidth(context: Context) : Float{
         val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         val display = windowManager.defaultDisplay

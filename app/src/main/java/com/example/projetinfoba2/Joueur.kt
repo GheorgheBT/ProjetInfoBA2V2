@@ -15,7 +15,6 @@ class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float) : ViewCo
     //position du joueur
     var Position = RectF(x, y, x + joueurTaille, y + joueurTaille) // position du joueur encodé dans un rectangle
 
-
     //Vitesses du joueur
     private val vitesseMax = 15f
     private var vitesseX: Float = 0f

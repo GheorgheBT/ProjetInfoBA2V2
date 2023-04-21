@@ -7,6 +7,7 @@ class Scores {
     private val scoreInitial = 0
     private var joueurVie = vieInitiale
     private var joueurScore = scoreInitial
+
     fun updateVie(valeur : Int = -1){
         joueurVie += valeur
     }

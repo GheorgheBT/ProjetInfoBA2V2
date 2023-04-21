@@ -14,7 +14,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
 
     private var drawing= true
-     var upadate  = true
+    var upadate  = true
 
 
     private var screenWidth = 0f// Largeur de l'écran en pixels
