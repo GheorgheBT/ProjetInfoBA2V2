@@ -28,8 +28,8 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
 
     init {
-        gameData.setScreenHeight(context)
-        gameData.setScreenWidth(context)
+        screenHeight = gameData.setScreenHeight(context)
+        screenWidth = gameData.setScreenWidth(context)
     }
 
     private val screenRect = RectF(0f, 0f ,screenWidth, screenHeight)
@@ -66,7 +66,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     private fun update() {
         joueur.getCollisionSide(obstacleList)
         joueur.updatePosition()
-
+        joueur.updateVie()
 
         for (projectile in projectileList){
             projectile.getCollision(obstacleList,obstacleToRemove, joueur)
@@ -140,7 +140,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         }
         run()
     }
-    fun run(){
+    private fun run(){
         if (System.currentTimeMillis() - lastObstacleTime > 2000) {// Génère des obstacles toutes les 5 secondes
             generateObstacle()
         }
@@ -160,7 +160,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     private fun addBullet(intervalle : Long){
         val currentShootTime = SystemClock.elapsedRealtime()
         if (currentShootTime - prevShootTime > intervalle) {
-            var projectile = Projectile(context, joueur.Position.centerX(), joueur.Position.centerY(), 0, screenHeight / 35f)
+            val projectile = Projectile(context, joueur.Position.centerX(), joueur.Position.centerY(), 0, screenHeight / 35f)
             projectileList.add( projectile)
             prevShootTime = currentShootTime
         }
@@ -178,9 +178,8 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         prevTime = currTime
     }
 
-
     fun detectEndGame() {
-        if (joueur.Vie == 0 ) {
+        if (joueur.scores.getVie() == 0 ) {
             upadate = false
         }
     }
@@ -191,7 +190,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         projectileList.clear()
         joueur.Position.top = screenHeight / 2
         joueur.Position.left = 0f
-        joueur.Vie = 5
-        joueur.Point = 0
+        joueur.scores.resetVie()
+        joueur.scores.resetScore()
     }
 }

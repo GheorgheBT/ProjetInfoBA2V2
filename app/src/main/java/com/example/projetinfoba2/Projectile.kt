@@ -52,8 +52,8 @@ open class Projectile( context: Context, x: Float,y: Float,  numeroProjectile: I
                 launch {// Pour chaque boucle, lancement d'une coroutine pour que la detection de collision se fasse plus vite
                     if (rightX >= obstacle.Position.left && rightX <= obstacle.Position.right && centerY >= obstacle.Position.top && centerY <= obstacle.Position.bottom) {
                         isOnScreen = false
-                        joueur.scores.updateScore()
                         if (obstacle.isDestructible) {
+                            joueur.scores.updateScore()
                             obstacleToRemove.add(obstacle)
                         }
                     }

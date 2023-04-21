@@ -5,6 +5,5 @@ import android.graphics.RectF
 interface ViewComponent {
 
     fun updatePosition(){
-
     }
 }

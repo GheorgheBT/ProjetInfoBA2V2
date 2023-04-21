@@ -17,6 +17,7 @@ class MainActivity: Activity(){
     lateinit var joystickView: JoystickView
     lateinit var boutonTir : ImageButton
     lateinit var fpsLabel : TextView // Pour voir nos fsp (seulement durant le developpement)
+    lateinit var scoreLabel : TextView // Pour l'affichage des différentes données du joueur
     var endGameAlertDialog: AlertDialog? = null
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,11 +30,15 @@ class MainActivity: Activity(){
         // Gestion du texte des fps
         fpsLabel = findViewById(R.id.fpsText)
 
+        //Gestion affichage des scores
+        scoreLabel = findViewById(R.id.scoreLabel)
+
         // Gesion de la vue du jeu
         drawingView = findViewById(R.id.vMain)
         drawingView.setWillNotDraw(false)
         drawingView.fpsLabel = fpsLabel
         drawingView.invalidate()
+        drawingView.joueur.scoresLabel = scoreLabel
 
         //Gestion du bouton
         boutonTir = findViewById(R.id.boutonTir)
@@ -79,7 +84,7 @@ class MainActivity: Activity(){
         })
 
         // je rajoute ca ici juste pour les tests mais on va le programmer proprement
-        if (drawingView.joueur.Vie == 0){
+        if (drawingView.joueur.scores.getVie() == 0){
             showScoreDialog()
             endGameAlertDialog?.show()
         }

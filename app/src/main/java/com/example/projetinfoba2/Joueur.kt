@@ -15,12 +15,6 @@ class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float) : ViewCo
     //position du joueur
     var Position = RectF(x, y, x + joueurTaille, y + joueurTaille) // position du joueur encodé dans un rectangle
 
-    //Vie du joueur
-    var Vie = 0
-
-
-    //point du joueur
-    var Point = 5
 
     //Vitesses du joueur
     private val vitesseMax = 15f
@@ -35,7 +29,7 @@ class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float) : ViewCo
 
     //Vie du joueur
     val scores = Scores()
-    lateinit var vieLabel : TextView
+    lateinit var scoresLabel : TextView
 
     // Bouclier du jouerur
     val bouclier = Bouclier()
@@ -122,10 +116,10 @@ class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float) : ViewCo
             }
         }
     }
-    fun updateVie(screenRectF: RectF){
-        if(Position.right < screenRectF.left) {
+    fun updateVie(){
+        if(Position.right < gameData.leftScreenSide) {
             scores.updateVie(-5)
         }
-        scores.showInfo(vieLabel)
+        scores.showInfo(scoresLabel)
     }
 }
