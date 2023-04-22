@@ -4,9 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.os.SystemClock
 import android.util.AttributeSet
-import android.util.DisplayMetrics
 import android.view.SurfaceView
-import android.view.WindowManager
 import android.widget.TextView
 import java.util.*
 
@@ -160,7 +158,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     private fun addBullet(intervalle : Long){
         val currentShootTime = SystemClock.elapsedRealtime()
         if (currentShootTime - prevShootTime > intervalle) {
-            val projectile = Projectile(context, joueur.Position.centerX(), joueur.Position.centerY(), 0, screenHeight / 35f)
+            val projectile = ProjectileJoueur(context, joueur.Position.centerX(), joueur.Position.centerY(), screenHeight / 35f)
             projectileList.add( projectile)
             prevShootTime = currentShootTime
         }
