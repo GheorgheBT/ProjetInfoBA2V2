@@ -45,14 +45,16 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     var lastObstacleTime = 0L
 
     //Variables pour la gesion des fps
-    private var prevTime : Long = 0 // Sert a calculer l'intervalle entre chaque frame
+    private var prevTime =  0L // Sert a calculer l'intervalle entre chaque frame
     lateinit var fpsLabel : TextView
     var deltas = mutableListOf<Float>() // liste des n fps pour avoir une valeur stable
 
     // Variables pour la gestion des tirs
     var isShooting = false // determine si le joueur doit tirer
-    private var prevShootTime : Long = 0 // permet d'utiliser un intervalle de tir
+    private var prevShootTimeJoueur = 0L // permet d'utiliser un intervalle de tir
 
+    // Variables pour la gestion des tirs ennemis
+    private var prevShootTimeEnnemi = 0L
 
     private fun backgroundMove(speed: Float){
         backgroundOffset -= speed//
@@ -78,15 +80,14 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
             obstacle.updatePosition()
         }
         for (ennemi in ennemiList){
-            ennemi.isOnScreen(screenRect)
-           if (!ennemi.updatePosition()) {
-               ennemiToRemove.add(ennemi)
-           }
+            ennemi.updatePosition()
         }
         getFrameRate()
+
         if (isShooting){
-            addBullet(400)
+            addJoueurBullet(400)
         }
+        addEnnemiBullet(400)
     }
 
     fun destroy(){
@@ -142,25 +143,40 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         if (System.currentTimeMillis() - lastObstacleTime > 2000) {// Génère des obstacles toutes les 5 secondes
             generateObstacle()
         }
-        if (System.currentTimeMillis() - lastEnnemiTime > 100000) {// Génère des oiseaux toutes les 10 secondes
+        if (System.currentTimeMillis() - lastEnnemiTime > 5000) {// Génère des oiseaux toutes les 10 secondes
             generateEnnemi()
         }
         backgroundMove(backgroundspeed)
         if (upadate){
             update()
             destroy()
+
         }
 
        detectEndGame()
 
     }
 
-    private fun addBullet(intervalle : Long){
+
+    private fun addEnnemiBullet(intervalle : Long){
         val currentShootTime = SystemClock.elapsedRealtime()
-        if (currentShootTime - prevShootTime > intervalle) {
+        if (currentShootTime - prevShootTimeJoueur > intervalle) {
+            for (ennemi in ennemiList){
+                if (joueur.Position.left <= ennemi.position.right && joueur.Position.right>= ennemi.position.left) {
+                    val projectile = ProjectileEnnemi(context, ennemi.position.centerX(), ennemi.position.centerY(), 100f)
+                    projectileList.add(projectile)
+                }
+            }
+            prevShootTimeJoueur = currentShootTime
+        }
+    }
+
+    private fun addJoueurBullet(intervalle : Long){
+        val currentShootTime = SystemClock.elapsedRealtime()
+        if (currentShootTime - prevShootTimeJoueur > intervalle) {
             val projectile = ProjectileJoueur(context, joueur.Position.centerX(), joueur.Position.centerY(), screenHeight / 35f)
             projectileList.add( projectile)
-            prevShootTime = currentShootTime
+            prevShootTimeJoueur = currentShootTime
         }
     }
 

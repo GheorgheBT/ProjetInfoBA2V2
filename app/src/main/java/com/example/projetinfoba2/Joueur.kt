@@ -1,7 +1,10 @@
 package com.example.projetinfoba2
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.RectF
 import android.widget.TextView
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -33,12 +36,9 @@ class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float) : ViewCo
     // Bouclier du jouerur
     val bouclier = Bouclier()
 
-    fun draw(canvas: Canvas, paint: Paint, width: Float, height: Float) {
+   fun draw(canvas: Canvas, paint: Paint, width: Float, height: Float) {
         canvas.drawBitmap(Image, null, Position, null)
-        paint.color = Color.BLACK
-        paint.textSize = 50f
-        //canvas.drawText("Vies : ${scores.getVie()}", width, height, paint)
-        //canvas.drawText("Point: $Point", width, height - 100f, paint)
+
     }
 
 

@@ -2,7 +2,7 @@ package com.example.projetinfoba2
 
 import android.widget.TextView
 
-class Scores {
+class Scores{
     private val vieInitiale = 5
     private val scoreInitial = 0
     private var joueurVie = vieInitiale
