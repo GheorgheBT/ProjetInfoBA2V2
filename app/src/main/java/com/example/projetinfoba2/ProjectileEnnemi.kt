@@ -10,15 +10,16 @@ import kotlinx.coroutines.runBlocking
 
 class ProjectileEnnemi(context: Context, x: Float, y: Float,projectileTaille: Float) : Projectile(),ViewComponent {
 
+    //Aspect de la bvelle
     override val image: Bitmap = BitmapFactory.decodeResource(context.resources,R.drawable.oeuf)
 
-
+    //Position de la balle
     override val position: RectF = RectF(x, y, x + projectileTaille, y + projectileTaille) // encode la position de la balle dans un rectangle
 
-
+    //Vitesses de la balle
     override val vitesse: Float = 20f // la vitesse eb x à laquelle la balle va se deplacer
 
-
+    // Degats causé par la balle
     override val degats: Int = 100
 
 

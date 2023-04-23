@@ -12,6 +12,7 @@ import kotlin.math.abs
 
 
 class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float) : ViewComponent {
+
     //Aspect du joueur
     private var Image = BitmapFactory.decodeResource(context.resources, R.drawable.pers_1, null)
 

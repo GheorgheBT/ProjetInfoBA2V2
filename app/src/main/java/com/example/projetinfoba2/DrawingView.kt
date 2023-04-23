@@ -140,19 +140,21 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         run()
     }
     private fun run(){
-        if (System.currentTimeMillis() - lastObstacleTime > 2000) {// Génère des obstacles toutes les 5 secondes
-            generateObstacle()
-        }
-        if (System.currentTimeMillis() - lastEnnemiTime > 5000) {// Génère des oiseaux toutes les 10 secondes
-            generateEnnemi()
-        }
+
         backgroundMove(backgroundspeed)
         if (upadate){
+
+            if (System.currentTimeMillis() - lastObstacleTime > 2000) {// Génère des obstacles toutes les 5 secondes
+                generateObstacle()
+            }
+            if (System.currentTimeMillis() - lastEnnemiTime > 5000) {// Génère des oiseaux toutes les 10 secondes
+                generateEnnemi()
+            }
+
             update()
             destroy()
 
         }
-
        detectEndGame()
 
     }
@@ -162,7 +164,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         if (currentShootTime - prevShootTimeJoueur > intervalle) {
             for (ennemi in ennemiList){
                 if (joueur.Position.left <= ennemi.position.right && joueur.Position.right>= ennemi.position.left) {
-                    val projectile = ProjectileEnnemi(context, ennemi.position.centerX(), ennemi.position.centerY(), 100f)
+                    val projectile = ProjectileEnnemi(context, ennemi.position.centerX(), ennemi.position.centerY(),screenHeight / 35f )
                     projectileList.add(projectile)
                 }
             }
