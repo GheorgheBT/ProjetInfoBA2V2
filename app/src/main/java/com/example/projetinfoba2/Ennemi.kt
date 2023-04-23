@@ -6,26 +6,39 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.RectF
 
-class Ennemi(private val context: Context, val x: Float, val y: Float) : ViewComponent{
+class Ennemi(private val context: Context,  x: Float, y: Float) : ViewComponent{
 
-    private var numeroImage = 0 // numero de l'image de l'oiseau que s'affiche
+    //numero de l'image de l'oiseau qui s'affiche
+    private var numeroImage = 0
+
+    //liste des images
     private val listImage = intArrayOf(R.drawable.frame_0, R.drawable.frame_1,R.drawable.frame_2,R.drawable.frame_3,R.drawable.frame_4,R.drawable.frame_5,R.drawable.frame_6,R.drawable.frame_7) // liste des images
+
+    //Aspect de l'ennemi
     private var image: Bitmap
-    private var taille = 200f //taille de l'affichage de l'oiseau
+
+    //taille de l'affichage de l'oiseau
+    private var taille = 200f
+
+    //position de l'ennemi
     var position = RectF(x, y, ((x + taille)/1.5).toFloat(), ((y + taille)/1.5).toFloat()) // position de l'oiseau encode dans un rectangle
-    var vitesse = 5f
-    var isOnScreen = true
-    init { // initialisation de la premiere image de l'oiseau
+
+    //Vitesses de l'ennemi
+    private val vitesse = 5f
+
+
+    private var isOnScreen = true
+
+    init {
         val options = BitmapFactory.Options().apply { inScaled = true }
         image = BitmapFactory.decodeResource(context.resources, listImage[numeroImage], options)
     }
 
     fun draw(canvas: Canvas) {
-
         canvas.drawBitmap(image,null, position, null)
-        numeroImage = (numeroImage + 1) % listImage.size // change to the next frame
+        numeroImage = (numeroImage + 1) % listImage.size
         val options = BitmapFactory.Options().apply { inScaled = true }
-        image = BitmapFactory.decodeResource(context.resources, listImage[numeroImage], options) // load the next image
+        image = BitmapFactory.decodeResource(context.resources, listImage[numeroImage], options)
     }
 
     override fun updatePosition(){
@@ -37,7 +50,6 @@ class Ennemi(private val context: Context, val x: Float, val y: Float) : ViewCom
             position.right += vitesse
         }
     }
-
 
 }
 

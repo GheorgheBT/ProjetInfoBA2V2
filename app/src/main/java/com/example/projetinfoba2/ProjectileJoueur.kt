@@ -8,7 +8,7 @@ import android.graphics.RectF
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-class ProjectileJoueur(context: Context, x: Float, y: Float,projectileTaille: Float) : Projectile(context), ViewComponent{
+class ProjectileJoueur(context: Context, x: Float, y: Float,projectileTaille: Float) : Projectile(), ViewComponent{
 
      override val image: Bitmap = BitmapFactory.decodeResource(context.resources,R.drawable.ball)
      override val position: RectF = RectF(x, y, x + projectileTaille, y + projectileTaille) // encode la position de la balle dans un rectangle
@@ -40,7 +40,7 @@ class ProjectileJoueur(context: Context, x: Float, y: Float,projectileTaille: Fl
              if (obstacleList != null) {
                  for (obstacle in obstacleList) {
                      launch {// Pour chaque boucle, lancement d'une coroutine pour que la detection de collision se fasse plus vite
-                         if (rightX >= obstacle.Position.left && rightX <= obstacle.Position.right && centerY >= obstacle.Position.top && centerY <= obstacle.Position.bottom) {
+                         if (rightX >= obstacle.position.left && rightX <= obstacle.position.right && centerY >= obstacle.position.top && centerY <= obstacle.position.bottom) {
                              isOnScreen = false
                              if (obstacle.isDestructible) {
                                  joueur.scores.updateScore()

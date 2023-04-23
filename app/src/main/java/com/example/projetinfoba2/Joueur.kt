@@ -11,12 +11,12 @@ import kotlinx.coroutines.runBlocking
 import kotlin.math.abs
 
 
-class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float) : ViewComponent
-{
+class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float) : ViewComponent {
     //Aspect du joueur
     private var Image = BitmapFactory.decodeResource(context.resources, R.drawable.pers_1, null)
+
     //position du joueur
-    var Position = RectF(x, y, x + joueurTaille, y + joueurTaille) // position du joueur encodé dans un rectangle
+   var Position = RectF(x, y, x + joueurTaille, y + joueurTaille) // position du joueur encodé dans un rectangle
 
     //Vitesses du joueur
     private val vitesseMax = 15f
@@ -40,7 +40,6 @@ class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float) : ViewCo
         canvas.drawBitmap(Image, null, Position, null)
 
     }
-
 
     override fun updatePosition() {
         // Limitation du mouvement du joueur si il se trouve à la bordure
@@ -66,6 +65,7 @@ class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float) : ViewCo
         Position.bottom += vitesseY
 
     }
+
     fun setSpeed(normeX : Float, normeY : Float){
         //Assignation des vitesses en vonction de la vitesse maximale du joueur et des valeurs normées du joystick
         vitesseX = normeX * vitesseMax
@@ -80,8 +80,8 @@ class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float) : ViewCo
         runBlocking {   //On bloque la continuation du thread pendant le lancement des coroutines detectant les collisions
             for (obstacle in obstacleList) { //Parcours de tous les obstacles de la liste d'obstacles
                 launch { // Pour chaque boucle, lancement d'une coroutine pour que la detection de collision se fasse plus vite
-                    vitesseRebond = obstacle.Vitesse
-                    val rectF = obstacle.Position // Assignation des "RectF" des obstacles
+                    vitesseRebond = obstacle.vitesse
+                    val rectF = obstacle.position // Assignation des "RectF" des obstacles
                     //Detection si il y a collision
                     if (Position.right > rectF.left && Position.left < rectF.right && Position.top < rectF.bottom && Position.bottom > rectF.top) {
                         isColliding = true
@@ -115,9 +115,10 @@ class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float) : ViewCo
             }
         }
     }
+
     fun updateVie(){
         if(Position.right < gameData.leftScreenSide) {
-            scores.updateVie(-5)
+            scores.dead()
         }
         scores.showInfo(scoresLabel)
     }

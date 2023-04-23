@@ -8,16 +8,24 @@ import android.graphics.RectF
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-class ProjectileEnnemi(context: Context, x: Float, y: Float,projectileTaille: Float) : Projectile(context),ViewComponent {
+class ProjectileEnnemi(context: Context, x: Float, y: Float,projectileTaille: Float) : Projectile(),ViewComponent {
 
     override val image: Bitmap = BitmapFactory.decodeResource(context.resources,R.drawable.oeuf)
+
+
     override val position: RectF = RectF(x, y, x + projectileTaille, y + projectileTaille) // encode la position de la balle dans un rectangle
+
+
     override val vitesse: Float = 20f // la vitesse eb x à laquelle la balle va se deplacer
+
+
     override val degats: Int = 100
+
+
     override var isOnScreen = true
 
+
     override fun draw(canvas: Canvas) {
-        //dessine la balle dans le rectangle defini plus haut
         canvas.drawBitmap(image, null, position, null)
     }
 
@@ -42,7 +50,7 @@ class ProjectileEnnemi(context: Context, x: Float, y: Float,projectileTaille: Fl
             if (obstacleList != null) {
                 for (obstacle in obstacleList) {
                     launch {// Pour chaque boucle, lancement d'une coroutine pour que la detection de collision se fasse plus vite
-                        if (rightX >= obstacle.Position.left && rightX <= obstacle.Position.right && centerY >= obstacle.Position.top && centerY <= obstacle.Position.bottom) {
+                        if (rightX >= obstacle.position.left && rightX <= obstacle.position.right && centerY >= obstacle.position.top && centerY <= obstacle.position.bottom) {
                             isOnScreen = false
                             if (obstacle.isDestructible) {
                                 joueur.scores.updateScore()

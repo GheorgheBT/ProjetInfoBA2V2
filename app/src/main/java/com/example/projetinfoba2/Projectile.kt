@@ -1,11 +1,11 @@
 package com.example.projetinfoba2
 
-import android.content.Context
+
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.RectF
 
-abstract class Projectile(context: Context) {
+abstract class Projectile {
 
     abstract val image: Bitmap
 
@@ -19,10 +19,10 @@ abstract class Projectile(context: Context) {
 
     abstract fun draw(canvas: Canvas)
 
+    abstract fun updatePosition()
+    
     abstract fun getCollision(
         obstacleList: MutableList<Obstacle>? = null,
         obstacleToRemove: MutableList<Obstacle>? = null,
         joueur: Joueur)
-
-    abstract fun updatePosition()
 }

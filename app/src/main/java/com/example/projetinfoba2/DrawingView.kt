@@ -101,7 +101,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     private fun generateObstacle(){
         var obstTop = random.nextInt(screenHeight.toInt())
         var obstacle = Obstacle(context, screenWidth, obstTop.toFloat())
-        while (obstacle.Position.bottom >= screenRect.bottom || obstacle.Position.top <= screenRect.top ){ // force les obstacle a s'afficher entierement sur l'écrant
+        while (obstacle.position.bottom >= screenRect.bottom || obstacle.position.top <= screenRect.top ){ // force les obstacle a s'afficher entierement sur l'écrant
             obstTop = random.nextInt(screenHeight.toInt())
             obstacle = Obstacle(context, screenWidth, obstTop.toFloat())
         }
@@ -156,7 +156,6 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
        detectEndGame()
 
     }
-
 
     private fun addEnnemiBullet(intervalle : Long){
         val currentShootTime = SystemClock.elapsedRealtime()
