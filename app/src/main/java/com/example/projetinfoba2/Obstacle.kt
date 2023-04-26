@@ -36,7 +36,8 @@ class Obstacle ( context: Context,  x: Float, y: Float) : ViewComponent{
     private val image: Bitmap
 
     // vitesse de l'obstacle
-    var vitesse = -5f
+    override var vitesseX = -5f
+    override var vitesseY = 0f
 
     // Degats causés par le contacte avec un obstacle
     private val Degats = 100
@@ -54,7 +55,7 @@ class Obstacle ( context: Context,  x: Float, y: Float) : ViewComponent{
         }
     }
     // position de l'obstacle (dans un RectF)
-    val position = RectF(x, y, x  + image.width, y + image.height) // encode la position
+    override val position = RectF(x, y, x  + image.width, y + image.height) // encode la position
 
     fun draw(canvas: Canvas) {
         //dessine l'obstacle dans le rectangle defini plus haut
@@ -65,12 +66,12 @@ class Obstacle ( context: Context,  x: Float, y: Float) : ViewComponent{
 
     override fun updatePosition(){
         // actualise la position
-        if (position.right< gameData.leftScreenSide) {
+        if (position.right< ScreenData.leftScreenSide) {
             isOnScreen = false
         }
         if (isOnScreen) {
-            position.left += vitesse
-            position.right += vitesse
+            position.left += vitesseX
+            position.right += vitesseX
         }
     }
 

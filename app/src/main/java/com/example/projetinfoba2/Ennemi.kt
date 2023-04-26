@@ -21,11 +21,11 @@ class Ennemi(private val context: Context,  x: Float, y: Float) : ViewComponent{
     private var taille = 200f
 
     //position de l'ennemi
-    var position = RectF(x, y, ((x + taille)/1.5).toFloat(), ((y + taille)/1.5).toFloat()) // position de l'oiseau encode dans un rectangle
+    override var position = RectF(x, y, ((x + taille)/1.5).toFloat(), ((y + taille)/1.5).toFloat()) // position de l'oiseau encode dans un rectangle
 
     //Vitesses de l'ennemi
-    private val vitesse = 5f
-
+    override var vitesseX = 5f
+    override var vitesseY = 0f
 
     private var isOnScreen = true
 
@@ -42,12 +42,12 @@ class Ennemi(private val context: Context,  x: Float, y: Float) : ViewComponent{
     }
 
     override fun updatePosition(){
-        if (gameData.screenWidth < position.left) {
+        if (ScreenData.screenWidth < position.left) {
             isOnScreen = false
         }
         if (isOnScreen) {
-            position.left += vitesse
-            position.right += vitesse
+            position.left += vitesseX
+            position.right += vitesseX
         }
     }
 

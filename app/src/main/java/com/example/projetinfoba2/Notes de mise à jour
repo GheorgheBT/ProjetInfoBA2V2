@@ -57,3 +57,10 @@ Mise a jour du 20/04/2022:
     - j'ai ajouté la methode de la boite de dialogue de fin de jeu dans la MainActivity apres je sais pas si c'est la qu'on doit la mettre mais vu que c'est aussi un vue je me suis proposé de la metre la
     et puis c'est plus facile a programmer comme ca
     -il faudra aussi correctement implementer la maniere dont elle va se declancher pcq pour l'instant c'est du bricolage
+
+
+MAJ 27/04 :
+    - ajout d'observable/observer, difficultés dans le menu selection, mais pour l'instant
+    le choix de difficulté n'affecte pas bcp le jeu (juste la vitesse du joueur pour le test)
+    - ajout de game status, pour gérer les vatiables non statiques qui définiront l'état du jeu
+    - pour la selection de difficulté il faut juste cliquer sur les étoiles

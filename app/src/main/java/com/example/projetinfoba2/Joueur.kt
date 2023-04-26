@@ -5,30 +5,32 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
+import android.util.Log
 import android.widget.TextView
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.util.Objects
 import kotlin.math.abs
 
 
-class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float) : ViewComponent {
+class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float) : ViewComponent, Collider, Observer {
 
     //Aspect du joueur
     private var Image = BitmapFactory.decodeResource(context.resources, R.drawable.pers_1, null)
 
     //position du joueur
-   var Position = RectF(x, y, x + joueurTaille, y + joueurTaille) // position du joueur encodé dans un rectangle
+    override var position = RectF(x, y, x + joueurTaille, y + joueurTaille) // position du joueur encodé dans un rectangle
 
     //Vitesses du joueur
-    private val vitesseMax = 15f
-    private var vitesseX: Float = 0f
-    private var vitesseY: Float = 0f
+    private var vitesseMax = 15f
+    override var vitesseX = 0f
+    override var vitesseY = 0f
 
     //Coté de collision
-    private var collisionSide : String = "NoCollision"
+    var collisionSide : String = "NoCollision"
 
     // vitess de rebond
-    private var vitesseRebond = 0f
+    var vitesseRebond = 0f
 
     //Vie du joueur
     val scores = Scores()
@@ -38,19 +40,19 @@ class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float) : ViewCo
     val bouclier = Bouclier()
 
    fun draw(canvas: Canvas, paint: Paint, width: Float, height: Float) {
-        canvas.drawBitmap(Image, null, Position, null)
+        canvas.drawBitmap(Image, null, position, null)
 
     }
 
     override fun updatePosition() {
         // Limitation du mouvement du joueur si il se trouve à la bordure
         when{
-            vitesseX > 0 -> if(Position.right > gameData.screenWidth){vitesseX = 0f}
-            vitesseX < 0 -> if(Position.left < gameData.leftScreenSide){vitesseX = 0f}
+            vitesseX > 0 -> if(position.right > ScreenData.screenWidth){vitesseX = 0f}
+            vitesseX < 0 -> if(position.left < ScreenData.leftScreenSide){vitesseX = 0f}
         }
         when{
-            vitesseY < 0 -> if(Position.top < gameData.upScreenSide){vitesseY = 0f}
-            vitesseY > 0 -> if(Position.bottom > gameData.screenHeight){vitesseY = 0f}
+            vitesseY < 0 -> if(position.top < ScreenData.upScreenSide){vitesseY = 0f}
+            vitesseY > 0 -> if(position.bottom > ScreenData.screenHeight){vitesseY = 0f}
         }
         // Limitation du mouvement du joueur si en contact avec les obstacles
         when (collisionSide) {
@@ -60,10 +62,7 @@ class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float) : ViewCo
             "DownCollision" -> if (vitesseY > vitesseRebond/2){vitesseY = vitesseRebond/2}
         }
         // Déplacement du joueur
-        Position.right += vitesseX
-        Position.left += vitesseX
-        Position.top += vitesseY
-        Position.bottom += vitesseY
+        super.updatePosition()
 
     }
 
@@ -72,32 +71,32 @@ class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float) : ViewCo
         vitesseX = normeX * vitesseMax
         vitesseY = normeY * vitesseMax
     }
-
-    fun getCollisionSide(obstacleList : MutableList<Obstacle>) {
+    override fun detectCollision(obstacleList : MutableList<Obstacle>){
+        collisionSide = "NoCollision"
         var isColliding = false
         var collidedObject = RectF()
-        collisionSide = "NoCollision"
 
         runBlocking {   //On bloque la continuation du thread pendant le lancement des coroutines detectant les collisions
             for (obstacle in obstacleList) { //Parcours de tous les obstacles de la liste d'obstacles
                 launch { // Pour chaque boucle, lancement d'une coroutine pour que la detection de collision se fasse plus vite
-                    vitesseRebond = obstacle.vitesse
-                    val rectF = obstacle.position // Assignation des "RectF" des obstacles
+                    val rectF = obstacle.position // Assignation des rectF
+                    vitesseRebond = obstacle.vitesseX
                     //Detection si il y a collision
-                    if (Position.right > rectF.left && Position.left < rectF.right && Position.top < rectF.bottom && Position.bottom > rectF.top) {
+                    if (position.right > rectF.left && position.left < rectF.right && position.top < rectF.bottom && position.bottom > rectF.top) {
                         isColliding = true
                         collidedObject = rectF
                     }
                 }
             }
         }
+
         //Si il y a collision, détermination du coté de la collision (entre joueur et obstacle)
         if(isColliding){
-            val xRealCollision = collidedObject.centerX() - Position.centerX() // Distance réelle entre les centres des 2 objets
-            val yRealCollision = collidedObject.centerY() - Position.centerY()
+            val xRealCollision = collidedObject.centerX() - position.centerX() // Distance réelle entre les centres des 2 objets
+            val yRealCollision = collidedObject.centerY() - position.centerY()
 
-            val xMinCollision = collidedObject.width()/2 + Position.width()/2 // Distances minimales entre les centres des 2 objets avant que la collision soit inévitable
-            val yMinCollision = collidedObject.height()/2 + Position.height()/2
+            val xMinCollision = collidedObject.width()/2 + position.width()/2 // Distances minimales entre les centres des 2 objets avant que la collision soit inévitable
+            val yMinCollision = collidedObject.height()/2 + position.height()/2
 
             val dx = xMinCollision - abs(xRealCollision) //Différences entre les distances minimales et réelles
             val dy = yMinCollision - abs(yRealCollision)
@@ -116,11 +115,19 @@ class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float) : ViewCo
             }
         }
     }
-
     fun updateVie(){
-        if(Position.right < gameData.leftScreenSide) {
+        if(position.right < ScreenData.leftScreenSide) {
             scores.dead()
         }
         scores.showInfo(scoresLabel)
+    }
+
+    override fun updateDifficulty(diff : Int) {
+        Log.d("TAG",diff.toString())
+        when(diff){
+            1 -> {vitesseMax = 15f}
+            2 -> {vitesseMax = 10f}
+            3 -> {vitesseMax = 5f}
+        }
     }
 }

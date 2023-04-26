@@ -10,10 +10,10 @@ import java.util.*
 
 class DrawingView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0): SurfaceView(context, attributes,defStyleAttr) {
 
-
     private var drawing= true
     var upadate  = true
 
+    val gameStatus = GameStatus()
 
     private var screenWidth = 0f// Largeur de l'écran en pixels
     private var screenHeight = 0f // Hauteur de l'écran en pixels
@@ -24,14 +24,15 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     val random = Random()
     val paint = Paint()
 
-
+    val joueur : Joueur
     init {
-        screenHeight = gameData.setScreenHeight(context)
-        screenWidth = gameData.setScreenWidth(context)
+        screenHeight = ScreenData.setScreenHeight(context)
+        screenWidth = ScreenData.setScreenWidth(context)
+        joueur = Joueur(context, 0f, screenHeight / 2f, screenHeight / 8f)
+        gameStatus.add(joueur)
     }
 
     private val screenRect = RectF(0f, 0f ,screenWidth, screenHeight)
-    val joueur = Joueur(context, 0f, screenHeight / 2f, screenHeight / 8f)
 
     private val projectileList = mutableListOf<Projectile>()
     private var projectileToRemove = mutableListOf<Projectile>()
@@ -64,7 +65,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     }
 
     private fun update() {
-        joueur.getCollisionSide(obstacleList)
+        joueur.detectCollision(obstacleList)
         joueur.updatePosition()
         joueur.updateVie()
 
@@ -163,7 +164,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         val currentShootTime = SystemClock.elapsedRealtime()
         if (currentShootTime - prevShootTimeJoueur > intervalle) {
             for (ennemi in ennemiList){
-                if (joueur.Position.left <= ennemi.position.right && joueur.Position.right>= ennemi.position.left) {
+                if (joueur.position.left <= ennemi.position.right && joueur.position.right>= ennemi.position.left) {
                     val projectile = ProjectileEnnemi(context, ennemi.position.centerX(), ennemi.position.centerY(),screenHeight / 35f )
                     projectileList.add(projectile)
                 }
@@ -175,7 +176,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     private fun addJoueurBullet(intervalle : Long){
         val currentShootTime = SystemClock.elapsedRealtime()
         if (currentShootTime - prevShootTimeJoueur > intervalle) {
-            val projectile = ProjectileJoueur(context, joueur.Position.centerX(), joueur.Position.centerY(), screenHeight / 35f)
+            val projectile = ProjectileJoueur(context, joueur.position.centerX(), joueur.position.centerY(), screenHeight / 35f)
             projectileList.add( projectile)
             prevShootTimeJoueur = currentShootTime
         }
@@ -203,8 +204,8 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         obstacleList.clear()
         ennemiList.clear()
         projectileList.clear()
-        joueur.Position.top = screenHeight / 2
-        joueur.Position.left = 0f
+        joueur.position.top = screenHeight / 2
+        joueur.position.left = 0f
         joueur.scores.resetVie()
         joueur.scores.resetScore()
     }

@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.View.OnTouchListener
 import android.widget.ImageButton
@@ -39,6 +40,9 @@ class MainActivity: Activity(){
         drawingView.fpsLabel = fpsLabel
         drawingView.invalidate()
         drawingView.joueur.scoresLabel = scoreLabel
+
+        val difficulty = intent.getIntExtra("Difficulty", 1)
+        drawingView.gameStatus.difficulty = difficulty
 
         //Gestion du bouton
         boutonTir = findViewById(R.id.boutonTir)
