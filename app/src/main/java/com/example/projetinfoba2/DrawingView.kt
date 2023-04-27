@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.*
 import android.os.SystemClock
 import android.util.AttributeSet
+import android.util.Log
 import android.view.SurfaceView
 import android.widget.TextView
 import java.util.*
@@ -29,6 +30,8 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         screenHeight = ScreenData.setScreenHeight(context)
         screenWidth = ScreenData.setScreenWidth(context)
         joueur = Joueur(context, 0f, screenHeight / 2f, screenHeight / 8f)
+
+        //Ajour d'une relation observateur entre le game status et les objets affectés par la difficulté
         gameStatus.add(joueur)
     }
 
@@ -86,7 +89,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         getFrameRate()
 
         if (isShooting){
-            addJoueurBullet(400)
+            addJoueurBullet(joueur.intervalleTir)
         }
         addEnnemiBullet(400)
     }
@@ -162,14 +165,14 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
     private fun addEnnemiBullet(intervalle : Long){
         val currentShootTime = SystemClock.elapsedRealtime()
-        if (currentShootTime - prevShootTimeJoueur > intervalle) {
+        if (currentShootTime - prevShootTimeEnnemi > intervalle) {
             for (ennemi in ennemiList){
                 if (joueur.position.left <= ennemi.position.right && joueur.position.right>= ennemi.position.left) {
                     val projectile = ProjectileEnnemi(context, ennemi.position.centerX(), ennemi.position.centerY(),screenHeight / 35f )
                     projectileList.add(projectile)
                 }
             }
-            prevShootTimeJoueur = currentShootTime
+            prevShootTimeEnnemi = currentShootTime
         }
     }
 

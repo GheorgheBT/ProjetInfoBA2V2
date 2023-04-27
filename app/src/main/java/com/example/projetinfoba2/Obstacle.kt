@@ -7,7 +7,7 @@ import android.graphics.Canvas
 import android.graphics.RectF
 import java.util.*
 
-class Obstacle ( context: Context,  x: Float, y: Float) : ViewComponent{
+class Obstacle ( context: Context,  x: Float, y: Float) : ViewComponent, Observer{
 
     //Images des obstacles
     private val listeObstacleImage = intArrayOf(
@@ -72,6 +72,14 @@ class Obstacle ( context: Context,  x: Float, y: Float) : ViewComponent{
         if (isOnScreen) {
             position.left += vitesseX
             position.right += vitesseX
+        }
+    }
+
+    override fun updateDifficulty(diff: Int) { // Ne fonctionne pas pour l'instant
+        when(diff){
+            1 -> {vitesseX = 5f}
+            2 -> {vitesseX = 7f}
+            3 -> {vitesseX = 9f}
         }
     }
 

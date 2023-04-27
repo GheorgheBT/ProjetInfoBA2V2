@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name = "ShootIntervalEasy">350 </integer>
+    <integer name = "ShootIntervalMedium">450 </integer>
+    <integer name = "ShootIntervalHard">550 </integer>
+
+    <fraction name = "PlayerSpeedEasy">15f </fraction>
+    <fraction name = "PlayerSpeedMedium">12f </fraction>
+    <fraction name = "PlayerSpeedHard">8f </fraction>
+
+</resources>

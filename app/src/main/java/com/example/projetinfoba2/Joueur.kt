@@ -39,9 +39,11 @@ class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float) : ViewCo
     // Bouclier du jouerur
     val bouclier = Bouclier()
 
+    // Intervalle de tir
+    var intervalleTir : Long = 400
+
    fun draw(canvas: Canvas, paint: Paint, width: Float, height: Float) {
         canvas.drawBitmap(Image, null, position, null)
-
     }
 
     override fun updatePosition() {
@@ -125,9 +127,18 @@ class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float) : ViewCo
     override fun updateDifficulty(diff : Int) {
         Log.d("TAG",diff.toString())
         when(diff){
-            1 -> {vitesseMax = 15f}
-            2 -> {vitesseMax = 10f}
-            3 -> {vitesseMax = 5f}
+            1 -> {
+                vitesseMax = 15f
+                intervalleTir = 350
+            }
+            2 -> {
+                vitesseMax = 10f
+                intervalleTir = 450
+            }
+            3 -> {
+                vitesseMax = 5f
+                intervalleTir = 550
+            }
         }
     }
 }

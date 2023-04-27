@@ -60,7 +60,13 @@ Mise a jour du 20/04/2022:
 
 
 MAJ 27/04 :
+    maj1
     - ajout d'observable/observer, difficultés dans le menu selection, mais pour l'instant
     le choix de difficulté n'affecte pas bcp le jeu (juste la vitesse du joueur pour le test)
     - ajout de game status, pour gérer les vatiables non statiques qui définiront l'état du jeu
     - pour la selection de difficulté il faut juste cliquer sur les étoiles
+
+    maj 2
+    - le changement de difficulté change la cadence de tir et la vitesse du joueur mais ca n'affacte
+    pas les autres objets car ils sont instanciés après le changement de difficulté, je vais demander
+    par mail une solution et je mettrai a jour apres
