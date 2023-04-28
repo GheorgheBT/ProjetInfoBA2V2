@@ -105,6 +105,9 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     private fun generateObstacle(){
         var obstTop = random.nextInt(screenHeight.toInt())
         var obstacle = Obstacle(context, screenWidth, obstTop.toFloat())
+        gameStatus.add(obstacle)
+        gameStatus.changeState(obstacle)
+
         while (obstacle.position.bottom >= screenRect.bottom || obstacle.position.top <= screenRect.top ){ // force les obstacle a s'afficher entierement sur l'écrant
             obstTop = random.nextInt(screenHeight.toInt())
             obstacle = Obstacle(context, screenWidth, obstTop.toFloat())
@@ -115,7 +118,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
     private fun generateEnnemi(){
         lastEnnemiTime = System.currentTimeMillis()
-        val ennemi = Ennemi(context, 0f, screenHeight / 20)
+        val ennemi = Ennemi(context, -750f, screenHeight / 20)
         ennemiList.add(ennemi)
     }
 
@@ -168,7 +171,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         if (currentShootTime - prevShootTimeEnnemi > intervalle) {
             for (ennemi in ennemiList){
                 if (joueur.position.left <= ennemi.position.right && joueur.position.right>= ennemi.position.left) {
-                    val projectile = ProjectileEnnemi(context, ennemi.position.centerX(), ennemi.position.centerY(),screenHeight / 35f )
+                    val projectile = ProjectileEnnemi(context, ennemi.position.centerX(), ennemi.position.centerY(),screenHeight / 30f )
                     projectileList.add(projectile)
                 }
             }

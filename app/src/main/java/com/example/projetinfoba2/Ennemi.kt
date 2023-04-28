@@ -18,10 +18,10 @@ class Ennemi(private val context: Context,  x: Float, y: Float) : ViewComponent{
     private var image: Bitmap
 
     //taille de l'affichage de l'oiseau
-    private var taille = 200f
+    private var taille = 150
 
     //position de l'ennemi
-    override var position = RectF(x, y, ((x + taille)/1.5).toFloat(), ((y + taille)/1.5).toFloat()) // position de l'oiseau encode dans un rectangle
+    override var position = RectF(x, y, (x + taille), (y + taille)) // position de l'oiseau encode dans un rectangle
 
     //Vitesses de l'ennemi
     override var vitesseX = 5f

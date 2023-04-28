@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.RectF
+import android.util.Log
 import java.util.*
 
 class Obstacle ( context: Context,  x: Float, y: Float) : ViewComponent, Observer{
@@ -77,9 +78,9 @@ class Obstacle ( context: Context,  x: Float, y: Float) : ViewComponent, Observe
 
     override fun updateDifficulty(diff: Int) { // Ne fonctionne pas pour l'instant
         when(diff){
-            1 -> {vitesseX = 5f}
-            2 -> {vitesseX = 7f}
-            3 -> {vitesseX = 9f}
+            1 -> {vitesseX = -5f}
+            2 -> {vitesseX = -7f}
+            3 -> {vitesseX = -9f}
         }
     }
 

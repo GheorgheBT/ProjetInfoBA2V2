@@ -9,8 +9,8 @@ class ScreenData {
     companion object{
         var screenWidth : Float = 0f
         var screenHeight : Float = 0f
-        var leftScreenSide = 0
-        var upScreenSide = 0
+        var leftScreenSide = 0f
+        var upScreenSide = 0f
 
         fun setScreenWidth(context: Context) : Float{
             val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager

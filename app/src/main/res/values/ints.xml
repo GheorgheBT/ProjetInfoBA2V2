@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name = "ShootIntervalEasy">350 </integer>
-    <integer name = "ShootIntervalMedium">450 </integer>
-    <integer name = "ShootIntervalHard">550 </integer>
+    <dimen name = "PlayerShootIntervalEasy">350 </dimen>
+    <dimen name = "PlayerShootIntervalMedium">450 </dimen>
+    <dimen name = "PlayerShootIntervalHard">550 </dimen>
 
-    <fraction name = "PlayerSpeedEasy">15f </fraction>
-    <fraction name = "PlayerSpeedMedium">12f </fraction>
-    <fraction name = "PlayerSpeedHard">8f </fraction>
+    <dimen name = "PlayerSpeedEasy">15f </dimen>
+    <dimen name = "PlayerSpeedMedium">12 </dimen>
+    <dimen name = "PlayerSpeedHard">8 </dimen>
 
+    <dimen name = "TailleEnnemi">150 </dimen>
+
+    <dimen name = "LargeurObstacle">200 </dimen>
 </resources>

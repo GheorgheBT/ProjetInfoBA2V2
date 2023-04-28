@@ -5,8 +5,10 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
+import android.os.Build
 import android.util.Log
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.Objects
@@ -41,10 +43,10 @@ class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float) : ViewCo
 
     // Intervalle de tir
     var intervalleTir : Long = 400
-
+    val ctx : Context = context
    fun draw(canvas: Canvas, paint: Paint, width: Float, height: Float) {
         canvas.drawBitmap(Image, null, position, null)
-    }
+   }
 
     override fun updatePosition() {
         // Limitation du mouvement du joueur si il se trouve à la bordure
@@ -124,10 +126,12 @@ class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float) : ViewCo
         scores.showInfo(scoresLabel)
     }
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun updateDifficulty(diff : Int) {
         Log.d("TAG",diff.toString())
         when(diff){
             1 -> {
+
                 vitesseMax = 15f
                 intervalleTir = 350
             }
