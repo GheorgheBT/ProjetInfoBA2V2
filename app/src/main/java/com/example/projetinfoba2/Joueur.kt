@@ -11,17 +11,16 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.util.Objects
 import kotlin.math.abs
 
 
-class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float) : ViewComponent, Collider, Observer {
+class Joueur(context: Context, taille: Float) : ViewComponent, Collider, Observer {
 
     //Aspect du joueur
     private var Image = BitmapFactory.decodeResource(context.resources, R.drawable.pers_1, null)
 
     //position du joueur
-    override var position = RectF(x, y, x + joueurTaille, y + joueurTaille) // position du joueur encodé dans un rectangle
+    override var position = RectF(ScreenData.leftScreenSide, ScreenData.screenHeight/2, ScreenData.leftScreenSide + taille, ScreenData.screenHeight/2 + taille) // position du joueur encodé dans un rectangle
 
     //Vitesses du joueur
     private var vitesseMax = 15f
@@ -121,11 +120,15 @@ class Joueur(context: Context, x: Float, y: Float, joueurTaille: Float) : ViewCo
     }
     fun updateVie(){
         if(position.right < ScreenData.leftScreenSide) {
-            scores.dead()
+            scores.isDead()
         }
         scores.showInfo(scoresLabel)
     }
 
+    fun reset(){
+        position.top = ScreenData.screenHeight/2
+        position.left = ScreenData.leftScreenSide
+    }
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun updateDifficulty(diff : Int) {
         Log.d("TAG",diff.toString())

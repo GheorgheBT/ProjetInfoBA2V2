@@ -11,8 +11,11 @@ class Scores{
     fun updateVie(valeur : Int = -1){
         joueurVie += valeur
     }
-    fun dead(){
-        joueurVie = 0
+    fun isDead() : Boolean{
+        if(joueurVie == 0) {
+            return true
+        }
+        return false
     }
     fun resetVie(){
         joueurVie = vieInitiale

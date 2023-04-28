@@ -4,14 +4,15 @@ import android.content.Context
 import android.graphics.*
 import android.os.SystemClock
 import android.util.AttributeSet
-import android.util.Log
 import android.view.SurfaceView
 import android.widget.TextView
 import java.util.*
 
 class DrawingView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0): SurfaceView(context, attributes,defStyleAttr) {
 
-    private var drawing= true
+    var drawing = false
+    lateinit var thread: Thread
+
     var upadate  = true
 
     val gameStatus = GameStatus()
@@ -24,46 +25,50 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     private var backgroundOffset = 0f
     val random = Random()
     val paint = Paint()
-
     val joueur : Joueur
+
     init {
         screenHeight = ScreenData.setScreenHeight(context)
         screenWidth = ScreenData.setScreenWidth(context)
-        joueur = Joueur(context, 0f, screenHeight / 2f, screenHeight / 8f)
+        joueur = Joueur(context,  screenHeight / 8f)
 
         //Ajour d'une relation observateur entre le game status et les objets affectés par la difficulté
         gameStatus.add(joueur)
     }
 
     private val screenRect = RectF(0f, 0f ,screenWidth, screenHeight)
-
     private val projectileList = mutableListOf<Projectile>()
     private var projectileToRemove = mutableListOf<Projectile>()
 
-    var ennemiList = mutableListOf<Ennemi>()
+    private var ennemiList = mutableListOf<Ennemi>()
     private var ennemiToRemove = mutableListOf<Ennemi>()
     private var lastEnnemiTime = 0L
 
-    var obstacleList = mutableListOf<Obstacle>()
-    var obstacleToRemove = mutableListOf<Obstacle>()
-    var lastObstacleTime = 0L
+    private var obstacleList = mutableListOf<Obstacle>()
+    private var obstacleToRemove = mutableListOf<Obstacle>()
+    private var lastObstacleTime = 0L
 
     //Variables pour la gesion des fps
     private var prevTime =  0L // Sert a calculer l'intervalle entre chaque frame
     lateinit var fpsLabel : TextView
     var deltas = mutableListOf<Float>() // liste des n fps pour avoir une valeur stable
 
-    // Variables pour la gestion des tirs
+    // Variables pour la gestion des tirs du joueyr
     var isShooting = false // determine si le joueur doit tirer
     private var prevShootTimeJoueur = 0L // permet d'utiliser un intervalle de tir
+    var joueurBulletSize = screenHeight / 35f
 
     // Variables pour la gestion des tirs ennemis
     private var prevShootTimeEnnemi = 0L
+    var ennemiBulletSize = screenHeight / 30f
+    var intervalleTir : Long = 400
+
+
 
     private fun backgroundMove(speed: Float){
         backgroundOffset -= speed//
         if (backgroundOffset < -(scaledBackgroundImage.width - screenWidth)) { //
-            backgroundOffset = 0f
+            backgroundOffset = ScreenData.leftScreenSide
         }
     }
 
@@ -83,15 +88,17 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         for (obstacle in obstacleList){
             obstacle.updatePosition()
         }
+
         for (ennemi in ennemiList){
             ennemi.updatePosition()
         }
+
         getFrameRate()
 
         if (isShooting){
-            addJoueurBullet(joueur.intervalleTir)
+            addJoueurBullet(joueur.intervalleTir, joueurBulletSize)
         }
-        addEnnemiBullet(400)
+        addEnnemiBullet( intervalleTir, ennemiBulletSize)
     }
 
     fun destroy(){
@@ -107,7 +114,6 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         var obstacle = Obstacle(context, screenWidth, obstTop.toFloat())
         gameStatus.add(obstacle)
         gameStatus.changeState(obstacle)
-
         while (obstacle.position.bottom >= screenRect.bottom || obstacle.position.top <= screenRect.top ){ // force les obstacle a s'afficher entierement sur l'écrant
             obstTop = random.nextInt(screenHeight.toInt())
             obstacle = Obstacle(context, screenWidth, obstTop.toFloat())
@@ -117,14 +123,15 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     }
 
     private fun generateEnnemi(){
-        lastEnnemiTime = System.currentTimeMillis()
-        val ennemi = Ennemi(context, -750f, screenHeight / 20)
+        val ennemi = Ennemi(context)
         ennemiList.add(ennemi)
+        lastEnnemiTime = System.currentTimeMillis()
     }
 
     override fun onDraw(canvas: Canvas?) {
         if (canvas != null) {
-            canvas.drawBitmap(scaledBackgroundImage, backgroundOffset, 0f, null)
+
+            canvas.drawBitmap(scaledBackgroundImage, backgroundOffset, ScreenData.upScreenSide, null)
             joueur.draw(canvas, paint, 1000f, 1000f)
 
             // Dessine tous les obstacles existants
@@ -141,14 +148,13 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
             for (projetile in projectileList) {
                 projetile.draw(canvas)
             }
-            postInvalidateOnAnimation()
-
+           postInvalidateOnAnimation()
         }
         run()
     }
     private fun run(){
 
-        backgroundMove(backgroundspeed)
+
         if (upadate){
 
             if (System.currentTimeMillis() - lastObstacleTime > 2000) {// Génère des obstacles toutes les 5 secondes
@@ -157,21 +163,20 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
             if (System.currentTimeMillis() - lastEnnemiTime > 5000) {// Génère des oiseaux toutes les 10 secondes
                 generateEnnemi()
             }
-
+            backgroundMove(backgroundspeed)
             update()
             destroy()
-
         }
        detectEndGame()
 
     }
 
-    private fun addEnnemiBullet(intervalle : Long){
+    private fun addEnnemiBullet(intervalle : Long , size : Float){
         val currentShootTime = SystemClock.elapsedRealtime()
         if (currentShootTime - prevShootTimeEnnemi > intervalle) {
             for (ennemi in ennemiList){
                 if (joueur.position.left <= ennemi.position.right && joueur.position.right>= ennemi.position.left) {
-                    val projectile = ProjectileEnnemi(context, ennemi.position.centerX(), ennemi.position.centerY(),screenHeight / 30f )
+                    val projectile = ProjectileEnnemi(context, ennemi.position.centerX(), ennemi.position.centerY(),size)
                     projectileList.add(projectile)
                 }
             }
@@ -179,10 +184,10 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         }
     }
 
-    private fun addJoueurBullet(intervalle : Long){
+    private fun addJoueurBullet(intervalle : Long ,size: Float){
         val currentShootTime = SystemClock.elapsedRealtime()
         if (currentShootTime - prevShootTimeJoueur > intervalle) {
-            val projectile = ProjectileJoueur(context, joueur.position.centerX(), joueur.position.centerY(), screenHeight / 35f)
+            val projectile = ProjectileJoueur(context, joueur.position.centerX(), joueur.position.centerY(),size )
             projectileList.add( projectile)
             prevShootTimeJoueur = currentShootTime
         }
@@ -201,7 +206,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     }
 
     fun detectEndGame() {
-        if (joueur.scores.getVie() == 0 ) {
+        if (joueur.scores.isDead()) {
             upadate = false
         }
     }
@@ -210,8 +215,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         obstacleList.clear()
         ennemiList.clear()
         projectileList.clear()
-        joueur.position.top = screenHeight / 2
-        joueur.position.left = 0f
+        joueur.reset()
         joueur.scores.resetVie()
         joueur.scores.resetScore()
     }

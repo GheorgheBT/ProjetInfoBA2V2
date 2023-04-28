@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.RectF
 
-class Ennemi(private val context: Context,  x: Float, y: Float) : ViewComponent{
+class Ennemi(private val context: Context) : ViewComponent{
 
     //numero de l'image de l'oiseau qui s'affiche
     private var numeroImage = 0
@@ -21,11 +21,12 @@ class Ennemi(private val context: Context,  x: Float, y: Float) : ViewComponent{
     private var taille = 150
 
     //position de l'ennemi
-    override var position = RectF(x, y, (x + taille), (y + taille)) // position de l'oiseau encode dans un rectangle
+    override var position = RectF(-ScreenData.screenHeight/2, ScreenData.screenHeight / 20,-ScreenData.screenHeight/2 + taille, ScreenData.screenHeight / 20 + taille) // position de l'oiseau encode dans un rectangle
 
     //Vitesses de l'ennemi
     override var vitesseX = 5f
     override var vitesseY = 0f
+
 
     private var isOnScreen = true
 

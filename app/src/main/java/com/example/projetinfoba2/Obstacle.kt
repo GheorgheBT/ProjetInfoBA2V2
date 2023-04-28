@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.RectF
-import android.util.Log
 import java.util.*
 
 class Obstacle ( context: Context,  x: Float, y: Float) : ViewComponent, Observer{
@@ -48,15 +47,18 @@ class Obstacle ( context: Context,  x: Float, y: Float) : ViewComponent, Observe
 
     //Proprieté d'affichage
     private var isOnScreen = true
+
+
     init {// initialise l'image de l'obstacle de manière  aléatoire
-        val random = Random().nextInt(listeObstacleImage.size)
-        image = BitmapFactory.decodeResource(context.resources, listeObstacleImage[random])
-        if ( listeObstacleDestuctible.contains(listeObstacleImage[random])){// caracterisation de la destructibilité
+        val randomObstacle = Random().nextInt(listeObstacleImage.size)
+        image = BitmapFactory.decodeResource(context.resources, listeObstacleImage[randomObstacle])
+        if ( listeObstacleDestuctible.contains(listeObstacleImage[randomObstacle])){// caracterisation de la destructibilité
             isDestructible = true
         }
+
     }
     // position de l'obstacle (dans un RectF)
-    override val position = RectF(x, y, x  + image.width, y + image.height) // encode la position
+    override val position = RectF(x, y, x  + image.width, y + image.height)
 
     fun draw(canvas: Canvas) {
         //dessine l'obstacle dans le rectangle defini plus haut
@@ -83,5 +85,4 @@ class Obstacle ( context: Context,  x: Float, y: Float) : ViewComponent, Observe
             3 -> {vitesseX = -9f}
         }
     }
-
 }

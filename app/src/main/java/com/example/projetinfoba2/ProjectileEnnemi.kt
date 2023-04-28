@@ -2,11 +2,8 @@ package com.example.projetinfoba2
 
 import android.content.Context
 import android.graphics.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import java.util.logging.Filter
 
-class ProjectileEnnemi(context: Context, x: Float, y: Float,projectileTaille: Float) : Projectile() {
+class ProjectileEnnemi(context: Context, x: Float, y: Float, Taille: Float) : Projectile() {
 
     //Aspect de la balle
     override val image: Bitmap = BitmapFactory.decodeResource(context.resources,
@@ -14,7 +11,7 @@ class ProjectileEnnemi(context: Context, x: Float, y: Float,projectileTaille: Fl
     )
 
     //Position de la balle
-    override val position = RectF(x, y, x + projectileTaille, y + projectileTaille) // encode la position de la balle dans un rectangle
+    override val position = RectF(x, y, x + Taille, y + Taille) // encode la position de la balle dans un rectangle
 
     //Vitesses de la balle
     override var vitesseX = 0f // la vitesse à laquelle la balle va se deplacer

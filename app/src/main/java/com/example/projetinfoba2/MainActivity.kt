@@ -5,7 +5,6 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.View.OnTouchListener
 import android.widget.ImageButton
@@ -20,6 +19,7 @@ class MainActivity: Activity(){
     lateinit var fpsLabel : TextView // Pour voir nos fsp (seulement durant le developpement)
     lateinit var scoreLabel : TextView // Pour l'affichage des différentes données du joueur
     var endGameAlertDialog: AlertDialog? = null
+    //@SuppressLint("ClickableViewAccessibility")
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,6 +93,7 @@ class MainActivity: Activity(){
             endGameAlertDialog?.show()
         }
     }
+
 
 
     fun showScoreDialog() {

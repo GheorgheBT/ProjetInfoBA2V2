@@ -8,10 +8,10 @@ import android.graphics.RectF
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-class ProjectileJoueur(context: Context, x: Float, y: Float,projectileTaille: Float) : Projectile(), ViewComponent{
+class ProjectileJoueur(context: Context, x: Float, y: Float, Taille: Float) : Projectile(), ViewComponent{
 
     override val image: Bitmap = BitmapFactory.decodeResource(context.resources,R.drawable.ball)
-    override val position: RectF = RectF(x, y, x + projectileTaille, y + projectileTaille) // encode la position de la balle dans un rectangle
+    override val position: RectF = RectF(x, y, x + Taille, y + Taille) // encode la position de la balle dans un rectangle
     override var vitesseX: Float = 20f // la vitesse à laquelle la balle va se deplacer
     override var vitesseY : Float = 0f
     override val degats: Int = 100
