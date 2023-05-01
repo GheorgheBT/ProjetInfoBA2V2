@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.RectF
+import android.util.Log
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.random.Random
@@ -37,7 +38,6 @@ class Obstacle ( context: Context,  x: Float, y: Float) : Observer{
 
     // vitesse de l'obstacle
     var vitesseX = -5f
-    var vitesseY = 0f
     private var multiplicateurVitesse = 1f
 
     //Dimensions de l'obstacle
@@ -142,17 +142,16 @@ class Obstacle ( context: Context,  x: Float, y: Float) : Observer{
         //Changement des paramètres des obstacles en fonction de la difficulté du jeu
         when(diff){
             1 -> {
-                vitesseX = -5f
+                vitesseX = ctx.resources.getString(R.string.VitesseObstacleEasy).toFloat()
                 probaDest = ctx.resources.getString(R.string.ProbaDestructibleEasy).toFloat()
             }
             2 -> {
-                vitesseX = -6.5f
+                vitesseX = ctx.resources.getString(R.string.VitesseObstacleMedium).toFloat()
                 probaDest = ctx.resources.getString(R.string.ProbaDestructibleMedium).toFloat()
             }
             3 -> {
-                vitesseX = -8f
+                vitesseX = ctx.resources.getString(R.string.VitesseObstacleHard).toFloat()
                 probaDest = ctx.resources.getString(R.string.ProbaDestructibleHard).toFloat()
-
             }
         }
     }

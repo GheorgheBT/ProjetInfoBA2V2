@@ -5,10 +5,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
-import android.os.Build
-import android.util.Log
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.math.abs
@@ -37,12 +34,11 @@ class Joueur(context: Context,var taille: Float) : ViewComponent, Collider, Obse
     val scores = Scores()
     lateinit var scoresLabel : TextView
 
-    // Bouclier du jouerur
-    val bouclier = Bouclier()
-
     // Intervalle de tir
     var intervalleTir : Long = 400
-    val ctx : Context = context
+
+    //Context
+    private val ctx = context
    fun draw(canvas: Canvas, paint: Paint, width: Float, height: Float) {
         canvas.drawBitmap(Image, null, position, null)
    }
@@ -133,16 +129,16 @@ class Joueur(context: Context,var taille: Float) : ViewComponent, Collider, Obse
     override fun updateDifficulty(diff : Int) {
         when(diff){
             1 -> {
-                vitesseMax = 15f
-                intervalleTir = 350
+                vitesseMax = ctx.resources.getString(R.string.PlayerSpeedEasy).toFloat()
+                intervalleTir = ctx.resources.getString(R.string.PlayerShootIntervalEasy).toLong()
             }
             2 -> {
-                vitesseMax = 10f
-                intervalleTir = 450
+                vitesseMax = ctx.resources.getString(R.string.PlayerSpeedMedium).toFloat()
+                intervalleTir = ctx.resources.getString(R.string.PlayerShootIntervalMedium).toLong()
             }
             3 -> {
-                vitesseMax = 5f
-                intervalleTir = 550
+                vitesseMax = ctx.resources.getString(R.string.PlayerSpeedHard).toFloat()
+                intervalleTir = ctx.resources.getString(R.string.PlayerShootIntervalHard).toLong()
             }
         }
     }

@@ -6,6 +6,6 @@ import kotlinx.coroutines.runBlocking
 
 interface Collider {
 
-    fun detectCollision(rectList : MutableList<Obstacle>){
+    fun detectCollision(obstacleList : MutableList<Obstacle>){
     }
 }
