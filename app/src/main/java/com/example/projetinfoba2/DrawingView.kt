@@ -3,7 +3,10 @@ package com.example.projetinfoba2
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Paint
 import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.SurfaceView
@@ -43,7 +46,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
     }
 
-    private val screenRect = RectF(0f, 0f ,screenWidth, screenHeight)
+
     private val projectileList = mutableListOf<Projectile>()
     private var projectileToRemove = mutableListOf<Projectile>()
 
@@ -108,20 +111,22 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         addEnnemiBullet( intervalleTir, ennemiBulletSize)
     }
 
-    fun destroy(){
+    private fun destroy(){
         obstacleList.removeAll(obstacleToRemove)
         obstacleToRemove.clear()
         projectileList.removeAll(projectileToRemove)
         projectileToRemove.clear()
         ennemiList.removeAll(ennemiToRemove)
         ennemiToRemove.clear()
+        // garbage collector
+        System.gc()
     }
     private fun generateObstacle(){
         var obstTop = random.nextInt(screenHeight.toInt())
         var obstacle = Obstacle(context, screenWidth, obstTop.toFloat())
         gameStatus.add(obstacle)
         gameStatus.changeState(obstacle)
-        while (obstacle.position.bottom >= screenRect.bottom || obstacle.position.top <= screenRect.top ){ // force les obstacle a s'afficher entierement sur l'écrant
+        while (obstacle.position.bottom >=ScreenData.screenHeight || obstacle.position.top <= ScreenData.upScreenSide){ // force les obstacle a s'afficher entierement sur l'écrant
             obstTop = random.nextInt(screenHeight.toInt())
             obstacle = Obstacle(context, screenWidth, obstTop.toFloat())
         }
@@ -233,7 +238,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         }
         builder.setNegativeButton("Quitter ") { _: DialogInterface, _: Int ->
             endGameAlertDialog?.dismiss()
-
+            (context as MainActivity).finish()
         }
         endGameAlertDialog = builder.create()
         endGameAlertDialog?.setCanceledOnTouchOutside(false)

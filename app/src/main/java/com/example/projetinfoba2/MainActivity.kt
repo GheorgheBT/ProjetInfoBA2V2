@@ -82,8 +82,7 @@ class MainActivity: Activity(){
                 }
             }
             drawingView.joueur.setSpeed(joystickView.deltaPosX/joystickView.cercleExtRayon, joystickView.deltaPosY/ joystickView.cercleExtRayon)
-            true
-        })
+            true })
 
     }
 
