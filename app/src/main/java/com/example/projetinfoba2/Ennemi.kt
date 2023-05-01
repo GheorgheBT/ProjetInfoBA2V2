@@ -46,7 +46,7 @@ class Ennemi(context: Context, posX : Float, posY : Float) : ViewComponent, Obse
         position.right += vitesseX
 
     }
-    private fun resetPosition(){
+    fun resetPosition(){
         position.right -= ScreenData.screenWidth + width
         position.left -= ScreenData.screenWidth + width
     }

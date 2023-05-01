@@ -2,7 +2,7 @@ package com.example.projetinfoba2
 
 import android.widget.TextView
 
-class Scores{
+open class Scores{
     private val vieInitiale = 5
     private val scoreInitial = 0
     private var joueurVie = vieInitiale
@@ -30,6 +30,9 @@ class Scores{
     }
     fun updateScore(valeur : Int = 1){
         joueurScore += valeur
+        if (joueurScore < 0 ){
+            isDead()
+        }
     }
     fun resetScore(){
         joueurScore = scoreInitial

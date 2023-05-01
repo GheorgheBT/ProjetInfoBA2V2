@@ -11,12 +11,9 @@ import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.SurfaceView
 import android.widget.TextView
-import java.util.*
 
 class DrawingView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0): SurfaceView(context, attributes,defStyleAttr) {
 
-    var drawing = false
-    lateinit var thread: Thread
     var endGameAlertDialog: AlertDialog? = null
     private var update  = true
 
@@ -28,7 +25,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     private var scaledBackgroundImage = Bitmap.createScaledBitmap(backgroundImage, 10000, 1500, true)
     private val backgroundspeed = 2f
     private var backgroundOffset = 0f
-    val random = Random()
+
     val paint = Paint()
     val joueur : Joueur
 
@@ -107,9 +104,9 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
             obstacle.updatePosition(obstacleList)
         }
 
-        for (ennemi in ennemiList){
-            ennemi.updatePosition()
-        }
+        //for (ennemi in ennemiList){
+        //    ennemi.updatePosition()
+        //}
 
         getFrameRate()
 
@@ -161,6 +158,18 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
        detectEndGame()
     }
 
+    private fun getFrameRate(){
+        val currTime = SystemClock.elapsedRealtime()
+        val deltaTime =  (currTime - prevTime).toFloat()/1000
+        deltas.add(1f/deltaTime)
+        if (deltas.size > 8){
+            deltas.removeAt(0)
+        }
+        val average = deltas.average()
+        fpsLabel.text = average.toInt().toString()
+        prevTime = currTime
+    }
+
     private fun addEnnemiBullet(intervalle : Long , size : Float){
         val currentShootTime = SystemClock.elapsedRealtime()
         if (currentShootTime - prevShootTimeEnnemi > intervalle) {
@@ -183,16 +192,28 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         }
     }
 
-    private fun getFrameRate(){
-        val currTime = SystemClock.elapsedRealtime()
-        val deltaTime =  (currTime - prevTime).toFloat()/1000
-        deltas.add(1f/deltaTime)
-        if (deltas.size > 8){
-            deltas.removeAt(0)
+    private fun initObstacles(nombre : Int){
+        val pas = (screenWidth/nombre).toInt()
+        for (i in screenWidth.toInt() .. 2*screenWidth.toInt() step pas){
+
+            val borneSup = ScreenData.upScreenSide.toInt() + context.resources.getString(R.string.LongueurEnnemi).toFloat().toInt()
+            val borneInf = screenHeight.toInt()
+            val posY = (borneSup .. borneInf).random().toFloat()
+            val obs = Obstacle(context, i.toFloat(), posY)
+            obstacleList.add(obs)
+            gameStatus.add(obs)
         }
-        val average = deltas.average()
-        fpsLabel.text = average.toInt().toString()
-        prevTime = currTime
+    }
+
+    private fun initEnnemies(nombre : Int){
+        val pas = (screenWidth/nombre).toInt()
+        for (i in 0 until nombre){
+            val posX = (i * pas).toFloat() - screenWidth
+            val ennemi = Ennemi(context, posX, ScreenData.upScreenSide + context.resources.getString(R.string.LongueurEnnemi).toFloat())
+            gameStatus.add(ennemi)
+            ennemiList.add(ennemi)
+
+        }
     }
 
     private fun detectEndGame() {
@@ -224,34 +245,15 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     }
 
     private fun restartGame() {
-        obstacleList.clear()
-        ennemiList.clear()
+        for (obstacle in obstacleList){
+            obstacle.resetObstacle()
+        }
+        for (ennemi in ennemiList){
+            ennemi.resetPosition()
+        }
         projectileList.clear()
         joueur.reset()
         joueur.scores.resetVie()
         joueur.scores.resetScore()
-    }
-
-    private fun initObstacles(nombre : Int){
-        val pas = (screenWidth/nombre).toInt()
-        for (i in screenWidth.toInt() .. 2*screenWidth.toInt() step pas){
-
-            val borneSup = ScreenData.upScreenSide.toInt() + context.resources.getString(R.string.LongueurEnnemi).toFloat().toInt()
-            val borneInf = screenHeight.toInt()
-            val posY = (borneSup .. borneInf).random().toFloat()
-            val obs = Obstacle(context, i.toFloat(), posY)
-            obstacleList.add(obs)
-            gameStatus.add(obs)
-        }
-    }
-    private fun initEnnemies(nombre : Int){
-        val pas = (screenWidth/nombre).toInt()
-        for (i in 0 until nombre){
-            val posX = (i * pas).toFloat() - screenWidth
-            val ennemi = Ennemi(context, posX, ScreenData.upScreenSide + context.resources.getString(R.string.LongueurEnnemi).toFloat())
-            gameStatus.add(ennemi)
-            ennemiList.add(ennemi)
-
-        }
     }
 }

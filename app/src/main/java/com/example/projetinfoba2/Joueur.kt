@@ -17,7 +17,7 @@ class Joueur(context: Context,var taille: Float) : ViewComponent, Collider, Obse
     private var Image = BitmapFactory.decodeResource(context.resources, R.drawable.ship1, null)
 
     //position du joueur
-    override var position = RectF(ScreenData.leftScreenSide, ScreenData.screenHeight/2, ScreenData.leftScreenSide + taille, ScreenData.screenHeight/2 + taille) // position du joueur encodé dans un rectangle
+    override var position = RectF(ScreenData.leftScreenSide, ScreenData.screenHeight/2 -taille/2, ScreenData.leftScreenSide + taille, ScreenData.screenHeight/2 + taille/2) // position du joueur encodé dans un rectangle
 
     //Vitesses du joueur
     private var vitesseMax = 15f
@@ -84,6 +84,7 @@ class Joueur(context: Context,var taille: Float) : ViewComponent, Collider, Obse
                         //Detection si il y a collision
                         if (position.right > rectF.left && position.left < rectF.right && position.top < rectF.bottom && position.bottom > rectF.top) {
                             isColliding = true
+                            scores.updateScore(-200)
                             collidedObject = rectF
                         }
                     }

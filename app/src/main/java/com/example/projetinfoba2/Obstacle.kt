@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.RectF
-import android.util.Log
+import android.widget.TextView
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.random.Random
@@ -41,8 +41,8 @@ class Obstacle ( context: Context,  x: Float, y: Float) : Observer{
     private var multiplicateurVitesse = 1f
 
     //Dimensions de l'obstacle
-    private var height : Float = 50f
-    private var width : Float = 50f
+    private var height : Float = ScreenData.screenHeight/20
+    private var width : Float = height
     //Proprieté de destructibilité
     var isDestructible = false
 
@@ -53,6 +53,11 @@ class Obstacle ( context: Context,  x: Float, y: Float) : Observer{
     private var probaDest : Float = 0f
 
     private val ctx : Context = context
+
+
+    val scores = Scores()
+    lateinit var scoresLabel : TextView
+
     init {
         //Definit la destructibilité de l'obstacle
         setDestructibility()
@@ -61,14 +66,14 @@ class Obstacle ( context: Context,  x: Float, y: Float) : Observer{
         //Definit le rectangle de la position
         position = RectF(x, y, x + width, y + height)
     }
-    private fun resetObstacle(){
+    fun resetObstacle(){
         //
         //Deplacement de l'obstacle a droite de l'ecran
         position.left += ScreenData.screenWidth + width
         position.right += ScreenData.screenWidth + width
 
         //Randomisation des dimensions
-        width = (50 .. 100).random().toFloat()
+        width = ((ScreenData.screenHeight/30).toInt() ..(ScreenData.screenHeight/20).toInt()).random().toFloat()
         height = width
 
         //Randomisation du caractère destructible
@@ -117,6 +122,7 @@ class Obstacle ( context: Context,  x: Float, y: Float) : Observer{
     fun updatePosition(obstacleList: MutableList<Obstacle>){
         //Detection si l'obstacle sort de l'ecran
         if(position.right < ScreenData.leftScreenSide){
+            scores.updateScore(100)
             resetObstacle()
             detectIncreaseSpeed(obstacleList)
         }
