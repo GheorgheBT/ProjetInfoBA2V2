@@ -162,7 +162,6 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     }
     private fun run(){
 
-
         if (update){
 
            // if (System.currentTimeMillis() - lastObstacleTime > 2000) {// Génère des obstacles toutes les 5 secondes
