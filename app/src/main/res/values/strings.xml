@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">ProjetInfoBA2</string>
+
+    <string name = "PlayerShootIntervalEasy">350 </string>
+    <string name = "PlayerShootIntervalMedium">450 </string>
+    <string name = "PlayerShootIntervalHard">550 </string>
+
+    <string name = "PlayerSpeedEasy">15f </string>
+    <string name = "PlayerSpeedMedium">12 </string>
+    <string name = "PlayerSpeedHard">8 </string>
+
+    <string name = "TailleEnnemi">150 </string>
+
+    <string name = "LargeurObstacle">200 </string>
+
+    <string name = "ProbaDestructibleEasy">0.4 </string>
+    <string name = "ProbaDestructibleMedium">0.3 </string>
+    <string name = "ProbaDestructibleHard">0.2 </string>
 </resources>

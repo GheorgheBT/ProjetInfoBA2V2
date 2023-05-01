@@ -5,84 +5,155 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.RectF
-import java.util.*
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlin.random.Random
 
-class Obstacle ( context: Context,  x: Float, y: Float) : ViewComponent, Observer{
+class Obstacle ( context: Context,  x: Float, y: Float) : Observer{
 
     //Images des obstacles
     private val listeObstacleImage = intArrayOf(
-        R.drawable.par_1,
-        R.drawable.par_2,
-        R.drawable.par_3,
-        R.drawable.par_4,
-        R.drawable.par_5,
-        R.drawable.par_6,
-        R.drawable.par_7,
-        R.drawable.par_8,
-        R.drawable.par_9,
-        R.drawable.par_10
+        R.drawable.ateroide1,
+        R.drawable.asteroide2,
+        R.drawable.asteroide3,
+        R.drawable.ateroide4,
+        R.drawable.asteroide5
     )
 
-    //Obstacles destructibles
-    private val listeObstacleDestuctible = intArrayOf(
-        R.drawable.par_2,
-        R.drawable.par_4,
-        R.drawable.par_6,
-        R.drawable.par_8,
-        R.drawable.par_10
+    //Images des obstacles destructibles
+    private val listeObstacleDestructibleImage = intArrayOf(
+        R.drawable.ateroide_or1,
+        R.drawable.asteroide_or2,
+        R.drawable.asteroide_or3,
+        R.drawable.ateroide_or4,
+        R.drawable.asteroide_or5
     )
+
+    // position de l'obstacle (dans un RectF)
+    var position = RectF()
 
     //Aspect de l'obstacle
-    private val image: Bitmap
+    private lateinit var image : Bitmap
 
     // vitesse de l'obstacle
-    override var vitesseX = -5f
-    override var vitesseY = 0f
+    var vitesseX = -5f
+    var vitesseY = 0f
+    private var multiplicateurVitesse = 1f
 
-    // Degats causés par le contacte avec un obstacle
-    private val Degats = 100
-
+    //Dimensions de l'obstacle
+    private var height : Float = 50f
+    private var width : Float = 50f
     //Proprieté de destructibilité
     var isDestructible = false
 
     //Proprieté d'affichage
-    private var isOnScreen = true
+    var isOnScreen = true
 
+    // Probalibité que l'obsatcle soit destructible
+    private var probaDest : Float = 0f
 
-    init {// initialise l'image de l'obstacle de manière  aléatoire
-        val randomObstacle = Random().nextInt(listeObstacleImage.size)
-        image = BitmapFactory.decodeResource(context.resources, listeObstacleImage[randomObstacle])
-        if ( listeObstacleDestuctible.contains(listeObstacleImage[randomObstacle])){// caracterisation de la destructibilité
-            isDestructible = true
-        }
-
+    private val ctx : Context = context
+    init {
+        //Definit la destructibilité de l'obstacle
+        setDestructibility()
+        //Definit l'image
+        setImage()
+        //Definit le rectangle de la position
+        position = RectF(x, y, x + width, y + height)
     }
-    // position de l'obstacle (dans un RectF)
-    override val position = RectF(x, y, x  + image.width, y + image.height)
+    private fun resetObstacle(){
+        //
+        //Deplacement de l'obstacle a droite de l'ecran
+        position.left += ScreenData.screenWidth + width
+        position.right += ScreenData.screenWidth + width
 
+        //Randomisation des dimensions
+        width = (50 .. 100).random().toFloat()
+        height = width
+
+        //Randomisation du caractère destructible
+        setDestructibility()
+
+        //Réinitialisation de la visibilité
+        isOnScreen = true
+
+        //Mise à jour de l'image
+        setImage()
+
+        //Randomisation de la position verticale
+        val yPos = (ScreenData.upScreenSide.toInt() + height.toInt() .. ScreenData.screenHeight.toInt() - height.toInt()).random().toFloat()
+
+        // Assignation des nouvelles dimensions/positions
+        position = RectF(position.left, yPos - height/2,position.left + width, yPos + height/2)
+    }
+
+    private fun setDestructibility(){
+        // Definit la destructibilité en fonction d'une probabilité entre 0 et 1
+        val valeur = Random.nextFloat()
+        isDestructible = valeur < probaDest
+    }
+    private fun setImage(){
+        // Choix de l'image en fonction des caractéristiques de l'obstacle
+        image = when(isDestructible){
+            false -> {
+                val index = Random.nextInt(listeObstacleImage.size)
+                BitmapFactory.decodeResource(ctx.resources, listeObstacleImage[index])
+            }
+            true ->{
+                val index = Random.nextInt(listeObstacleDestructibleImage.size)
+                BitmapFactory.decodeResource(ctx.resources, listeObstacleDestructibleImage[index])
+            }
+        }
+    }
     fun draw(canvas: Canvas) {
-        //dessine l'obstacle dans le rectangle defini plus haut
+        //Dessine l'obstacle dans le rectangle defini auparavant
         if (isOnScreen) {
-           canvas.drawBitmap(image, null, position, null)
+            canvas.drawBitmap(image, null, position, null)
         }
     }
 
-    override fun updatePosition(){
-        // actualise la position
-        if (position.right< ScreenData.leftScreenSide) {
-            isOnScreen = false
+    fun updatePosition(obstacleList: MutableList<Obstacle>){
+        //Detection si l'obstacle sort de l'ecran
+        if(position.right < ScreenData.leftScreenSide){
+            resetObstacle()
+            detectIncreaseSpeed(obstacleList)
         }
-        if (isOnScreen) {
-            position.left += vitesseX
-            position.right += vitesseX
-        }
+        //Translation de l'obstacle à gauche
+        position.left += vitesseX * multiplicateurVitesse
+        position.right += vitesseX * multiplicateurVitesse
     }
 
-    override fun updateDifficulty(diff: Int) { // Ne fonctionne pas pour l'instant
+    private fun detectIncreaseSpeed(obstacleList : MutableList<Obstacle>){
+        var iSpeed = true
+        val thisObject = this // On reférencie cet objet pour l'utiliser dans la coroutine
+        runBlocking {//On bloque le thread principal pendand l'execution de la boucle
+            for (obs in obstacleList) {
+                launch { // lancement des coroutines
+                    if (obs != thisObject && (obs.position.bottom > position.top && obs.position.top < position.bottom)) { // Detection si les autres obstacles se trouvent sur la trajectoire de celui-ci
+                        iSpeed = false
+                    }
+                }
+            }
+        }
+        multiplicateurVitesse = if (iSpeed){ Random.nextDouble(1.0, 2.0).toFloat() } else { 1f }
+    }
+
+    override fun updateDifficulty(diff: Int) {
+        //Changement des paramètres des obstacles en fonction de la difficulté du jeu
         when(diff){
-            1 -> {vitesseX = -5f}
-            2 -> {vitesseX = -7f}
-            3 -> {vitesseX = -9f}
+            1 -> {
+                vitesseX = -5f
+                probaDest = ctx.resources.getString(R.string.ProbaDestructibleEasy).toFloat()
+            }
+            2 -> {
+                vitesseX = -6.5f
+                probaDest = ctx.resources.getString(R.string.ProbaDestructibleMedium).toFloat()
+            }
+            3 -> {
+                vitesseX = -8f
+                probaDest = ctx.resources.getString(R.string.ProbaDestructibleHard).toFloat()
+
+            }
         }
     }
 }

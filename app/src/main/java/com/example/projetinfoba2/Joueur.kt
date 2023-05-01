@@ -17,7 +17,7 @@ import kotlin.math.abs
 class Joueur(context: Context,var taille: Float) : ViewComponent, Collider, Observer {
 
     //Aspect du joueur
-    private var Image = BitmapFactory.decodeResource(context.resources, R.drawable.pers_1, null)
+    private var Image = BitmapFactory.decodeResource(context.resources, R.drawable.ship1, null)
 
     //position du joueur
     override var position = RectF(ScreenData.leftScreenSide, ScreenData.screenHeight/2, ScreenData.leftScreenSide + taille, ScreenData.screenHeight/2 + taille) // position du joueur encodé dans un rectangle
@@ -81,13 +81,15 @@ class Joueur(context: Context,var taille: Float) : ViewComponent, Collider, Obse
 
         runBlocking {   //On bloque la continuation du thread pendant le lancement des coroutines detectant les collisions
             for (obstacle in obstacleList) { //Parcours de tous les obstacles de la liste d'obstacles
-                launch { // Pour chaque boucle, lancement d'une coroutine pour que la detection de collision se fasse plus vite
-                    val rectF = obstacle.position // Assignation des rectF
-                    vitesseRebond = obstacle.vitesseX
-                    //Detection si il y a collision
-                    if (position.right > rectF.left && position.left < rectF.right && position.top < rectF.bottom && position.bottom > rectF.top) {
-                        isColliding = true
-                        collidedObject = rectF
+                launch {
+                    if(obstacle.isOnScreen) {// Pour chaque boucle, lancement d'une coroutine pour que la detection de collision se fasse plus vite
+                        val rectF = obstacle.position // Assignation des rectF
+                        vitesseRebond = obstacle.vitesseX
+                        //Detection si il y a collision
+                        if (position.right > rectF.left && position.left < rectF.right && position.top < rectF.bottom && position.bottom > rectF.top) {
+                            isColliding = true
+                            collidedObject = rectF
+                        }
                     }
                 }
             }
@@ -128,12 +130,9 @@ class Joueur(context: Context,var taille: Float) : ViewComponent, Collider, Obse
     fun reset(){
         position = RectF(ScreenData.leftScreenSide, ScreenData.screenHeight/2, ScreenData.leftScreenSide + taille, ScreenData.screenHeight/2 + taille)
     }
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun updateDifficulty(diff : Int) {
-        Log.d("TAG",diff.toString())
         when(diff){
             1 -> {
-
                 vitesseMax = 15f
                 intervalleTir = 350
             }

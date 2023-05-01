@@ -26,23 +26,32 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     private var screenHeight = 0f // Hauteur de l'écran en pixels
     private val backgroundImage = BitmapFactory.decodeResource(resources, R.drawable.run_bg_1)
     private var scaledBackgroundImage = Bitmap.createScaledBitmap(backgroundImage, 10000, 1500, true)
-    private val backgroundspeed = 5f
+    private val backgroundspeed = 2f
     private var backgroundOffset = 0f
     val random = Random()
     val paint = Paint()
     val joueur : Joueur
 
+
+    //Liste des obstacles
+    private var obstacleList = mutableListOf<Obstacle>()
     init {
+        //Initialisation des dimensions de l'ecran
         screenHeight = ScreenData.setScreenHeight(context)
         screenWidth = ScreenData.setScreenWidth(context)
-        joueur = Joueur(context,  screenHeight / 8f)
-        //Ajour d'une relation observateur entre le game status et les objets affectés par la difficulté
-        gameStatus.add(joueur)
+
+        //Initialisation du fond d'ecran
         scaledBackgroundImage = Bitmap.createScaledBitmap(backgroundImage,
             ((screenHeight/backgroundImage.height)*backgroundImage.width).toInt(),
             screenHeight.toInt(), true)
 
+        // Initialisation du joueur
+        joueur = Joueur(context,  screenHeight / 8f)
+        //Ajout d'une relation observateur entre le game status et les objets affectés par la difficulté
+        gameStatus.add(joueur)
 
+        //Initialisation des obstacles
+        initObstacles(7)
 
     }
 
@@ -54,9 +63,6 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     private var ennemiToRemove = mutableListOf<Ennemi>()
     private var lastEnnemiTime = 0L
 
-    private var obstacleList = mutableListOf<Obstacle>()
-    private var obstacleToRemove = mutableListOf<Obstacle>()
-    private var lastObstacleTime = 0L
 
     //Variables pour la gesion des fps
     private var prevTime =  0L // Sert a calculer l'intervalle entre chaque frame
@@ -88,7 +94,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         joueur.updateVie()
 
         for (projectile in projectileList){
-            projectile.getCollision(obstacleList,obstacleToRemove, joueur)
+            projectile.getCollision(obstacleList, joueur)
             projectile.updatePosition()
             if (!projectile.isOnScreen){
                 projectileToRemove.add(projectile)
@@ -96,7 +102,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         }
 
         for (obstacle in obstacleList){
-            obstacle.updatePosition()
+            obstacle.updatePosition(obstacleList)
         }
 
         for (ennemi in ennemiList){
@@ -112,8 +118,6 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     }
 
     private fun destroy(){
-        obstacleList.removeAll(obstacleToRemove)
-        obstacleToRemove.clear()
         projectileList.removeAll(projectileToRemove)
         projectileToRemove.clear()
         ennemiList.removeAll(ennemiToRemove)
@@ -121,18 +125,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         // garbage collector
         System.gc()
     }
-    private fun generateObstacle(){
-        var obstTop = random.nextInt(screenHeight.toInt())
-        var obstacle = Obstacle(context, screenWidth, obstTop.toFloat())
-        gameStatus.add(obstacle)
-        gameStatus.changeState(obstacle)
-        while (obstacle.position.bottom >=ScreenData.screenHeight || obstacle.position.top <= ScreenData.upScreenSide){ // force les obstacle a s'afficher entierement sur l'écrant
-            obstTop = random.nextInt(screenHeight.toInt())
-            obstacle = Obstacle(context, screenWidth, obstTop.toFloat())
-        }
-        obstacleList.add(obstacle)
-        lastObstacleTime = System.currentTimeMillis()
-    }
+
 
     private fun generateEnnemi(){
         val ennemi = Ennemi(context)
@@ -252,5 +245,15 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         joueur.reset()
         joueur.scores.resetVie()
         joueur.scores.resetScore()
+    }
+
+    private fun initObstacles(nombre : Int){
+        val pas = (screenWidth/nombre).toInt()
+        for (i in screenWidth.toInt() .. 2*screenWidth.toInt() step pas){
+            val posY = (ScreenData.upScreenSide.toInt() .. screenHeight.toInt()).random().toFloat()
+            val obs = Obstacle(context, i.toFloat(), posY)
+            obstacleList.add(obs)
+            gameStatus.add(obs)
+        }
     }
 }

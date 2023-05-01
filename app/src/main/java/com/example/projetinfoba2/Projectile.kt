@@ -18,6 +18,5 @@ abstract class Projectile : ViewComponent  {
 
     abstract fun getCollision(
         obstacleList: MutableList<Obstacle>? = null,
-        obstacleToRemove: MutableList<Obstacle>? = null,
         joueur: Joueur)
 }

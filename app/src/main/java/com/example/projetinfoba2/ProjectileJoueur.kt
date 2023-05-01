@@ -33,7 +33,7 @@ class ProjectileJoueur(context: Context, x: Float, y: Float, Taille: Float) : Pr
         }
     }
 
-    override fun getCollision(obstacleList: MutableList<Obstacle>?, obstacleToRemove: MutableList<Obstacle>?, joueur: Joueur) {
+    override fun getCollision(obstacleList: MutableList<Obstacle>?, joueur: Joueur) {
         val rightX= position.right
         val centerY = position.centerY()
 
@@ -41,11 +41,11 @@ class ProjectileJoueur(context: Context, x: Float, y: Float, Taille: Float) : Pr
             if (obstacleList != null) {
                 for (obstacle in obstacleList) {
                     launch {// Pour chaque boucle, lancement d'une coroutine pour que la detection de collision se fasse plus vite
-                        if (rightX >= obstacle.position.left && rightX <= obstacle.position.right && centerY >= obstacle.position.top && centerY <= obstacle.position.bottom) {
+                        if (obstacle.isOnScreen && rightX >= obstacle.position.left && rightX <= obstacle.position.right && centerY >= obstacle.position.top && centerY <= obstacle.position.bottom) {
                             isOnScreen = false
                             if (obstacle.isDestructible) {
                                 joueur.scores.updateScore()
-                                obstacleToRemove?.add(obstacle)
+                                obstacle.isOnScreen = false
                             }
                         }
                     }

@@ -9,7 +9,5 @@ class GameStatus : Observable{
         }
 
     var isOnPause : Boolean = false
-    fun changeState(observer : Observer){
-        observer.updateDifficulty(difficulty)
-    }
+
 }

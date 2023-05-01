@@ -70,3 +70,10 @@ MAJ 27/04 :
     - le changement de difficulté change la cadence de tir et la vitesse du joueur mais ca n'affacte
     pas les autres objets car ils sont instanciés après le changement de difficulté, je vais demander
     par mail une solution et je mettrai a jour apres
+
+
+MAJ 01/05
+    j'ai modifié legerement le comportement des obstacles, on init un nomobre voulu d'obstacles dés le début,
+    et ils se reset quand ils depassent l'écran à gauche
+    certains obstacles peuvent aussi avoir des vitesses différentes (cette fois c'est pas un bug)
+    on a des obstacles destructibles (dorés) et des indestructibles, casser les obstacles destructibles donne des points

@@ -38,7 +38,6 @@ class ProjectileEnnemi(context: Context, x: Float, y: Float, Taille: Float) : Pr
     }
     override fun getCollision(
         obstacleList: MutableList<Obstacle>?,
-        obstacleToRemove: MutableList<Obstacle>?,
         joueur: Joueur
     )
     {
