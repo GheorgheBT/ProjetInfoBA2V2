@@ -19,8 +19,8 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
     private var screenWidth = 0f// Largeur de l'écran en pixels
     private var screenHeight = 0f // Hauteur de l'écran en pixels
-    private val backgroundImage = BitmapFactory.decodeResource(resources, R.drawable.run_background)
-    private val scaledBackgroundImage = Bitmap.createScaledBitmap(backgroundImage, 10000, 1500, true)
+    private val backgroundImage = BitmapFactory.decodeResource(resources, R.drawable.run_bg_1)
+    private var scaledBackgroundImage = Bitmap.createScaledBitmap(backgroundImage, 10000, 1500, true)
     private val backgroundspeed = 5f
     private var backgroundOffset = 0f
     val random = Random()
@@ -31,9 +31,14 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         screenHeight = ScreenData.setScreenHeight(context)
         screenWidth = ScreenData.setScreenWidth(context)
         joueur = Joueur(context,  screenHeight / 8f)
-
         //Ajour d'une relation observateur entre le game status et les objets affectés par la difficulté
         gameStatus.add(joueur)
+        scaledBackgroundImage = Bitmap.createScaledBitmap(backgroundImage,
+            ((screenHeight/backgroundImage.height)*backgroundImage.width).toInt(),
+            screenHeight.toInt(), true)
+
+
+
     }
 
     private val screenRect = RectF(0f, 0f ,screenWidth, screenHeight)
@@ -157,12 +162,12 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
         if (upadate){
 
-            if (System.currentTimeMillis() - lastObstacleTime > 2000) {// Génère des obstacles toutes les 5 secondes
-                generateObstacle()
-            }
-            if (System.currentTimeMillis() - lastEnnemiTime > 5000) {// Génère des oiseaux toutes les 10 secondes
-                generateEnnemi()
-            }
+           // if (System.currentTimeMillis() - lastObstacleTime > 2000) {// Génère des obstacles toutes les 5 secondes
+           //     generateObstacle()
+            //}
+            //if (System.currentTimeMillis() - lastEnnemiTime > 5000) {// Génère des oiseaux toutes les 10 secondes
+            //    generateEnnemi()
+            //}
             backgroundMove(backgroundspeed)
             update()
             destroy()
