@@ -11,6 +11,10 @@ class Scores{
     fun updateVie(valeur : Int = -1){
         joueurVie += valeur
     }
+
+    fun setVie(valeur: Int){
+        joueurVie = valeur
+    }
     fun isDead() : Boolean{
         if(joueurVie == 0) {
             return true
@@ -33,6 +37,7 @@ class Scores{
     fun getScore() : Int{
         return joueurScore
     }
+
     fun showInfo(textView: TextView){
         val data = "Vie : $joueurVie \nScore : $joueurScore"
         textView.text = data

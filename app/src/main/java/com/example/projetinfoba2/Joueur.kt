@@ -118,7 +118,7 @@ class Joueur(context: Context,var taille: Float) : ViewComponent, Collider, Obse
     }
     fun updateVie(){
         if(position.right < ScreenData.leftScreenSide) {
-            scores.isDead()
+            scores.setVie(0)
         }
         scores.showInfo(scoresLabel)
     }

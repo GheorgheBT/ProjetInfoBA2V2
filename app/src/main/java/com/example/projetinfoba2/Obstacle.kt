@@ -81,7 +81,9 @@ class Obstacle ( context: Context,  x: Float, y: Float) : Observer{
         setImage()
 
         //Randomisation de la position verticale
-        val yPos = (ScreenData.upScreenSide.toInt() + height.toInt() .. ScreenData.screenHeight.toInt() - height.toInt()).random().toFloat()
+        val borneSup = ScreenData.upScreenSide.toInt() + height.toInt() + ctx.resources.getString(R.string.LongueurEnnemi).toFloat().toInt()
+        val borneInf = ScreenData.screenHeight.toInt() - height.toInt()
+        val yPos = (borneSup .. borneInf).random().toFloat()
 
         // Assignation des nouvelles dimensions/positions
         position = RectF(position.left, yPos - height/2,position.left + width, yPos + height/2)

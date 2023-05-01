@@ -7,7 +7,7 @@ class ProjectileEnnemi(context: Context, x: Float, y: Float, Taille: Float) : Pr
 
     //Aspect de la balle
     override val image: Bitmap = BitmapFactory.decodeResource(context.resources,
-        R.drawable.oeuf
+        R.drawable.balleennemie
     )
 
     //Position de la balle

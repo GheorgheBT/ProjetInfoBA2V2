@@ -13,8 +13,6 @@
 
     <string name = "LargeurObstacle">200 </string>
 
-
-
     <string name = "ProbaDestructibleEasy">0.4 </string>
     <string name = "ProbaDestructibleMedium">0.3 </string>
     <string name = "ProbaDestructibleHard">0.2 </string>
@@ -24,4 +22,6 @@
     <string name="VitesseObstacleHard">-8f</string>
 
 
+    <string name="LargeurEnnemi">134f</string>
+    <string name="LongueurEnnemi">74f</string>
 </resources>

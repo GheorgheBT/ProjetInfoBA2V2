@@ -77,3 +77,5 @@ MAJ 01/05
     et ils se reset quand ils depassent l'écran à gauche
     certains obstacles peuvent aussi avoir des vitesses différentes (cette fois c'est pas un bug)
     on a des obstacles destructibles (dorés) et des indestructibles, casser les obstacles destructibles donne des points
+
+    maj 2 : petites modifs ennemi + ajout de quelques valeurs dans le string.xml + ajouts d'images (pas encore fini)

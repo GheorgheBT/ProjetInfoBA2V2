@@ -35,6 +35,10 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
     //Liste des obstacles
     private var obstacleList = mutableListOf<Obstacle>()
+
+    //Liste des ennemis
+    private var ennemiList = mutableListOf<Ennemi>()
+
     init {
         //Initialisation des dimensions de l'ecran
         screenHeight = ScreenData.setScreenHeight(context)
@@ -53,15 +57,13 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         //Initialisation des obstacles
         initObstacles(7)
 
+        initEnnemies(2)
     }
 
 
     private val projectileList = mutableListOf<Projectile>()
     private var projectileToRemove = mutableListOf<Projectile>()
 
-    private var ennemiList = mutableListOf<Ennemi>()
-    private var ennemiToRemove = mutableListOf<Ennemi>()
-    private var lastEnnemiTime = 0L
 
 
     //Variables pour la gesion des fps
@@ -120,18 +122,10 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     private fun destroy(){
         projectileList.removeAll(projectileToRemove)
         projectileToRemove.clear()
-        ennemiList.removeAll(ennemiToRemove)
-        ennemiToRemove.clear()
         // garbage collector
         System.gc()
     }
 
-
-    private fun generateEnnemi(){
-        val ennemi = Ennemi(context)
-        ennemiList.add(ennemi)
-        lastEnnemiTime = System.currentTimeMillis()
-    }
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
@@ -159,15 +153,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         run()
     }
     private fun run(){
-
         if (update){
-
-           // if (System.currentTimeMillis() - lastObstacleTime > 2000) {// Génère des obstacles toutes les 5 secondes
-           //     generateObstacle()
-            //}
-            if (System.currentTimeMillis() - lastEnnemiTime > 5000) {// Génère des oiseaux toutes les 10 secondes
-                generateEnnemi()
-            }
             backgroundMove(backgroundspeed)
             update()
             destroy()
@@ -219,7 +205,6 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     }
 
     private fun showScoreDialog() {
-
         val builder = AlertDialog.Builder(context)
         builder.setTitle("Score")
         builder.setMessage("Votre score est de ${joueur.scores.getScore()}")
@@ -250,10 +235,23 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     private fun initObstacles(nombre : Int){
         val pas = (screenWidth/nombre).toInt()
         for (i in screenWidth.toInt() .. 2*screenWidth.toInt() step pas){
-            val posY = (ScreenData.upScreenSide.toInt() .. screenHeight.toInt()).random().toFloat()
+
+            val borneSup = ScreenData.upScreenSide.toInt() + context.resources.getString(R.string.LongueurEnnemi).toFloat().toInt()
+            val borneInf = screenHeight.toInt()
+            val posY = (borneSup .. borneInf).random().toFloat()
             val obs = Obstacle(context, i.toFloat(), posY)
             obstacleList.add(obs)
             gameStatus.add(obs)
+        }
+    }
+    private fun initEnnemies(nombre : Int){
+        val pas = (screenWidth/nombre).toInt()
+        for (i in 0 until nombre){
+            val posX = (i * pas).toFloat() - screenWidth
+            val ennemi = Ennemi(context, posX, ScreenData.upScreenSide + context.resources.getString(R.string.LongueurEnnemi).toFloat())
+            gameStatus.add(ennemi)
+            ennemiList.add(ennemi)
+
         }
     }
 }
