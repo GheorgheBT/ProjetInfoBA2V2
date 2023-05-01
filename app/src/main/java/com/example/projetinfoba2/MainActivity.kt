@@ -2,8 +2,6 @@ package com.example.projetinfoba2
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.AlertDialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.*
 import android.view.View.OnTouchListener
@@ -18,7 +16,7 @@ class MainActivity: Activity(){
     lateinit var boutonTir : ImageButton
     lateinit var fpsLabel : TextView // Pour voir nos fsp (seulement durant le developpement)
     lateinit var scoreLabel : TextView // Pour l'affichage des différentes données du joueur
-    var endGameAlertDialog: AlertDialog? = null
+
     //@SuppressLint("ClickableViewAccessibility")
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,29 +85,9 @@ class MainActivity: Activity(){
             true
         })
 
-        // je rajoute ca ici juste pour les tests mais on va le programmer proprement
-        if (drawingView.joueur.scores.getVie() == 0){
-            showScoreDialog()
-            endGameAlertDialog?.show()
-        }
     }
 
 
 
-    fun showScoreDialog() {
-        drawingView = findViewById(R.id.vMain)
 
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Score")
-        builder.setMessage("Votre score est de")
-        builder.setPositiveButton("Nouvelle partie") { _: DialogInterface, _: Int ->
-            drawingView.restartGame()
-            drawingView.upadate = true
-        }
-        builder.setNegativeButton("Quitter ") { _: DialogInterface, _: Int ->
-            finish()
-        }
-        endGameAlertDialog = builder.create()
-        endGameAlertDialog?.setCanceledOnTouchOutside(false)
-    }
 }

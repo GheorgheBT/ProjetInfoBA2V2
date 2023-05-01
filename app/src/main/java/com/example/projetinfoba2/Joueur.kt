@@ -14,7 +14,7 @@ import kotlinx.coroutines.runBlocking
 import kotlin.math.abs
 
 
-class Joueur(context: Context, taille: Float) : ViewComponent, Collider, Observer {
+class Joueur(context: Context,var taille: Float) : ViewComponent, Collider, Observer {
 
     //Aspect du joueur
     private var Image = BitmapFactory.decodeResource(context.resources, R.drawable.pers_1, null)
@@ -126,8 +126,7 @@ class Joueur(context: Context, taille: Float) : ViewComponent, Collider, Observe
     }
 
     fun reset(){
-        position.top = ScreenData.screenHeight/2
-        position.left = ScreenData.leftScreenSide
+        position = RectF(ScreenData.leftScreenSide, ScreenData.screenHeight/2, ScreenData.leftScreenSide + taille, ScreenData.screenHeight/2 + taille)
     }
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun updateDifficulty(diff : Int) {

@@ -1,6 +1,8 @@
 package com.example.projetinfoba2
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.graphics.*
 import android.os.SystemClock
 import android.util.AttributeSet
@@ -12,8 +14,8 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
     var drawing = false
     lateinit var thread: Thread
-
-    var upadate  = true
+    var endGameAlertDialog: AlertDialog? = null
+    private var update  = true
 
     val gameStatus = GameStatus()
 
@@ -134,6 +136,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     }
 
     override fun onDraw(canvas: Canvas?) {
+        super.onDraw(canvas)
         if (canvas != null) {
 
             canvas.drawBitmap(scaledBackgroundImage, backgroundOffset, ScreenData.upScreenSide, null)
@@ -160,20 +163,19 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     private fun run(){
 
 
-        if (upadate){
+        if (update){
 
            // if (System.currentTimeMillis() - lastObstacleTime > 2000) {// Génère des obstacles toutes les 5 secondes
            //     generateObstacle()
             //}
-            //if (System.currentTimeMillis() - lastEnnemiTime > 5000) {// Génère des oiseaux toutes les 10 secondes
-            //    generateEnnemi()
-            //}
+            if (System.currentTimeMillis() - lastEnnemiTime > 5000) {// Génère des oiseaux toutes les 10 secondes
+                generateEnnemi()
+            }
             backgroundMove(backgroundspeed)
             update()
             destroy()
         }
        detectEndGame()
-
     }
 
     private fun addEnnemiBullet(intervalle : Long , size : Float){
@@ -210,13 +212,36 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         prevTime = currTime
     }
 
-    fun detectEndGame() {
+    private fun detectEndGame() {
         if (joueur.scores.isDead()) {
-            upadate = false
+            update = false
+            if (endGameAlertDialog == null){
+                showScoreDialog()
+            }
         }
     }
 
-    fun restartGame() {
+    private fun showScoreDialog() {
+
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle("Score")
+        builder.setMessage("Votre score est de ${joueur.scores.getScore()}")
+        builder.setPositiveButton("Nouvelle partie") { _: DialogInterface, _: Int ->
+            restartGame()
+            update = true
+            endGameAlertDialog?.dismiss()
+            endGameAlertDialog = null
+        }
+        builder.setNegativeButton("Quitter ") { _: DialogInterface, _: Int ->
+            endGameAlertDialog?.dismiss()
+
+        }
+        endGameAlertDialog = builder.create()
+        endGameAlertDialog?.setCanceledOnTouchOutside(false)
+        endGameAlertDialog?.show()
+    }
+
+    private fun restartGame() {
         obstacleList.clear()
         ennemiList.clear()
         projectileList.clear()
