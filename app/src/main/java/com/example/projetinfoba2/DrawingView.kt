@@ -104,9 +104,9 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
             obstacle.updatePosition(obstacleList)
         }
 
-        //for (ennemi in ennemiList){
-        //    ennemi.updatePosition()
-        //}
+        for (ennemi in ennemiList){
+            ennemi.updatePosition()
+        }
 
         getFrameRate()
 
