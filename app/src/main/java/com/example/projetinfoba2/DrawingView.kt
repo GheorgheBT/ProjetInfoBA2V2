@@ -24,7 +24,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     private var screenHeight = 0f // Hauteur de l'écran en pixels
 
     //Caractérisation de l'image de fond
-    private val backgroundImage = BitmapFactory.decodeResource(resources, R.drawable.run_bg_1)
+    private val backgroundImage = BitmapFactory.decodeResource(resources, R.drawable.bgrnd)
     private var scaledBackgroundImage = Bitmap.createScaledBitmap(backgroundImage, 10000, 1500, true)
     private val backgroundspeed = 2f
     private var backgroundOffset = 0f

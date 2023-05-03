@@ -27,8 +27,6 @@ class WelcomeActivity : AppCompatActivity() {
 
         // Initialiser le MediaPlayer
         mediaPlayer = MediaPlayer.create(this, R.raw.intro)
-
-        // Jouer la musique
         mediaPlayer.start()
 
         btnPlay = findViewById(R.id.btnPlay)
@@ -46,10 +44,12 @@ class WelcomeActivity : AppCompatActivity() {
                 i = 0
                 btnDiff.setImageResource(diffImages[i])
                 btnDiff.setColorFilter(colors[i])
+                btnPlay.setColorFilter(colors[i])
                 i++
             } else {
                 btnDiff.setImageResource(diffImages[i])
                 btnDiff.setColorFilter(colors[i])
+                btnPlay.setColorFilter(colors[i])
                 i++
             }
 
