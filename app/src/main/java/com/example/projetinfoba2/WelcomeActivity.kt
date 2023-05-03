@@ -12,11 +12,11 @@ import androidx.appcompat.app.AppCompatActivity
 
 class WelcomeActivity : AppCompatActivity() {
 
-    lateinit var btnPlay: ImageButton
-    lateinit var btnDiff : ImageButton
-    val diffImages = intArrayOf(R.drawable.difficulty_button_1_star, R.drawable.difficulty_button_2_stars, R.drawable.difficulty_button_3_stars)
-    val colors = intArrayOf(Color.GREEN, Color.YELLOW, Color.RED)
-    var i = 1
+    private lateinit var btnPlay: ImageButton
+    private lateinit var btnDiff : ImageButton
+    private val diffImages = intArrayOf(R.drawable.difficulty_button_1_star, R.drawable.difficulty_button_2_stars, R.drawable.difficulty_button_3_stars)
+    private val colors = intArrayOf(Color.GREEN, Color.YELLOW, Color.RED)
+    private var i = 1
     private lateinit var mediaPlayer: MediaPlayer
 
     @SuppressLint("MissingInflatedId")
@@ -30,8 +30,6 @@ class WelcomeActivity : AppCompatActivity() {
 
         // Jouer la musique
         mediaPlayer.start()
-
-
 
         btnPlay = findViewById(R.id.btnPlay)
         btnPlay.setOnClickListener {

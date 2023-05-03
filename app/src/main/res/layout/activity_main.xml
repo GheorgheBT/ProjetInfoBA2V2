@@ -44,8 +44,8 @@
         android:id="@+id/fpsText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginStart="628dp"
+        android:layout_marginTop="16dp"
         android:text="TextView"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -56,14 +56,22 @@
         android:id="@+id/scoreLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="52dp"
         android:text="TextView"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.499"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <ImageView
+        android:id="@+id/barreVie"
+        android:layout_width="61dp"
+        android:layout_height="16dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/barre_vie_4"
+        app:layout_constraintBottom_toTopOf="@+id/scoreLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

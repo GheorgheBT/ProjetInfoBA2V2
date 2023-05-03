@@ -79,3 +79,6 @@ MAJ 01/05
     on a des obstacles destructibles (dorés) et des indestructibles, casser les obstacles destructibles donne des points
 
     maj 2 : petites modifs ennemi + ajout de quelques valeurs dans le string.xml + ajouts d'images (pas encore fini)
+
+Maj 03/05 :
+    rajout d'une barre de vie et legere modification du code d'affichage des score

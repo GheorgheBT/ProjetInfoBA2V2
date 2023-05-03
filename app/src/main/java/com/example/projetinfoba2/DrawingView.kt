@@ -10,23 +10,28 @@ import android.graphics.Paint
 import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.SurfaceView
-import android.widget.TextView
 
-class DrawingView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0): SurfaceView(context, attributes,defStyleAttr) {
+class DrawingView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0): SurfaceView(context, attributes,defStyleAttr), Observer {
 
     var endGameAlertDialog: AlertDialog? = null
     private var update  = true
 
+    //Création d'un objet gamestatus pour relier le changement de difficulté aux objets
     val gameStatus = GameStatus()
 
+    //Dimensions de l'écran en pixels
     private var screenWidth = 0f// Largeur de l'écran en pixels
     private var screenHeight = 0f // Hauteur de l'écran en pixels
+
+    //Caractérisation de l'image de fond
     private val backgroundImage = BitmapFactory.decodeResource(resources, R.drawable.run_bg_1)
     private var scaledBackgroundImage = Bitmap.createScaledBitmap(backgroundImage, 10000, 1500, true)
     private val backgroundspeed = 2f
     private var backgroundOffset = 0f
 
-    val paint = Paint()
+    private val paint = Paint()
+
+    //Création d'une valeur joueur
     val joueur : Joueur
 
 
@@ -36,7 +41,15 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     //Liste des ennemis
     private var ennemiList = mutableListOf<Ennemi>()
 
+    //Variables pour la gestion des projectiles
+    private val projectileList = mutableListOf<Projectile>()
+    private var projectileToRemove = mutableListOf<Projectile>()
+
+
     init {
+        //Ajout d'une relation observateur entre le game status et le rawingview
+        gameStatus.add(this)
+
         //Initialisation des dimensions de l'ecran
         screenHeight = ScreenData.setScreenHeight(context)
         screenWidth = ScreenData.setScreenWidth(context)
@@ -58,16 +71,6 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     }
 
 
-    private val projectileList = mutableListOf<Projectile>()
-    private var projectileToRemove = mutableListOf<Projectile>()
-
-
-
-    //Variables pour la gesion des fps
-    private var prevTime =  0L // Sert a calculer l'intervalle entre chaque frame
-    lateinit var fpsLabel : TextView
-    var deltas = mutableListOf<Float>() // liste des n fps pour avoir une valeur stable
-
     // Variables pour la gestion des tirs du joueyr
     var isShooting = false // determine si le joueur doit tirer
     private var prevShootTimeJoueur = 0L // permet d'utiliser un intervalle de tir
@@ -76,7 +79,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     // Variables pour la gestion des tirs ennemis
     private var prevShootTimeEnnemi = 0L
     var ennemiBulletSize = screenHeight / 30f
-    var intervalleTir : Long = 400
+    var intervalleTirEnnemi : Long = 400L
 
 
 
@@ -101,19 +104,17 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         }
 
         for (obstacle in obstacleList){
-            obstacle.updatePosition(obstacleList)
+            obstacle.updatePosition(obstacleList, joueur)
         }
 
         for (ennemi in ennemiList){
             ennemi.updatePosition()
         }
 
-        getFrameRate()
-
         if (isShooting){
             addJoueurBullet(joueur.intervalleTir, joueurBulletSize)
         }
-        addEnnemiBullet( intervalleTir, ennemiBulletSize)
+        addEnnemiBullet( intervalleTirEnnemi, ennemiBulletSize)
     }
 
     private fun destroy(){
@@ -156,18 +157,6 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
             destroy()
         }
        detectEndGame()
-    }
-
-    private fun getFrameRate(){
-        val currTime = SystemClock.elapsedRealtime()
-        val deltaTime =  (currTime - prevTime).toFloat()/1000
-        deltas.add(1f/deltaTime)
-        if (deltas.size > 8){
-            deltas.removeAt(0)
-        }
-        val average = deltas.average()
-        fpsLabel.text = average.toInt().toString()
-        prevTime = currTime
     }
 
     private fun addEnnemiBullet(intervalle : Long , size : Float){
@@ -255,5 +244,13 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         joueur.reset()
         joueur.scores.resetVie()
         joueur.scores.resetScore()
+    }
+
+    override fun updateDifficulty(diff: Int) {
+        when(diff){
+            1->{intervalleTirEnnemi = context.resources.getString(R.string.IntervalleTirEnnemiEasy).toLong()}
+            2->{intervalleTirEnnemi = context.resources.getString(R.string.IntervalleTirEnnemiMedium).toLong()}
+            3->{intervalleTirEnnemi = context.resources.getString(R.string.IntervalleTirEnnemiHard).toLong()}
+        }
     }
 }

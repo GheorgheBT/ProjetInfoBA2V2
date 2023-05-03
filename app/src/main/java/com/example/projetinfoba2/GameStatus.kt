@@ -7,7 +7,4 @@ class GameStatus : Observable{
             field = value
             hasUpdatedDifficulty(value)
         }
-
-    var isOnPause : Boolean = false
-
 }

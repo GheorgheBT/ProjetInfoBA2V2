@@ -24,4 +24,12 @@
 
     <string name="LargeurEnnemi">134f</string>
     <string name="LongueurEnnemi">74f</string>
+
+    <string name = "VitesseEnnemiEasy">5f</string>
+    <string name = "VitesseEnnemiMedium">7f</string>
+    <string name = "VitesseEnnemiHard">9f</string>
+
+    <string name = "IntervalleTirEnnemiEasy">800</string>
+    <string name = "IntervalleTirEnnemiMedium">700</string>
+    <string name = "IntervalleTirEnnemiHard">600</string>
 </resources>

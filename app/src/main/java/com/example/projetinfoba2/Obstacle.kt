@@ -5,12 +5,11 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.RectF
-import android.widget.TextView
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.random.Random
 
-class Obstacle ( context: Context,  x: Float, y: Float) : Observer{
+class Obstacle ( context: Context,  x: Float, y: Float) : Observer, MoveRandomly{
 
     //Images des obstacles
     private val listeObstacleImage = intArrayOf(
@@ -54,9 +53,6 @@ class Obstacle ( context: Context,  x: Float, y: Float) : Observer{
 
     private val ctx : Context = context
 
-
-    val scores = Scores()
-    lateinit var scoresLabel : TextView
 
     init {
         //Definit la destructibilité de l'obstacle
@@ -119,10 +115,10 @@ class Obstacle ( context: Context,  x: Float, y: Float) : Observer{
         }
     }
 
-    fun updatePosition(obstacleList: MutableList<Obstacle>){
+    override fun updatePosition(obstacleList: MutableList<Obstacle>, joueur: Joueur){
         //Detection si l'obstacle sort de l'ecran
         if(position.right < ScreenData.leftScreenSide){
-            scores.updateScore(100)
+            joueur.scores.updateScore(10)
             resetObstacle()
             detectIncreaseSpeed(obstacleList)
         }

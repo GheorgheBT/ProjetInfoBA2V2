@@ -8,7 +8,7 @@ import android.graphics.RectF
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-class ProjectileJoueur(context: Context, x: Float, y: Float, Taille: Float) : Projectile(), ViewComponent{
+class ProjectileJoueur(context: Context, x: Float, y: Float, Taille: Float) : Projectile(), Deplacement{
 
     override val image: Bitmap = BitmapFactory.decodeResource(context.resources,
         R.drawable.ballejoueur

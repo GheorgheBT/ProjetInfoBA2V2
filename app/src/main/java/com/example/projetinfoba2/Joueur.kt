@@ -5,16 +5,15 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
-import android.widget.TextView
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.math.abs
 
 
-class Joueur(context: Context,var taille: Float) : ViewComponent, Collider, Observer {
+class Joueur(context: Context, private var taille: Float) : Deplacement, Collider, Observer {
 
     //Aspect du joueur
-    private var Image = BitmapFactory.decodeResource(context.resources, R.drawable.ship1, null)
+    private var image = BitmapFactory.decodeResource(context.resources, R.drawable.ship1, null)
 
     //position du joueur
     override var position = RectF(ScreenData.leftScreenSide, ScreenData.screenHeight/2 -taille/2, ScreenData.leftScreenSide + taille, ScreenData.screenHeight/2 + taille/2) // position du joueur encodé dans un rectangle
@@ -25,14 +24,13 @@ class Joueur(context: Context,var taille: Float) : ViewComponent, Collider, Obse
     override var vitesseY = 0f
 
     //Coté de collision
-    var collisionSide : String = "NoCollision"
+    private var collisionSide : String = "NoCollision"
 
     // vitess de rebond
-    var vitesseRebond = 0f
+    private var vitesseRebond = 0f
 
     //Vie du joueur
     val scores = Scores()
-    lateinit var scoresLabel : TextView
 
     // Intervalle de tir
     var intervalleTir : Long = 400
@@ -40,7 +38,7 @@ class Joueur(context: Context,var taille: Float) : ViewComponent, Collider, Obse
     //Context
     private val ctx = context
    fun draw(canvas: Canvas, paint: Paint, width: Float, height: Float) {
-        canvas.drawBitmap(Image, null, position, null)
+        canvas.drawBitmap(image, null, position, null)
    }
 
     override fun updatePosition() {
@@ -62,7 +60,6 @@ class Joueur(context: Context,var taille: Float) : ViewComponent, Collider, Obse
         }
         // Déplacement du joueur
         super.updatePosition()
-
     }
 
     fun setSpeed(normeX : Float, normeY : Float){
@@ -121,7 +118,6 @@ class Joueur(context: Context,var taille: Float) : ViewComponent, Collider, Obse
         if(position.right < ScreenData.leftScreenSide) {
             scores.setVie(0)
         }
-        scores.showInfo(scoresLabel)
     }
 
     fun reset(){

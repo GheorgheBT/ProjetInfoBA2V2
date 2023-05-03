@@ -5,7 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.RectF
 
-abstract class Projectile : ViewComponent  {
+abstract class Projectile : Deplacement  {
 
     abstract val image: Bitmap
 

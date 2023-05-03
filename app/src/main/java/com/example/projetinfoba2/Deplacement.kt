@@ -2,7 +2,7 @@ package com.example.projetinfoba2
 
 import android.graphics.RectF
 
-interface ViewComponent {
+interface Deplacement {
     val position : RectF
     var vitesseX : Float
     var vitesseY : Float
