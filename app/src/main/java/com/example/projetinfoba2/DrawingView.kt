@@ -15,6 +15,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
     var endGameAlertDialog: AlertDialog? = null
     private var update  = true
+    var appState : Boolean = true
 
     //Création d'un objet gamestatus pour relier le changement de difficulté aux objets
     val gameStatus = GameStatus()
@@ -24,7 +25,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     private var screenHeight = 0f // Hauteur de l'écran en pixels
 
     //Caractérisation de l'image de fond
-    private val backgroundImage = BitmapFactory.decodeResource(resources, R.drawable.bgrnd)
+    private val backgroundImage = BitmapFactory.decodeResource(resources, R.drawable.run_background)
     private var scaledBackgroundImage = Bitmap.createScaledBitmap(backgroundImage, 10000, 1500, true)
     private val backgroundspeed = 2f
     private var backgroundOffset = 0f
@@ -85,7 +86,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
     private fun backgroundMove(speed: Float){
         backgroundOffset -= speed//
-        if (backgroundOffset < -(scaledBackgroundImage.width - screenWidth)) { //
+        if (backgroundOffset < -(scaledBackgroundImage.width/2)) { //
             backgroundOffset = ScreenData.leftScreenSide
         }
     }
@@ -219,27 +220,27 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         builder.setTitle("Score")
         builder.setMessage("Votre score est de ${joueur.scores.getScore()}")
         builder.setPositiveButton("Nouvelle partie") { _: DialogInterface, _: Int ->
-            restartGame()
-            update = true
-            endGameAlertDialog?.dismiss()
-            endGameAlertDialog = null
-        }
-        builder.setNegativeButton("Quitter ") { _: DialogInterface, _: Int ->
+            endGame()
             endGameAlertDialog?.dismiss()
             (context as MainActivity).finish()
+        }
+        builder.setNegativeButton("Quitter ") { _: DialogInterface, _: Int ->
+            // Fermer l'application
+
+            //(context as WelcomeActivity).finish()
+            endGameAlertDialog?.dismiss()
+            (context as MainActivity).closeAll()
         }
         endGameAlertDialog = builder.create()
         endGameAlertDialog?.setCanceledOnTouchOutside(false)
         endGameAlertDialog?.show()
     }
 
-    private fun restartGame() {
-        for (obstacle in obstacleList){
-            obstacle.resetObstacle()
-        }
-        for (ennemi in ennemiList){
-            ennemi.resetPosition()
-        }
+    private fun endGame() {
+        endGameAlertDialog = null
+        update = true
+        obstacleList.clear()
+        ennemiList.clear()
         projectileList.clear()
         joueur.reset()
         joueur.scores.resetVie()

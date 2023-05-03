@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 
 class WelcomeActivity : AppCompatActivity() {
 
+
     private lateinit var btnPlay: ImageButton
     private lateinit var btnDiff : ImageButton
     private val diffImages = intArrayOf(R.drawable.difficulty_button_1_star, R.drawable.difficulty_button_2_stars, R.drawable.difficulty_button_3_stars)
@@ -31,10 +32,9 @@ class WelcomeActivity : AppCompatActivity() {
 
         btnPlay = findViewById(R.id.btnPlay)
         btnPlay.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java).also{
+            Intent(this, MainActivity::class.java).also{
                 it.putExtra("Difficulty", i)
                 startActivity(it)
-
             }
         }
 

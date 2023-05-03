@@ -86,8 +86,9 @@ class MainActivity: Activity(){
             true })
 
     }
+    fun closeAll() {
+        //Ferme le jeu
+        finishAffinity()
 
-
-
-
+    }
 }
