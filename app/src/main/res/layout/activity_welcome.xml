@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/back"
+    android:background="@drawable/background"
     android:backgroundTintMode="multiply"
     tools:context=".WelcomeActivity">
 
@@ -15,28 +16,28 @@
         android:background="@null"
 
         android:backgroundTint="#00FF00"
+        android:contentDescription="@string/todo"
         app:layout_constraintBottom_toTopOf="@+id/btnDiff"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.835"
+        app:layout_constraintVertical_bias="0.741"
         app:srcCompat="@drawable/ic_play"
-        app:tint="#00FF00"
-        android:contentDescription="@string/todo" />
+        app:tint="#4B00FF00" />
 
     <ImageButton
         android:id="@+id/btnDiff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="84dp"
+        android:layout_marginBottom="92dp"
         android:background="@null"
 
         android:backgroundTint="#00FF00"
+        android:contentDescription="@string/todo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/difficulty_button_1_star"
-        app:tint="#00FF00"
-        android:contentDescription="@string/todo" />
+        app:tint="#2C00FF00" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

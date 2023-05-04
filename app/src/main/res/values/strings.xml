@@ -17,20 +17,25 @@
     <string name = "ProbaDestructibleMedium">0.3 </string>
     <string name = "ProbaDestructibleHard">0.2 </string>
 
-    <string name="VitesseObstacleEasy">-5f</string>
-    <string name="VitesseObstacleMedium">-6.5f</string>
-    <string name="VitesseObstacleHard">-8f</string>
+    <string name="VitesseObstacleEasy">-6f</string>
+    <string name="VitesseObstacleMedium">-7f</string>
+    <string name="VitesseObstacleHard">-9f</string>
 
 
     <string name="LargeurEnnemi">134f</string>
     <string name="LongueurEnnemi">74f</string>
 
-    <string name = "VitesseEnnemiEasy">5f</string>
+    <string name = "VitesseEnnemiEasy">4f</string>
     <string name = "VitesseEnnemiMedium">7f</string>
-    <string name = "VitesseEnnemiHard">9f</string>
+    <string name = "VitesseEnnemiHard">10f</string>
 
-    <string name = "IntervalleTirEnnemiEasy">800</string>
-    <string name = "IntervalleTirEnnemiMedium">700</string>
-    <string name = "IntervalleTirEnnemiHard">600</string>
+    <string name = "IntervalleTirEnnemiEasy">700</string>
+    <string name = "IntervalleTirEnnemiMedium">600</string>
+    <string name = "IntervalleTirEnnemiHard">500</string>
+
+    <string name = "BackgroundSpeedEasy">2</string>
+    <string name = "BackgroundSpeedMedium">4</string>
+    <string name = "BackgroundSpeedHard">8</string>
+
     <string name="todo">TODO</string>
 </resources>

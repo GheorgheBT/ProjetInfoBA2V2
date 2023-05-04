@@ -15,7 +15,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
     var endGameAlertDialog: AlertDialog? = null
     private var update  = true
-    var appState : Boolean = true
+
 
     //Création d'un objet gamestatus pour relier le changement de difficulté aux objets
     val gameStatus = GameStatus()
@@ -27,7 +27,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     //Caractérisation de l'image de fond
     private val backgroundImage = BitmapFactory.decodeResource(resources, R.drawable.run_background)
     private var scaledBackgroundImage = Bitmap.createScaledBitmap(backgroundImage, 10000, 1500, true)
-    private val backgroundspeed = 2f
+    private var backgroundspeed = 2f
     private var backgroundOffset = 0f
 
     private val paint = Paint()
@@ -249,9 +249,12 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
     override fun updateDifficulty(diff: Int) {
         when(diff){
-            1->{intervalleTirEnnemi = context.resources.getString(R.string.IntervalleTirEnnemiEasy).toLong()}
-            2->{intervalleTirEnnemi = context.resources.getString(R.string.IntervalleTirEnnemiMedium).toLong()}
-            3->{intervalleTirEnnemi = context.resources.getString(R.string.IntervalleTirEnnemiHard).toLong()}
+            1->{intervalleTirEnnemi = context.resources.getString(R.string.IntervalleTirEnnemiEasy).toLong()
+                backgroundspeed = context.resources.getString(R.string.BackgroundSpeedEasy).toFloat()}
+            2->{intervalleTirEnnemi = context.resources.getString(R.string.IntervalleTirEnnemiMedium).toLong()
+                backgroundspeed = context.resources.getString(R.string.BackgroundSpeedMedium).toFloat() }
+            3->{intervalleTirEnnemi = context.resources.getString(R.string.IntervalleTirEnnemiHard).toLong()
+                backgroundspeed = context.resources.getString(R.string.BackgroundSpeedHard).toFloat() }
         }
     }
 }
