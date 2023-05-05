@@ -82,3 +82,9 @@ MAJ 01/05
 
 Maj 03/05 :
     rajout d'une barre de vie et legere modification du code d'affichage des score
+
+MAJ 05/05:
+    changement des collision sous forme d'interface comme ca on peut rajouter différents types d'objets et + facile d'expansion
+    ajout de commentaires
+    nettoyage de code
+    ajout collision ennemis

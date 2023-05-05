@@ -6,14 +6,13 @@ import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
-import android.graphics.Paint
 import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.SurfaceView
 
 class DrawingView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0): SurfaceView(context, attributes,defStyleAttr), Observer {
 
-    var endGameAlertDialog: AlertDialog? = null
+    private var endGameAlertDialog: AlertDialog? = null
     private var update  = true
 
 
@@ -29,8 +28,6 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     private var scaledBackgroundImage = Bitmap.createScaledBitmap(backgroundImage, 10000, 1500, true)
     private var backgroundspeed = 2f
     private var backgroundOffset = 0f
-
-    private val paint = Paint()
 
     //Création d'une valeur joueur
     val joueur : Joueur
@@ -75,12 +72,12 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     // Variables pour la gestion des tirs du joueyr
     var isShooting = false // determine si le joueur doit tirer
     private var prevShootTimeJoueur = 0L // permet d'utiliser un intervalle de tir
-    var joueurBulletSize = screenHeight / 35f
+    private var joueurBulletSize = screenHeight / 35f
 
     // Variables pour la gestion des tirs ennemis
     private var prevShootTimeEnnemi = 0L
-    var ennemiBulletSize = screenHeight / 30f
-    var intervalleTirEnnemi : Long = 400L
+    private var ennemiBulletSize = screenHeight / 30f
+    private var intervalleTirEnnemi : Long = 400L
 
 
 
@@ -92,12 +89,16 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     }
 
     private fun update() {
-        joueur.detectCollision(obstacleList)
+        joueur.onCollision()
         joueur.updatePosition()
         joueur.updateVie()
 
         for (projectile in projectileList){
-            projectile.getCollision(obstacleList, joueur)
+            when(projectile){
+                is ProjectileJoueur ->{projectile.onCollision(joueur.scores) }
+                is ProjectileEnnemi ->{projectile.onCollision()}
+            }
+
             projectile.updatePosition()
             if (!projectile.isOnScreen){
                 projectileToRemove.add(projectile)
@@ -131,7 +132,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         if (canvas != null) {
 
             canvas.drawBitmap(scaledBackgroundImage, backgroundOffset, ScreenData.upScreenSide, null)
-            joueur.draw(canvas, paint, 1000f, 1000f)
+            joueur.draw(canvas)
 
             // Dessine tous les obstacles existants
             for (obstacle in obstacleList) {
@@ -167,6 +168,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
                 if (joueur.position.left <= ennemi.position.right && joueur.position.right>= ennemi.position.left) {
                     val projectile = ProjectileEnnemi(context, ennemi.position.centerX(), ennemi.position.centerY(),size)
                     projectileList.add(projectile)
+                    projectile.add(joueur)
                 }
             }
             prevShootTimeEnnemi = currentShootTime
@@ -178,6 +180,10 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         if (currentShootTime - prevShootTimeJoueur > intervalle) {
             val projectile = ProjectileJoueur(context, joueur.position.centerX(), joueur.position.centerY(),size )
             projectileList.add( projectile)
+
+            for(obs in obstacleList)
+                projectile.add(obs)
+
             prevShootTimeJoueur = currentShootTime
         }
     }
@@ -192,6 +198,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
             val obs = Obstacle(context, i.toFloat(), posY)
             obstacleList.add(obs)
             gameStatus.add(obs)
+            joueur.add(obs)
         }
     }
 
@@ -202,7 +209,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
             val ennemi = Ennemi(context, posX, ScreenData.upScreenSide + context.resources.getString(R.string.LongueurEnnemi).toFloat())
             gameStatus.add(ennemi)
             ennemiList.add(ennemi)
-
+            joueur.add(ennemi)
         }
     }
 

@@ -8,45 +8,50 @@ import android.graphics.RectF
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-class ProjectileJoueur(context: Context, x: Float, y: Float, Taille: Float) : Projectile(), Deplacement{
+class ProjectileJoueur(context: Context, x: Float, y: Float, Taille: Float) : Projectile(), Deplacement, DetecterCollisionAvecScore{
 
+    //Image du projectile
     override val image: Bitmap = BitmapFactory.decodeResource(context.resources,
         R.drawable.ballejoueur
     )
-    override val position: RectF = RectF(x, y - Taille/2, x + Taille, y + Taille/2) // encode la position de la balle dans un rectangle
+    //Rectangle de délimitation du projectile
+    override var position: RectF = RectF(x, y - Taille/2, x + Taille, y + Taille/2)
+
+    //Vitesses du projectile
     override var vitesseX: Float = 20f // la vitesse à laquelle la balle va se deplacer
     override var vitesseY : Float = 0f
-    override val degats: Int = 100
+
+    //Condition d'affichage de l'ennemi
     override var isOnScreen = true
 
     override fun draw(canvas: Canvas) {
-        //dessine la balle dans le rectangle defini plus haut
+        //Dessine le projectile dans le rectangle de délimitaion
         canvas.drawBitmap(image, null, position, null)
     }
 
 
     override fun updatePosition() {
+        //Arret d'affichage si le projectile sort de l'écran
         if (ScreenData.screenWidth <position.left){
             isOnScreen = false
         }
+        //Mise à jour de la position
         if (isOnScreen) {
             position.left += vitesseX
             position.right += vitesseX
         }
     }
 
-    override fun getCollision(obstacleList: MutableList<Obstacle>?, joueur: Joueur) {
-        val rightX= position.right
-        val centerY = position.centerY()
-
+    override val listeObjetsDeCollision: ArrayList<ObjetDeCollision> = ArrayList()
+    override fun onCollision(scores: Scores) {
         runBlocking {   //On bloque la continuation du thread pendant le lancement des coroutines detectant les collisions
-            if (obstacleList != null) {
-                for (obstacle in obstacleList) {
-                    launch {// Pour chaque boucle, lancement d'une coroutine pour que la detection de collision se fasse plus vite
-                        if (obstacle.isOnScreen && rightX >= obstacle.position.left && rightX <= obstacle.position.right && centerY >= obstacle.position.top && centerY <= obstacle.position.bottom) {
+            for (obstacle in listeObjetsDeCollision) {
+                launch { // Pour chaque boucle, lancement d'une coroutine pour que la detection de collision se fasse plus vite
+                    if(obstacle is Obstacle){
+                        if (obstacle.isOnScreen && isInContact(position, obstacle.position)) {
                             isOnScreen = false
                             if (obstacle.isDestructible) {
-                                joueur.scores.updateScore()
+                                scores.updateScore()
                                 obstacle.isOnScreen = false
                             }
                         }

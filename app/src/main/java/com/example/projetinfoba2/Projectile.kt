@@ -9,14 +9,9 @@ abstract class Projectile : Deplacement  {
 
     abstract val image: Bitmap
 
-    abstract val degats : Int
-
     abstract var isOnScreen : Boolean
 
-    abstract override val position: RectF
+    abstract override var position: RectF
     abstract fun draw(canvas: Canvas)
 
-    abstract fun getCollision(
-        obstacleList: MutableList<Obstacle>? = null,
-        joueur: Joueur)
 }

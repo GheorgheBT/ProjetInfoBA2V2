@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
 import android.view.*
-import android.view.View.OnTouchListener
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -12,13 +11,14 @@ import android.widget.TextView
 
 class MainActivity: Activity(){
 
-    lateinit var drawingView: DrawingView
-    lateinit var joystickView: JoystickView
-    lateinit var boutonTir : ImageButton
+    private lateinit var drawingView: DrawingView
+    private lateinit var joystickView: JoystickView
+    private lateinit var boutonTir : ImageButton
 
-    lateinit var scoreLabel : TextView // Pour l'affichage des différentes données du joueur
-    lateinit var barreVie : ImageView
-    //@SuppressLint("ClickableViewAccessibility")
+    private lateinit var scoreLabel : TextView // Pour l'affichage des différentes données du joueur
+    private lateinit var barreVie : ImageView
+
+    @Suppress("DEPRECATION")
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +61,7 @@ class MainActivity: Activity(){
         //Gestion du joystick
         joystickView = findViewById(R.id.joystickView)
 
-        joystickView.setOnTouchListener(OnTouchListener {v, event ->
+        joystickView.setOnTouchListener { v, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
                     if (joystickView.isPressed(event.x, event.y)) {
@@ -75,15 +75,19 @@ class MainActivity: Activity(){
                     joystickView.invalidate()
                 }
                 MotionEvent.ACTION_MOVE -> {
-                    if (joystickView.getIsPressed()){
+                    if (joystickView.getIsPressed()) {
                         joystickView.setActuator(event.x, event.y)
                         joystickView.updateJoystickPosition()
                         joystickView.invalidate()
                     }
                 }
             }
-            drawingView.joueur.setSpeed(joystickView.deltaPosX/joystickView.cercleExtRayon, joystickView.deltaPosY/ joystickView.cercleExtRayon)
-            true })
+            drawingView.joueur.setSpeed(
+                joystickView.deltaPosX / joystickView.cercleExtRayon,
+                joystickView.deltaPosY / joystickView.cercleExtRayon
+            )
+            true
+        }
 
     }
     fun closeAll() {

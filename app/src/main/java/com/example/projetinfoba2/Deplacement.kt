@@ -3,10 +3,13 @@ package com.example.projetinfoba2
 import android.graphics.RectF
 
 interface Deplacement {
-    val position : RectF
+    //Rectangle délimitant l'objet
+    var position : RectF
+    //Vitesse de déplacement de l'objet
     var vitesseX : Float
     var vitesseY : Float
-    fun updatePosition(){
+
+    fun updatePosition(){ //Fonction de déplacement
         position.top += vitesseY
         position.bottom += vitesseY
         position.left += vitesseX

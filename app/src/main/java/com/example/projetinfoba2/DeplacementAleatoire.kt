@@ -1,5 +1,5 @@
 package com.example.projetinfoba2
 
-interface MoveRandomly {
+interface DeplacementAleatoire {
     fun updatePosition(obstacleList: MutableList<Obstacle>, joueur: Joueur)
 }

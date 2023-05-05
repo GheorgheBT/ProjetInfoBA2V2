@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.random.Random
 
-class Obstacle ( context: Context,  x: Float, y: Float) : Observer, MoveRandomly{
+class Obstacle ( context: Context,  x: Float, y: Float) : Observer, DeplacementAleatoire, ObjetDeCollision{
 
     //Images des obstacles
     private val listeObstacleImage = intArrayOf(
@@ -29,30 +29,33 @@ class Obstacle ( context: Context,  x: Float, y: Float) : Observer, MoveRandomly
         R.drawable.asteroide_or5
     )
 
-    // position de l'obstacle (dans un RectF)
-    var position = RectF()
+    //Rectangle délimitant l'obstacle
+    override var position = RectF()
 
     //Aspect de l'obstacle
     private lateinit var image : Bitmap
 
-    // vitesse de l'obstacle
+    //Vitesse de l'obstacle
     var vitesseX = -5f
     private var multiplicateurVitesse = 1f
 
     //Dimensions de l'obstacle
     private var height : Float = ScreenData.screenHeight/20
     private var width : Float = height
+
     //Proprieté de destructibilité
     var isDestructible = false
 
     //Proprieté d'affichage
-    var isOnScreen = true
+    override var isOnScreen = true
 
     // Probalibité que l'obsatcle soit destructible
     private var probaDest : Float = 0f
 
     private val ctx : Context = context
 
+    //Score enlevé lors des collisions joueur/obstacle
+    private var removedScore : Int = 0
 
     init {
         //Definit la destructibilité de l'obstacle
@@ -62,8 +65,7 @@ class Obstacle ( context: Context,  x: Float, y: Float) : Observer, MoveRandomly
         //Definit le rectangle de la position
         position = RectF(x, y, x + width, y + height)
     }
-    fun resetObstacle(){
-        //
+    private fun resetObstacle(){
         //Deplacement de l'obstacle a droite de l'ecran
         position.left += ScreenData.screenWidth + width
         position.right += ScreenData.screenWidth + width
@@ -148,14 +150,17 @@ class Obstacle ( context: Context,  x: Float, y: Float) : Observer, MoveRandomly
             1 -> {
                 vitesseX = ctx.resources.getString(R.string.VitesseObstacleEasy).toFloat()
                 probaDest = ctx.resources.getString(R.string.ProbaDestructibleEasy).toFloat()
+                removedScore = ctx.resources.getString(R.string.RemovedScoreEasy).toInt()
             }
             2 -> {
                 vitesseX = ctx.resources.getString(R.string.VitesseObstacleMedium).toFloat()
                 probaDest = ctx.resources.getString(R.string.ProbaDestructibleMedium).toFloat()
+                removedScore = ctx.resources.getString(R.string.RemovedScoreNormal).toInt()
             }
             3 -> {
                 vitesseX = ctx.resources.getString(R.string.VitesseObstacleHard).toFloat()
                 probaDest = ctx.resources.getString(R.string.ProbaDestructibleHard).toFloat()
+                removedScore = ctx.resources.getString(R.string.RemovedScoreHard).toInt()
             }
         }
     }

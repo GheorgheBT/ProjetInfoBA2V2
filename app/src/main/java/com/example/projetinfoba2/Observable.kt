@@ -4,13 +4,13 @@ interface Observable {
     val observers: ArrayList<Observer>
 
     fun add(observer: Observer) {
-        observers.add(observer);
+        observers.add(observer)
     }
     fun remove(observer: Observer) {
-        observers.remove(observer);
+        observers.remove(observer)
     }
     fun hasUpdatedDifficulty(diff : Int) {
-        observers.forEach { it.updateDifficulty(diff); }
+        observers.forEach { it.updateDifficulty(diff) }
     }
 
 }

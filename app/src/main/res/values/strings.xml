@@ -37,5 +37,10 @@
     <string name = "BackgroundSpeedMedium">4</string>
     <string name = "BackgroundSpeedHard">8</string>
 
+    <string name = "RemovedScoreEasy">-10</string>
+    <string name = "RemovedScoreNormal">-15</string>
+    <string name = "RemovedScoreHard">-20</string>
+
     <string name="todo">TODO</string>
+
 </resources>

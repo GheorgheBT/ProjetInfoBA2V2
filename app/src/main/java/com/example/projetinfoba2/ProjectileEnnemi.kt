@@ -3,22 +3,20 @@ package com.example.projetinfoba2
 import android.content.Context
 import android.graphics.*
 
-class ProjectileEnnemi(context: Context, x: Float, y: Float, Taille: Float) : Projectile() {
+class ProjectileEnnemi(context: Context, x: Float, y: Float, Taille: Float) : Projectile(), DetecterCollision {
 
     //Aspect de la balle
     override val image: Bitmap = BitmapFactory.decodeResource(context.resources,
         R.drawable.balleennemie
     )
 
-    //Position de la balle
-    override val position = RectF(x, y, x + Taille, y + Taille) // encode la position de la balle dans un rectangle
+    //Délimitation rectangulaire de la balle
+    override var position = RectF(x, y, x + Taille, y + Taille) // encode la position de la balle dans un rectangle
 
     //Vitesses de la balle
     override var vitesseX = 0f // la vitesse à laquelle la balle va se deplacer
     override var vitesseY = 15f
 
-    // Degats causé par la balle
-    override val degats: Int = 100
 
     override var isOnScreen = true
 
@@ -36,16 +34,18 @@ class ProjectileEnnemi(context: Context, x: Float, y: Float, Taille: Float) : Pr
             super.updatePosition()
         }
     }
-    override fun getCollision(
-        obstacleList: MutableList<Obstacle>?,
-        joueur: Joueur
-    )
-    {
-        val rightX= position.right
-        val centerY = position.centerY()
-        if (rightX >= joueur.position.left && rightX <= joueur.position.right && centerY >= joueur.position.top && centerY <= joueur.position.bottom) {
-            isOnScreen = false
-            joueur.scores.updateVie()
+
+    override val listeObjetsDeCollision: ArrayList<ObjetDeCollision> = ArrayList()
+
+    override fun onCollision() {
+        for (obj in listeObjetsDeCollision){
+            if (obj !is Joueur){ // On passe au prochain objet si cette condition n'est ps respectée
+                continue
+            }
+            if (isInContact(position, obj.position)) {
+                isOnScreen = false
+                obj.scores.updateVie()
+            }
         }
     }
 
