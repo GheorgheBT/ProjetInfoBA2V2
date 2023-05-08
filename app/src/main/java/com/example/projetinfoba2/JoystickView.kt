@@ -44,7 +44,7 @@ class JoystickView @JvmOverloads constructor(context: Context, attributes: Attri
         setWillNotDraw(false) // permet d'activer Ondraw
     }
 
-    fun isPressed (posAppuiX: Float, posAppuiY : Float) : Boolean{
+    fun onPress (posAppuiX: Float, posAppuiY : Float) : Boolean{
         val distanceAppuiX = posAppuiX - cercleExtPosX
         val distanceAppuiY = posAppuiY - cercleExtPosY
         val distanceAppui = sqrt( distanceAppuiX.pow(2) + distanceAppuiY.pow(2))

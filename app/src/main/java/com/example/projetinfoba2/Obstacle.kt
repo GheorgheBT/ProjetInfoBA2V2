@@ -36,7 +36,8 @@ class Obstacle ( context: Context,  x: Float, y: Float) : Observer, DeplacementA
     private lateinit var image : Bitmap
 
     //Vitesse de l'obstacle
-    var vitesseX = -5f
+    override var vitesseX = -5f
+    override var vitesseY = 0f
     private var multiplicateurVitesse = 1f
 
     //Dimensions de l'obstacle
@@ -95,7 +96,7 @@ class Obstacle ( context: Context,  x: Float, y: Float) : Observer, DeplacementA
     private fun setDestructibility(){
         // Definit la destructibilité en fonction d'une probabilité entre 0 et 1
         val valeur = Random.nextFloat()
-        isDestructible = valeur < probaDest
+        isDestructible = valeur <= probaDest
     }
     private fun setImage(){
         // Choix de l'image en fonction des caractéristiques de l'obstacle
@@ -144,7 +145,7 @@ class Obstacle ( context: Context,  x: Float, y: Float) : Observer, DeplacementA
         multiplicateurVitesse = if (iSpeed){ Random.nextDouble(1.0, 2.0).toFloat() } else { 1f }
     }
 
-    override fun updateDifficulty(diff: Int) {
+    override fun updateParameters(diff: Int) {
         //Changement des paramètres des obstacles en fonction de la difficulté du jeu
         when(diff){
             1 -> {

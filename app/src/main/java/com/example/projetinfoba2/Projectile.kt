@@ -7,7 +7,7 @@ import android.graphics.RectF
 
 abstract class Projectile : Deplacement  {
 
-    abstract val image: Bitmap
+    protected abstract val image: Bitmap
 
     abstract var isOnScreen : Boolean
 

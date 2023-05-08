@@ -5,9 +5,14 @@ class GameStatus : Observable{
     override val observers:ArrayList<Observer> = ArrayList()
 
     //Notification des observers lors de la modification de la difficulté
-    var difficulty : Int = 1
+    private var difficulty : Int = 1
         set(value) {
             field = value
             hasUpdatedDifficulty(value)
         }
+
+    fun updateDifficulty(diff : Int){
+        difficulty = diff
+    }
+
 }

@@ -32,7 +32,6 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     //Création d'une valeur joueur
     val joueur : Joueur
 
-
     //Liste des obstacles
     private var obstacleList = mutableListOf<Obstacle>()
 
@@ -81,45 +80,54 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
 
 
-    private fun backgroundMove(speed: Float){
+    private fun backgroundMove(speed: Float, canvas: Canvas?){
         backgroundOffset -= speed//
         if (backgroundOffset < -(scaledBackgroundImage.width/2)) { //
             backgroundOffset = ScreenData.leftScreenSide
         }
+        canvas?.drawBitmap(scaledBackgroundImage, backgroundOffset, ScreenData.upScreenSide, null)
     }
 
-    private fun update() {
-        joueur.onCollision()
-        joueur.updatePosition()
-        joueur.updateVie()
+    private fun updateObjects() {
+        //Mise à jour des obstacles
+        for (obstacle in obstacleList){
+            obstacle.updatePosition(obstacleList, joueur)
+        }
 
+        //Mise à jour des ennemis
+        for (ennemi in ennemiList){
+            ennemi.updatePosition()
+        }
+
+        //Ajour de nouvelles balles
+        if (isShooting){
+            addJoueurBullet(joueur.intervalleTir, joueurBulletSize)
+        }
+        addEnnemiBullet( intervalleTirEnnemi, ennemiBulletSize)
+
+        //Mise à jour des projectiles
         for (projectile in projectileList){
             when(projectile){
                 is ProjectileJoueur ->{projectile.onCollision(joueur.scores) }
                 is ProjectileEnnemi ->{projectile.onCollision()}
             }
-
             projectile.updatePosition()
+
             if (!projectile.isOnScreen){
                 projectileToRemove.add(projectile)
             }
         }
 
-        for (obstacle in obstacleList){
-            obstacle.updatePosition(obstacleList, joueur)
-        }
 
-        for (ennemi in ennemiList){
-            ennemi.updatePosition()
-        }
+        // Mise à jour du joueur
+        joueur.onCollision()
+        joueur.updatePosition()
+        joueur.updateVie()
 
-        if (isShooting){
-            addJoueurBullet(joueur.intervalleTir, joueurBulletSize)
-        }
-        addEnnemiBullet( intervalleTirEnnemi, ennemiBulletSize)
+        destroyProjectiles()
     }
 
-    private fun destroy(){
+    private fun destroyProjectiles(){
         projectileList.removeAll(projectileToRemove)
         projectileToRemove.clear()
         // garbage collector
@@ -130,37 +138,38 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         if (canvas != null) {
-
-            canvas.drawBitmap(scaledBackgroundImage, backgroundOffset, ScreenData.upScreenSide, null)
-            joueur.draw(canvas)
-
-            // Dessine tous les obstacles existants
-            for (obstacle in obstacleList) {
-                obstacle.draw(canvas)
+            if(update) {
+                backgroundMove(backgroundspeed, canvas)
+                updateObjects()
             }
 
-            // Dessine tous les oiseaux existants
-            for (ennemi in ennemiList) {
-                ennemi.draw(canvas)
-            }
+            drawObjects(canvas)
 
-            // dessine tous les projectiles existants
-            for (projetile in projectileList) {
-                projetile.draw(canvas)
-            }
-           postInvalidateOnAnimation()
+            detectEndGame()
+
+            postInvalidateOnAnimation()
         }
-        run()
-    }
-    private fun run(){
-        if (update){
-            backgroundMove(backgroundspeed)
-            update()
-            destroy()
-        }
-       detectEndGame()
     }
 
+    private fun drawObjects(canvas: Canvas){
+        //Dessine le joueur
+        joueur.draw(canvas)
+
+        // Dessine tous les obstacles existants
+        for (obstacle in obstacleList) {
+            obstacle.draw(canvas)
+        }
+
+        // Dessine tous les oiseaux existants
+        for (ennemi in ennemiList) {
+            ennemi.draw(canvas)
+        }
+
+        // dessine tous les projectiles existants
+        for (projetile in projectileList) {
+            projetile.draw(canvas)
+        }
+    }
     private fun addEnnemiBullet(intervalle : Long , size : Float){
         val currentShootTime = SystemClock.elapsedRealtime()
         if (currentShootTime - prevShootTimeEnnemi > intervalle) {
@@ -254,7 +263,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         joueur.scores.resetScore()
     }
 
-    override fun updateDifficulty(diff: Int) {
+    override fun updateParameters(diff: Int) {
         when(diff){
             1->{intervalleTirEnnemi = context.resources.getString(R.string.IntervalleTirEnnemiEasy).toLong()
                 backgroundspeed = context.resources.getString(R.string.BackgroundSpeedEasy).toFloat()}

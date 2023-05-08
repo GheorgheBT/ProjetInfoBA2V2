@@ -10,7 +10,7 @@ interface Observable {
         observers.remove(observer)
     }
     fun hasUpdatedDifficulty(diff : Int) {
-        observers.forEach { it.updateDifficulty(diff) }
+        observers.forEach { it.updateParameters(diff) }
     }
 
 }

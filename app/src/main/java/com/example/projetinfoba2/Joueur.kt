@@ -83,7 +83,7 @@ class Joueur(context: Context, private var taille: Float) : Deplacement, Detecte
     fun reset(){
         position = RectF(ScreenData.leftScreenSide, ScreenData.screenHeight/2, ScreenData.leftScreenSide + taille, ScreenData.screenHeight/2 + taille)
     }
-    override fun updateDifficulty(diff : Int) {
+    override fun updateParameters(diff : Int) {
         when(diff){
             1 -> {
                 vitesseMax = ctx.resources.getString(R.string.PlayerSpeedEasy).toFloat()
@@ -103,51 +103,48 @@ class Joueur(context: Context, private var taille: Float) : Deplacement, Detecte
     override val listeObjetsDeCollision: ArrayList<ObjetDeCollision> = ArrayList()
     override fun onCollision(){
         collisionSide = "NoCollision"
-        var isColliding = false
-        var collidedObject = RectF()
 
         runBlocking {   //On bloque la continuation du thread pendant le lancement des coroutines detectant les collisions
             for (objet in listeObjetsDeCollision) { //Parcours de tous les obstacles de la liste d'obstacles
                 launch {
-                    if(objet.isOnScreen) {// Pour chaque boucle, lancement d'une coroutine pour que la detection de collision se fasse plus vite
-                        val rectF = objet.position // Assignation des rectF
+                    val rectF = objet.position // Assignation des rectF
+                    if(objet.isOnScreen && isInContact(position, rectF)) {// Pour chaque boucle, lancement d'une coroutine pour que la detection de collision se fasse plus vite
                         //Detection si il y a collision
-                        if (isInContact(position, rectF)) {
-                            if(objet is Ennemi){scores.setVie(0)}
-                            else if (objet is Obstacle){
-                                vitesseRebond = objet.vitesseX
-                                isColliding = true
-                                collidedObject = rectF
-                                scores.updateScore(-10)
-                            }
+                        if(objet is Ennemi){scores.setVie(0)}
+                        else if (objet is Obstacle){
+                            vitesseRebond = objet.vitesseX
+
+                            //Détermination du coté de la collision (entre joueur et obstacle)
+                            getCollisionSide(rectF)
+                            scores.updateScore(-10)
                         }
                     }
                 }
             }
         }
 
-        //Si il y a collision, détermination du coté de la collision (entre joueur et obstacle)
-        if(isColliding){
-            val xRealCollision = collidedObject.centerX() - position.centerX() // Distance réelle entre les centres des 2 objets
-            val yRealCollision = collidedObject.centerY() - position.centerY()
+    }
 
-            val xMinCollision = collidedObject.width()/2 + position.width()/2 // Distances minimales entre les centres des 2 objets avant que la collision soit inévitable
-            val yMinCollision = collidedObject.height()/2 + position.height()/2
+    private fun getCollisionSide(collidedObject : RectF){
+        val xRealCollision = collidedObject.centerX() - position.centerX() // Distance réelle entre les centres des 2 objets
+        val yRealCollision = collidedObject.centerY() - position.centerY()
 
-            val dx = xMinCollision - abs(xRealCollision) //Différences entre les distances minimales et réelles
-            val dy = yMinCollision - abs(yRealCollision)
+        val xMinCollision = collidedObject.width()/2 + position.width()/2 // Distances minimales entre les centres des 2 objets avant que la collision soit inévitable
+        val yMinCollision = collidedObject.height()/2 + position.height()/2
 
-            if (dx < dy){ // Signifie que le joueur se trouve très proche du coté droit ou gauche de l'obstacle
-                when{
-                    xRealCollision > 0 -> collisionSide = "RightCollision" // Le joueur se trouve a gauche
-                    xRealCollision < 0 -> collisionSide = "LeftCollision" // Le joueur se trouve a droite
-                }
+        val dx = xMinCollision - abs(xRealCollision) //Différences entre les distances minimales et réelles
+        val dy = yMinCollision - abs(yRealCollision)
+
+        if (dx < dy){ // Signifie que le joueur se trouve très proche du coté droit ou gauche de l'obstacle
+            when{
+                xRealCollision > 0 -> collisionSide = "RightCollision" // Le joueur se trouve a gauche
+                xRealCollision < 0 -> collisionSide = "LeftCollision" // Le joueur se trouve a droite
             }
-            else if (dy < dx){  // Signifie que le joueur se trouve très proche du coté haut ou bas de l'obstacle
-                when{
-                    yRealCollision > 0 -> collisionSide = "DownCollision" // Le joueur se trouve en haut
-                    yRealCollision < 0 -> collisionSide = "UpCollision" // Le joueur se trouve en bas
-                }
+        }
+        else if (dy < dx){  // Signifie que le joueur se trouve très proche du coté haut ou bas de l'obstacle
+            when{
+                yRealCollision > 0 -> collisionSide = "DownCollision" // Le joueur se trouve en haut
+                yRealCollision < 0 -> collisionSide = "UpCollision" // Le joueur se trouve en bas
             }
         }
     }

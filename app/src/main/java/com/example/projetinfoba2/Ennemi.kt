@@ -59,7 +59,7 @@ class Ennemi(context: Context, posX : Float, posY : Float) : Deplacement, Observ
         position.left -= ScreenData.screenWidth + width
     }
 
-    override fun updateDifficulty(diff: Int) {
+    override fun updateParameters(diff: Int) {
         //Moification de la vitesse de l'ennemi en fonction de la difficulté
         when (diff){
             1 -> {vitesseX = ctx.resources.getString(R.string.VitesseEnnemiEasy).toFloat()}

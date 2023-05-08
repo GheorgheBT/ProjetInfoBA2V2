@@ -41,7 +41,7 @@ class MainActivity: Activity(){
         drawingView.joueur.scores.barreVie = barreVie
 
         val difficulty = intent.getIntExtra("Difficulty", 1)
-        drawingView.gameStatus.difficulty = difficulty
+        drawingView.gameStatus.updateDifficulty(difficulty)
 
         //Gestion du bouton
         boutonTir = findViewById(R.id.boutonTir)
@@ -64,7 +64,7 @@ class MainActivity: Activity(){
         joystickView.setOnTouchListener { v, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    if (joystickView.isPressed(event.x, event.y)) {
+                    if (joystickView.onPress(event.x, event.y)) {
                         joystickView.setIsPressed(true)
                     }
                 }

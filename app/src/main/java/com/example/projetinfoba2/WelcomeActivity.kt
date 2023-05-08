@@ -21,7 +21,7 @@ class WelcomeActivity : AppCompatActivity() {
     //Liste des couleurs pour chaque difficulté
     private val colors = intArrayOf(Color.GREEN, Color.YELLOW, Color.RED)
     //Indice de sélection de couleur et image
-    private var i = 1
+    private var indice = 1
     //Ajout de musique de jeu
     private lateinit var mediaPlayer: MediaPlayer
 
@@ -41,7 +41,7 @@ class WelcomeActivity : AppCompatActivity() {
         btnPlay.setOnClickListener {
             Intent(this, MainActivity::class.java).also{
                 //Création de l'activité principale, en passant comme donnée la difficulté de jeu
-                it.putExtra("Difficulty", i)
+                it.putExtra("Difficulty", indice)
                 startActivity(it)
             }
         }
@@ -50,22 +50,23 @@ class WelcomeActivity : AppCompatActivity() {
         btnDiff = findViewById(R.id.btnDiff)
         btnDiff.setOnClickListener{
             //Changement de la difficulté de jeu, de l'image du bouton et des couleurs à chaque clic
-            if (i == diffImages.size) {
-                i = 0
-                btnDiff.setImageResource(diffImages[i])
-                btnDiff.setColorFilter(colors[i])
-                btnPlay.setColorFilter(colors[i])
-                i++
+            if (indice == diffImages.size) {
+                indice = 0
+                updateDifficulty()
+                indice++
             } else {
-                btnDiff.setImageResource(diffImages[i])
-                btnDiff.setColorFilter(colors[i])
-                btnPlay.setColorFilter(colors[i])
-                i++
+                updateDifficulty()
+                indice++
             }
 
         }
     }
 
+    private fun updateDifficulty(){
+        btnDiff.setImageResource(diffImages[indice])
+        btnDiff.setColorFilter(colors[indice])
+        btnPlay.setColorFilter(colors[indice])
+    }
     override fun onResume() {
         //Reprise du jeu
         super.onResume()
