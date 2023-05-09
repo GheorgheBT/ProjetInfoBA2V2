@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.media.MediaPlayer
 import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.SurfaceView
@@ -14,6 +15,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
     private var endGameAlertDialog: AlertDialog? = null
     private var update  = true
+
 
 
     //Création d'un objet gamestatus pour relier le changement de difficulté aux objets
@@ -42,6 +44,8 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     private val projectileList = mutableListOf<Projectile>()
     private var projectileToRemove = mutableListOf<Projectile>()
 
+    //liste pour la gestion des songs
+    var mediaList = mutableListOf<MediaPlayer>()
 
     init {
         //Ajout d'une relation observateur entre le game status et le rawingview
@@ -108,8 +112,9 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         //Mise à jour des projectiles
         for (projectile in projectileList){
             when(projectile){
-                is ProjectileJoueur ->{projectile.onCollision(joueur.scores) }
-                is ProjectileEnnemi ->{projectile.onCollision()}
+                is ProjectileJoueur ->{projectile.onCollision(joueur.scores , mediaList) }
+                is ProjectileEnnemi ->{projectile.onCollision(null , mediaList)
+                }
             }
             projectile.updatePosition()
 
@@ -120,7 +125,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
 
         // Mise à jour du joueur
-        joueur.onCollision()
+        joueur.onCollision(joueur.scores , mediaList)
         joueur.updatePosition()
         joueur.updateVie()
 
@@ -142,6 +147,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
                 backgroundMove(backgroundspeed, canvas)
                 updateObjects()
             }
+            mediaPlayer()
 
             drawObjects(canvas)
 
@@ -186,6 +192,9 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
     private fun addJoueurBullet(intervalle : Long ,size: Float){
         val currentShootTime = SystemClock.elapsedRealtime()
+        var mediaPlayer = MediaPlayer.create(context, R.raw.canon_fire)
+        mediaPlayer.start()
+        mediaList.add(mediaPlayer)
         if (currentShootTime - prevShootTimeJoueur > intervalle) {
             val projectile = ProjectileJoueur(context, joueur.position.centerX(), joueur.position.centerY(),size )
             projectileList.add( projectile)
@@ -194,6 +203,14 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
                 projectile.add(obs)
 
             prevShootTimeJoueur = currentShootTime
+        }
+    }
+
+    private fun mediaPlayer(){
+        for (media in mediaList){
+            media.setOnCompletionListener {
+                media.release()
+            }
         }
     }
 
@@ -242,8 +259,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         }
         builder.setNegativeButton("Quitter ") { _: DialogInterface, _: Int ->
             // Fermer l'application
-
-            //(context as WelcomeActivity).finish()
+            endGame()
             endGameAlertDialog?.dismiss()
             (context as MainActivity).closeAll()
         }
@@ -261,6 +277,9 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         joueur.reset()
         joueur.scores.resetVie()
         joueur.scores.resetScore()
+        for (media in mediaList){
+            media.release()
+        }
     }
 
     override fun updateParameters(diff: Int) {

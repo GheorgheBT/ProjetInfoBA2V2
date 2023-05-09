@@ -5,15 +5,18 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.RectF
+import android.media.MediaPlayer
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-class ProjectileJoueur(context: Context, x: Float, y: Float, Taille: Float) : Projectile(), Deplacement, DetecterCollisionAvecScore{
+class ProjectileJoueur(context: Context, x: Float, y: Float, Taille: Float) : Projectile(), Deplacement, DetecterCollision{
 
     //Image du projectile
     override val image: Bitmap = BitmapFactory.decodeResource(context.resources,
         R.drawable.ballejoueur
     )
+    //song de collision
+    var mediaPlayer = MediaPlayer.create(context, R.raw.target_hit)
     //Rectangle de délimitation du projectile
     override var position: RectF = RectF(x, y - Taille/2, x + Taille, y + Taille/2)
 
@@ -43,7 +46,7 @@ class ProjectileJoueur(context: Context, x: Float, y: Float, Taille: Float) : Pr
     }
 
     override val listeObjetsDeCollision: ArrayList<ObjetDeCollision> = ArrayList()
-    override fun onCollision(scores: Scores) {
+    override fun onCollision(scores: Scores?, mediaList: MutableList<MediaPlayer>?) {
         runBlocking {   //On bloque la continuation du thread pendant le lancement des coroutines detectant les collisions
             for (obstacle in listeObjetsDeCollision) {
                 launch { // Pour chaque boucle, lancement d'une coroutine pour que la detection de collision se fasse plus vite
@@ -51,7 +54,9 @@ class ProjectileJoueur(context: Context, x: Float, y: Float, Taille: Float) : Pr
                         if (obstacle.isOnScreen && isInContact(position, obstacle.position)) {
                             isOnScreen = false
                             if (obstacle.isDestructible) {
-                                scores.updateScore()
+                                scores?.updateScore()
+                                mediaPlayer.start()
+                                mediaList?.add(mediaPlayer)
                                 obstacle.isOnScreen = false
                             }
                         }

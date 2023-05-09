@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.RectF
+import android.media.MediaPlayer
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.math.abs
@@ -13,6 +14,9 @@ class Joueur(context: Context, private var taille: Float) : Deplacement, Detecte
 
     //Aspect du joueur
     private var image = BitmapFactory.decodeResource(context.resources, R.drawable.ship1, null)
+
+    //song de collision
+    var mediaPlayer = MediaPlayer.create(context, R.raw.blocker_hit)
 
     //Délimitaion du joueur par un rectangle
     override var position = RectF(ScreenData.leftScreenSide, ScreenData.screenHeight/2 -taille/2, ScreenData.leftScreenSide + taille, ScreenData.screenHeight/2 + taille/2) // position du joueur encodé dans un rectangle
@@ -101,7 +105,7 @@ class Joueur(context: Context, private var taille: Float) : Deplacement, Detecte
     }
 
     override val listeObjetsDeCollision: ArrayList<ObjetDeCollision> = ArrayList()
-    override fun onCollision(){
+    override fun onCollision(scores: Scores?, mediaList: MutableList<MediaPlayer>?) {
         collisionSide = "NoCollision"
 
         runBlocking {   //On bloque la continuation du thread pendant le lancement des coroutines detectant les collisions
@@ -110,13 +114,15 @@ class Joueur(context: Context, private var taille: Float) : Deplacement, Detecte
                     val rectF = objet.position // Assignation des rectF
                     if(objet.isOnScreen && isInContact(position, rectF)) {// Pour chaque boucle, lancement d'une coroutine pour que la detection de collision se fasse plus vite
                         //Detection si il y a collision
-                        if(objet is Ennemi){scores.setVie(0)}
+                        if(objet is Ennemi){scores?.setVie(0)}
                         else if (objet is Obstacle){
                             vitesseRebond = objet.vitesseX
 
                             //Détermination du coté de la collision (entre joueur et obstacle)
                             getCollisionSide(rectF)
-                            scores.updateScore(-10)
+                            scores?.updateScore(-10)
+                            //mediaPlayer.start()
+                            //mediaList?.add(mediaPlayer)
                         }
                     }
                 }
