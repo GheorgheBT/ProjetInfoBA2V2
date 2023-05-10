@@ -9,7 +9,6 @@ import android.graphics.Canvas
 import android.media.MediaPlayer
 import android.os.SystemClock
 import android.util.AttributeSet
-import android.util.Log
 import android.view.SurfaceView
 
 class DrawingView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0): SurfaceView(context, attributes,defStyleAttr), Observer {
@@ -46,7 +45,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     private var projectileToRemove = mutableListOf<Projectile>()
 
     //liste pour la gestion des songs
-    var mediaList = mutableListOf<MediaPlayer>()
+    private var mediaList = mutableListOf<MediaPlayer>()
 
     init {
         //Ajout d'une relation observateur entre le game status et le rawingview
