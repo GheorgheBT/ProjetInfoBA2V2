@@ -47,6 +47,7 @@ class MainActivity: Activity(){
         boutonTir = findViewById(R.id.boutonTir)
 
         boutonTir.setOnTouchListener { view, event ->
+           //Gestion du tir dans DrawingView
             when (event.action){
                 MotionEvent.ACTION_DOWN -> {
                     drawingView.isShooting = true
@@ -64,11 +65,13 @@ class MainActivity: Activity(){
         joystickView.setOnTouchListener { v, event ->
             when (event.action) {
                 MotionEvent.ACTION_DOWN -> {
+                    //Activation du joystick
                     if (joystickView.onPress(event.x, event.y)) {
                         joystickView.setIsPressed(true)
                     }
                 }
                 MotionEvent.ACTION_UP -> {
+                    //Réinitialisation du joystick
                     joystickView.setIsPressed(false)
                     joystickView.resetActuator()
                     joystickView.updateJoystickPosition()
@@ -76,12 +79,14 @@ class MainActivity: Activity(){
                 }
                 MotionEvent.ACTION_MOVE -> {
                     if (joystickView.getIsPressed()) {
+                        //Mouvement du cercle intérieur du joystick
                         joystickView.setActuator(event.x, event.y)
                         joystickView.updateJoystickPosition()
                         joystickView.invalidate()
                     }
                 }
             }
+            //Mise à jour des vitesses du joueur
             drawingView.joueur.setSpeed(
                 joystickView.deltaPosX / joystickView.cercleExtRayon,
                 joystickView.deltaPosY / joystickView.cercleExtRayon

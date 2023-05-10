@@ -72,7 +72,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     }
 
 
-    // Variables pour la gestion des tirs du joueyr
+    // Variables pour la gestion des tirs du joueur
     var isShooting = false // determine si le joueur doit tirer
     private var prevShootTimeJoueur = 0L // permet d'utiliser un intervalle de tir
     private var joueurBulletSize = screenHeight / 35f
@@ -144,15 +144,22 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         super.onDraw(canvas)
         if (canvas != null) {
             if(update) {
+                //Mouvement du plan arrière
                 backgroundMove(backgroundspeed, canvas)
+                //Mise à jour des objets
                 updateObjects()
             }
+
+            //Addition des sons
             mediaPlayer()
 
+            //Dessin des objets
             drawObjects(canvas)
 
+            //Detection du fin de jeu
             detectEndGame()
 
+            //Activation de la mise à jour des images
             postInvalidateOnAnimation()
         }
     }
@@ -192,11 +199,9 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
 
     private fun addJoueurBullet(intervalle : Long ,size: Float){
         val currentShootTime = SystemClock.elapsedRealtime()
-        var mediaPlayer = MediaPlayer.create(context, R.raw.canon_fire)
-        mediaPlayer.start()
-        mediaList.add(mediaPlayer)
         if (currentShootTime - prevShootTimeJoueur > intervalle) {
             val projectile = ProjectileJoueur(context, joueur.position.centerX(), joueur.position.centerY(),size )
+
             projectileList.add( projectile)
 
             for(obs in obstacleList)
@@ -215,6 +220,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     }
 
     private fun initObstacles(nombre : Int){
+        //Instantiation des obstacles avec une certaine distance entre eux
         val pas = (screenWidth/nombre).toInt()
         for (i in screenWidth.toInt() .. 2*screenWidth.toInt() step pas){
 
@@ -222,24 +228,35 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
             val borneInf = screenHeight.toInt()
             val posY = (borneSup .. borneInf).random().toFloat()
             val obs = Obstacle(context, i.toFloat(), posY)
-            obstacleList.add(obs)
+
+            //Addition des relations d'observer
             gameStatus.add(obs)
+            //Addition des relations de collision
             joueur.add(obs)
+
+            obstacleList.add(obs)
+
         }
     }
 
     private fun initEnnemies(nombre : Int){
+        //Instantiation des ennemis avec une certaine distance entre eux
         val pas = (screenWidth/nombre).toInt()
         for (i in 0 until nombre){
             val posX = (i * pas).toFloat() - screenWidth
             val ennemi = Ennemi(context, posX, ScreenData.upScreenSide + context.resources.getString(R.string.LongueurEnnemi).toFloat())
+
+            //Addition des relations d'observer
             gameStatus.add(ennemi)
-            ennemiList.add(ennemi)
+            //Addition des relations de collision
             joueur.add(ennemi)
+
+            ennemiList.add(ennemi)
         }
     }
 
     private fun detectEndGame() {
+        //Détection du GameOver
         if (joueur.scores.isDead()) {
             update = false
             if (endGameAlertDialog == null){
@@ -249,11 +266,13 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     }
 
     private fun showScoreDialog() {
+        //Ajout de la fenetre de GameOver
         val builder = AlertDialog.Builder(context)
         builder.setTitle("Score")
         builder.setMessage("Votre score est de ${joueur.scores.getScore()}")
         builder.setPositiveButton("Nouvelle partie") { _: DialogInterface, _: Int ->
             endGame()
+            //Recommencer l'application
             endGameAlertDialog?.dismiss()
             (context as MainActivity).finish()
         }
@@ -269,6 +288,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     }
 
     private fun endGame() {
+        //Réinitialisation des données du jeu
         endGameAlertDialog = null
         update = true
         obstacleList.clear()
@@ -283,6 +303,7 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     }
 
     override fun updateParameters(diff: Int) {
+        //Changement des paramètres en fonction de la difficulté
         when(diff){
             1->{intervalleTirEnnemi = context.resources.getString(R.string.IntervalleTirEnnemiEasy).toLong()
                 backgroundspeed = context.resources.getString(R.string.BackgroundSpeedEasy).toFloat()}
