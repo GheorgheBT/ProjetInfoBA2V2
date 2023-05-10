@@ -9,6 +9,7 @@ import android.graphics.Canvas
 import android.media.MediaPlayer
 import android.os.SystemClock
 import android.util.AttributeSet
+import android.util.Log
 import android.view.SurfaceView
 
 class DrawingView @JvmOverloads constructor (context: Context, attributes: AttributeSet? = null, defStyleAttr: Int = 0): SurfaceView(context, attributes,defStyleAttr), Observer {
@@ -66,11 +67,10 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         gameStatus.add(joueur)
 
         //Initialisation des obstacles
-        initObstacles(7)
-
-        initEnnemies(2)
+        initObstacles(context.resources.getString(R.string.NombreObstacles).toInt())
+        //Initialisation des ennemis
+        initEnnemies(context.resources.getString(R.string.NombreEnnemis).toInt())
     }
-
 
     // Variables pour la gestion des tirs du joueur
     var isShooting = false // determine si le joueur doit tirer
@@ -81,8 +81,6 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     private var prevShootTimeEnnemi = 0L
     private var ennemiBulletSize = screenHeight / 30f
     private var intervalleTirEnnemi : Long = 400L
-
-
 
     private fun backgroundMove(speed: Float, canvas: Canvas?){
         backgroundOffset -= speed//
@@ -122,7 +120,6 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
                 projectileToRemove.add(projectile)
             }
         }
-
 
         // Mise à jour du joueur
         joueur.onCollision(joueur.scores , mediaList)
@@ -185,15 +182,15 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
     }
     private fun addEnnemiBullet(intervalle : Long , size : Float){
         val currentShootTime = SystemClock.elapsedRealtime()
-        if (currentShootTime - prevShootTimeEnnemi > intervalle) {
-            for (ennemi in ennemiList){
-                if (joueur.position.left <= ennemi.position.right && joueur.position.right>= ennemi.position.left) {
+        for (ennemi in ennemiList){
+            if (joueur.position.left <= ennemi.position.right && joueur.position.right>= ennemi.position.left) {
+                if (currentShootTime - prevShootTimeEnnemi > intervalle) {
                     val projectile = ProjectileEnnemi(context, ennemi.position.centerX(), ennemi.position.centerY(),size)
                     projectileList.add(projectile)
                     projectile.add(joueur)
+                    prevShootTimeEnnemi = currentShootTime
                 }
             }
-            prevShootTimeEnnemi = currentShootTime
         }
     }
 
@@ -306,11 +303,14 @@ class DrawingView @JvmOverloads constructor (context: Context, attributes: Attri
         //Changement des paramètres en fonction de la difficulté
         when(diff){
             1->{intervalleTirEnnemi = context.resources.getString(R.string.IntervalleTirEnnemiEasy).toLong()
-                backgroundspeed = context.resources.getString(R.string.BackgroundSpeedEasy).toFloat()}
+                backgroundspeed = context.resources.getString(R.string.BackgroundSpeedEasy).toFloat()
+            }
             2->{intervalleTirEnnemi = context.resources.getString(R.string.IntervalleTirEnnemiMedium).toLong()
-                backgroundspeed = context.resources.getString(R.string.BackgroundSpeedMedium).toFloat() }
+                backgroundspeed = context.resources.getString(R.string.BackgroundSpeedMedium).toFloat()
+            }
             3->{intervalleTirEnnemi = context.resources.getString(R.string.IntervalleTirEnnemiHard).toLong()
-                backgroundspeed = context.resources.getString(R.string.BackgroundSpeedHard).toFloat() }
+                backgroundspeed = context.resources.getString(R.string.BackgroundSpeedHard).toFloat()
+            }
         }
     }
 }

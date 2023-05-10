@@ -29,9 +29,9 @@
     <string name = "VitesseEnnemiMedium">7f</string>
     <string name = "VitesseEnnemiHard">10f</string>
 
-    <string name = "IntervalleTirEnnemiEasy">700</string>
-    <string name = "IntervalleTirEnnemiMedium">600</string>
-    <string name = "IntervalleTirEnnemiHard">500</string>
+    <string name = "IntervalleTirEnnemiEasy">900</string>
+    <string name = "IntervalleTirEnnemiMedium">800</string>
+    <string name = "IntervalleTirEnnemiHard">700</string>
 
     <string name = "BackgroundSpeedEasy">2</string>
     <string name = "BackgroundSpeedMedium">4</string>
@@ -40,6 +40,10 @@
     <string name = "RemovedScoreEasy">-5</string>
     <string name = "RemovedScoreNormal">-10</string>
     <string name = "RemovedScoreHard">-15</string>
+
+    <string name="NombreObstacles">7</string>
+
+    <string name="NombreEnnemis">2</string>
 
     <string name="todo">TODO</string>
 
